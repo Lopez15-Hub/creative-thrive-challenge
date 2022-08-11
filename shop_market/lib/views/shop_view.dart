@@ -65,7 +65,9 @@ class _ShopViewState extends State<ShopView> {
                 const Text(
                   '\$ 9.99',
                   textAlign: TextAlign.end,
-                  style: TextStyle(fontSize: 18,),
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ],
             ),
@@ -77,7 +79,7 @@ class _ShopViewState extends State<ShopView> {
 
   @override
   Widget build(BuildContext context) {
-    var backgroundColor = const Color.fromARGB(255, 243, 242, 248);
+    var backgroundColor = Colors.transparent;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -102,9 +104,17 @@ class _ShopViewState extends State<ShopView> {
             ),
           ],
         ),
-        listInnerDecoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        listInnerDecoration:  BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 179, 179, 179).withOpacity(0.8),
+              spreadRadius: 2,
+              blurRadius: 3,
+              offset: const Offset(0, 0), // changes position of shadow
+            ),
+          ],
+          borderRadius:const BorderRadius.all(Radius.circular(8.0)),
         ),
         lastItemTargetHeight: 8,
         addLastItemTargetHeightToTop: true,
@@ -124,7 +134,7 @@ class _ShopViewState extends State<ShopView> {
             padding: EdgeInsets.only(right: 10),
             child: Icon(
               Icons.menu,
-              color: Colors.blueGrey,
+              color: Color.fromRGBO(216, 67, 21, 1),
             ),
           ),
         ),
