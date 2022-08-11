@@ -5,10 +5,10 @@ class ShopView extends StatefulWidget {
   const ShopView({Key? key}) : super(key: key);
 
   @override
-  State createState() => _DragHandleExample();
+  State createState() => _ShopViewState();
 }
 
-class _DragHandleExample extends State<ShopView> {
+class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
 
   @override
@@ -17,7 +17,6 @@ class _DragHandleExample extends State<ShopView> {
 
     _contents = List.generate(2, (index) {
       return DragAndDropList(
-        
         header: Column(
           children: <Widget>[
             Row(
@@ -42,16 +41,16 @@ class _DragHandleExample extends State<ShopView> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ClipRRect(
-                    
-                    borderRadius:  BorderRadius.circular(50),
-                    child: Image.network('https://picsum.photos/50/50?image=${index + 1}',fit: BoxFit.fill)),
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                          'https://picsum.photos/50/50?image=${index + 1}',
+                          fit: BoxFit.fill)),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       Text(
                         'Name $index',
                         style: const TextStyle(fontSize: 18),
@@ -63,12 +62,14 @@ class _DragHandleExample extends State<ShopView> {
                     ],
                   ),
                 ),
-                
+                const Text(
+                  '\$ 9.99',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontSize: 18,),
+                ),
               ],
             ),
           ),
-
-          
         ],
       );
     });
