@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "182386394154",
+    "project_id": "creativethrivechallenge",
+    "storage_bucket": "creativethrivechallenge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182386394154:android:577030bb5c45ed7301af53",
+        "android_client_info": {
+          "package_name": "com.shopmarket.cthrive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182386394154-klm9ub062qvttp30rn155k8dd66iq8ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKtNU29Sc3Rralh022FnmV9s2lHcJGRfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182386394154-klm9ub062qvttp30rn155k8dd66iq8ka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
