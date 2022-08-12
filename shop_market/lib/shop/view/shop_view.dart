@@ -115,7 +115,7 @@ class _ShopViewState extends State<ShopView> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Color.fromARGB(255, 179, 179, 179).withOpacity(0.8),
+              color: const Color.fromARGB(255, 179, 179, 179).withOpacity(0.8),
               spreadRadius: 2,
               blurRadius: 3,
               offset: const Offset(0, 0), // changes position of shadow

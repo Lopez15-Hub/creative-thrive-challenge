@@ -2,7 +2,6 @@ part of 'bottombar_navigation_bloc.dart';
 
 abstract class BottombarNavigationEvent {
   const BottombarNavigationEvent();
-  @override
   List<Object> get props => [];
 }
 

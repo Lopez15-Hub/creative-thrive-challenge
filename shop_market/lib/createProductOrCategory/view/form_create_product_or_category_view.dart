@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:image_picker/image_picker.dart';
 
 class FormCreateProductOrCategoryView extends StatefulWidget {
   const FormCreateProductOrCategoryView({Key? key}) : super(key: key);
@@ -66,8 +65,8 @@ class _FormCreateProductOrCategoryViewState
           const Text("Create Product"),
           const Text("Image product"),
           ElevatedButton(
-              onPressed: () => showGaleryToPickImage(),
-              child: Text("Select image")),
+              onPressed: () => "",
+              child:const Text("Select image")),
           customFormField(
             TextInputType.text,
             false,
@@ -146,11 +145,5 @@ class _FormCreateProductOrCategoryViewState
     );
   }
 
-  showGaleryToPickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    // Pick an image
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    // Capture a photo
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-  }
+
 }

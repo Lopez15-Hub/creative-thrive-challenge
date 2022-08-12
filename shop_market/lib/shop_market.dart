@@ -7,26 +7,24 @@ class ShopMarket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var scaffoldKey = GlobalKey<ScaffoldState>();
     return MultiBlocProvider(
       providers: [
-        BlocProvider<BottombarNavigationBloc>( create: (context) => BottombarNavigationBloc(),),
-
+        BlocProvider<BottombarNavigationBloc>(
+          create: (context) => BottombarNavigationBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-    
         home: Scaffold(
-          appBar: AppbarWidget(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    
+          key: scaffoldKey,
+          appBar: AppbarWidget(scaffoldKey: scaffoldKey),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
           floatingActionButton: const FabWidget(),
-    
           drawer:const DrawerWidget(),
-    
-          body:   const PagesView(),
-    
+          body: const PagesView(),
           bottomNavigationBar: const BottombarWidget(),
-    
         ),
       ),
     );
