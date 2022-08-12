@@ -37,13 +37,20 @@ class _ShopViewState extends State<ShopView> {
           DragAndDropItem(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
+                  child: IconButton(
+                      onPressed: () => print("fav"),
+                      icon: const Icon(Icons.star_border, size: 30)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                          'https://picsum.photos/50/50?image=${index + 1}',
+                          'https://picsum.photos/60/60?image=${index + 1}',
                           fit: BoxFit.fill)),
                 ),
                 Padding(
@@ -104,7 +111,7 @@ class _ShopViewState extends State<ShopView> {
             ),
           ],
         ),
-        listInnerDecoration:  BoxDecoration(
+        listInnerDecoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
@@ -114,7 +121,7 @@ class _ShopViewState extends State<ShopView> {
               offset: const Offset(0, 0), // changes position of shadow
             ),
           ],
-          borderRadius:const BorderRadius.all(Radius.circular(8.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         ),
         lastItemTargetHeight: 8,
         addLastItemTargetHeightToTop: true,

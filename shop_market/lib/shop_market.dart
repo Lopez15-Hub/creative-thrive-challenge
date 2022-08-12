@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_market/views/form_create_product_or_category.dart';
 import 'package:shop_market/views/shop_view.dart';
 
 class ShopMarket extends StatelessWidget {
@@ -18,11 +19,14 @@ class ShopMarket extends StatelessWidget {
           toolbarHeight: 80,
           leading: IconButton(
             icon: const Icon(Icons.menu_sharp,color: Color.fromRGBO(216, 67, 21, 1),size: 30,),
-            onPressed: (){
-              Navigator.pop(context);
-            },
+            onPressed: ()=> Navigator.pop(context),
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> FormCreateProductOrCategory())),
+          backgroundColor:const  Color.fromRGBO(216, 67, 21, 1),
+          child: const Icon(Icons.add_circle,size: 30,),),
         drawer: Drawer(
           child: ListView(
             children: <Widget>[
@@ -84,7 +88,7 @@ class ShopMarket extends StatelessWidget {
             ],
           ),
         ),
-        body:  const ShopView(),
+        body:   FormCreateProductOrCategory(),
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,
           iconSize: 30,
