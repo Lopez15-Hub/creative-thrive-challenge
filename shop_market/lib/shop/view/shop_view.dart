@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../widgets/widgets.dart';
 
 class ShopView extends StatefulWidget {
@@ -12,12 +15,19 @@ class ShopView extends StatefulWidget {
 
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
-
+  late QuerySnapshot<Map<String, dynamic>> products;
   @override
   void initState() {
     super.initState();
-
     _contents = List.generate(2, (index) => generateDraggableItems(index));
+
+    //test
+    final productsBloc = BlocProvider.of<ProductsBloc>(context);
+    productsBloc.add(const GetProductsEvent());
+    final currentProducts = productsBloc.productRepository.productsCollection.get();
+    currentProducts.then((value) =>setState(() {
+      products = value;
+    }));
   }
 
   generateDraggableItems(index) {
