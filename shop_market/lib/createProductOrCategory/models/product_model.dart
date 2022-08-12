@@ -8,32 +8,38 @@ class ProductModel {
     required this.productImage,
     required this.category,
     required this.isFavorite,
+    required this.productPrice,
   });
 
+  CategoryModel category;
   String productName;
   String productImage;
-  CategoryModel category;
+  String productPrice;
   bool isFavorite;
 
-  factory ProductModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
+  static ProductModel fromSnapshot(DocumentSnapshot snapshot) {
     return ProductModel(
-      productName: data?['productName'],
-      productImage: data?['productImage'],
-      category: CategoryModel.fromFirestore(data?['category'], options),
-      isFavorite: data?['isFavorite'],
+      productName: snapshot['productName'],
+      productImage: snapshot['productImage'],
+      category: CategoryModel.fromJson(snapshot['category']),
+      isFavorite: snapshot['isFavorite'],
+      productPrice: snapshot['productPrice'],
     );
   }
 
-  Map<String, dynamic> toFirestore() {
-    return {
-      "productName": productName,
-      "productImage": productImage,
-      "category": category.toFirestore(),
-      "isFavorite": isFavorite,
-    };
-  }
+  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+        productName: json["productName"],
+        productImage: json["productImage"],
+        category: CategoryModel.fromJson(json["category"]),
+        isFavorite: json["isFavorite"],
+        productPrice: json["productPrice"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "productName": productName,
+        "productImage": productImage,
+        "category": category.toJson(),
+        "isFavorite": isFavorite,
+        "productPrice": productPrice,
+      };
 }

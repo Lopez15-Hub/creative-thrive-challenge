@@ -6,5 +6,7 @@ import 'package:shop_market/shopping_app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ShoppingApp(productRepository: ProductRepository(),));
+  runApp(ShoppingApp(
+    productRepository: ProductsRepository(),
+  ));
 }

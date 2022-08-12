@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class CategoryModel {
   CategoryModel({
     required this.categoryName,
@@ -9,20 +10,26 @@ class CategoryModel {
   String categoryName;
   String categoryColor;
 
-  factory CategoryModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
+  factory CategoryModel.fromSnapshot(DocumentSnapshot snapshot) {
     return CategoryModel(
-      categoryName: data?['categoryName'],
-      categoryColor: data?['categoryColor'],
+      categoryName: snapshot['categoryName'],
+      categoryColor: snapshot['categoryColor'],
     );
   }
   Map<String, dynamic> toFirestore() {
     return {
-       "name": categoryName,
-       "color": categoryColor,
+      "name": categoryName,
+      "color": categoryColor,
     };
   }
+
+  factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
+        categoryName: json["categoryName"],
+        categoryColor: json["categoryColor"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "categoryName": categoryName,
+        "categoryColor": categoryColor,
+      };
 }

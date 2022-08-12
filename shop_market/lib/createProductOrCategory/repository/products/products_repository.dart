@@ -1,27 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:shop_market/createProductOrCategory/services/database_service.dart';
 
 import '../../models/product_model.dart';
 
-
-class ProductRepository {
-  final productsCollection = FirebaseFirestore.instance.collection("products");
-
-
-  Future<CollectionReference<ProductModel>> getProducts() async {
-    final products = productsCollection.withConverter<ProductModel>(
-        fromFirestore: (snapshot, _) => ProductModel.fromFirestore(snapshot, _),
-        toFirestore: (product, _) => product.toFirestore());
-    return products;
-  }
-
-  Future<void> createProduct(ProductModel product) async => await productsCollection.add(product.toFirestore());
-  Future<void> deleteProduct(String productId) async =>  await productsCollection.doc(productId).delete();
+class ProductsRepository {
+  final databaseService = DatabaseService();
 
 
-  Future<void> updateProduct(
-      String productId, ProductModel newProductData) async {
-    await productsCollection
-        .doc(productId)
-        .update(newProductData.toFirestore());
-  }
+  Future<List<ProductModel>> getProducts() async=> await databaseService.retrieveProducts();
+  Future<void> createProduct(ProductModel product) async => await databaseService.createProduct(product);
+  Future<void> deleteProduct(String productId) async => await databaseService.deleteProduct(productId);
+  Future<void> updateProduct(String productId, ProductModel newProductData) async => await databaseService.updateProduct(productId, newProductData);
 }

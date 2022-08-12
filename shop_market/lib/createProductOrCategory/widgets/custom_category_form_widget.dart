@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:shop_market/createProductOrCategory/widgets/form_widgets/custom_color_picker_widget.dart';
 
@@ -40,6 +42,6 @@ class CategoryFormWidget extends StatelessWidget {
         ],
       )),
     );
-    ;
+    
   }
 }

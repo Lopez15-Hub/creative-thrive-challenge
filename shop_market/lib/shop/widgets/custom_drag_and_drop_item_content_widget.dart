@@ -1,11 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:shop_market/createProductOrCategory/models/product_model.dart';
 
 class DragAndDropItemContentWidget extends StatelessWidget {
-  const DragAndDropItemContentWidget({
-    Key? key,
-    required this.index,
-  }) : super(key: key);
+  const DragAndDropItemContentWidget(
+      {Key? key, required this.index, required this.products})
+      : super(key: key);
   final int index;
+  final List<ProductModel> products;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,9 +25,8 @@ class DragAndDropItemContentWidget extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                  'https://picsum.photos/60/60?image=${index + 1}',
-                  fit: BoxFit.fill)),
+              child: Image.network(products[index].productImage,
+                  height: 60, width: 60, fit: BoxFit.fill)),
         ),
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -32,20 +34,23 @@ class DragAndDropItemContentWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Name $index',
+                products[index].productName,
                 style: const TextStyle(fontSize: 18),
               ),
               Text(
-                'Category $index',
-                style: const TextStyle(fontSize: 12),
+                products[index].category.categoryName,
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Color(
+                        int.parse(products[index].category.categoryColor))),
               ),
             ],
           ),
         ),
-        const Text(
-          '\$ 9.99',
+        Text(
+          '\$ ${products[index].productPrice}',
           textAlign: TextAlign.end,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
           ),
         ),

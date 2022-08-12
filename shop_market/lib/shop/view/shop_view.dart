@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: avoid_print
+
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:shop_market/createProductOrCategory/models/product_model.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -15,34 +16,29 @@ class ShopView extends StatefulWidget {
 
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
-  late QuerySnapshot<Map<String, dynamic>> products;
   @override
   void initState() {
     super.initState();
-    _contents = List.generate(2, (index) => generateDraggableItems(index));
 
     //test
-    final productsBloc = BlocProvider.of<ProductsBloc>(context);
-    productsBloc.add(const GetProductsEvent());
-    final currentProducts = productsBloc.productRepository.productsCollection.get();
-    currentProducts.then((value) =>setState(() {
-      products = value;
-    }));
   }
 
-  generateDraggableItems(index) {
-    //TODO: Add Bloc builder to fetch product data
+  generateDraggableItems(List<ProductModel> products, int index) {
     return DragAndDropList(
       header: Column(
         children: <Widget>[
           DragAndDropListHeaderWidget(
             index: index,
+            products: products,
           ),
         ],
       ),
       children: <DragAndDropItem>[
         DragAndDropItem(
-          child: DragAndDropItemContentWidget(index: index),
+          child: DragAndDropItemContentWidget(
+            index: index,
+            products: products,
+          ),
         ),
       ],
     );
@@ -106,9 +102,25 @@ class _ShopViewState extends State<ShopView> {
 
   @override
   Widget build(BuildContext context) {
+    final productsBloc = BlocProvider.of<ProductsBloc>(context);
+    productsBloc.add(ListeningProductsEvent());
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: configureDraggableItemList());
+        body: BlocBuilder<ProductsBloc, ProductsState>(
+          builder: (context, state) {
+            if (state is ProductsRetrieved) {
+              _contents = List.generate(
+                  state.retrievedProducts.length,
+                  (index) =>
+                      generateDraggableItems(state.retrievedProducts, index));
+              print(state.retrievedProducts[0].toJson());
+              return configureDraggableItemList();
+            }
+
+      
+             return const Center(child: CircularProgressIndicator());
+          },
+        ));
   }
 
   _onItemReorder(

@@ -6,35 +6,44 @@ import 'package:shop_market/home/home.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
 
 class ShoppingApp extends StatelessWidget {
-  const ShoppingApp({Key? key, required this.productRepository}) : super(key: key);
-  final ProductRepository productRepository;
+  const ShoppingApp({Key? key, required ProductsRepository productRepository})
+      : _productRepository = productRepository,
+        super(key: key);
+  final ProductsRepository _productRepository;
   @override
   Widget build(BuildContext context) {
     var scaffoldKey = GlobalKey<ScaffoldState>();
-    
-    return MultiBlocProvider(
-    
+
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider<BottombarNavigationBloc>( create: (context) => BottombarNavigationBloc(),),
-        BlocProvider<TitleChangerBloc>       ( create: (context) => TitleChangerBloc()       ,),
-        BlocProvider<ProductsBloc>          ( create: (context) => ProductsBloc(productRepository:productRepository )          ,),
+        RepositoryProvider<ProductsRepository>(
+            create: (context) => _productRepository),
       ],
-    
-      child: MaterialApp(
-
-        debugShowCheckedModeBanner: false,
-        
-        home: Scaffold(
-
-          key: scaffoldKey,
-          
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          appBar:                       AppbarWidget(scaffoldKey: scaffoldKey),
-          drawer:               const   DrawerWidget(),
-          body:                 const   PagesView(),
-          floatingActionButton: const   FabWidget(),
-          bottomNavigationBar:  const   BottombarWidget(),
-        
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<BottombarNavigationBloc>(
+            create: (context) => BottombarNavigationBloc(),
+          ),
+          BlocProvider<TitleChangerBloc>(
+            create: (context) => TitleChangerBloc(),
+          ),
+          BlocProvider<ProductsBloc>(
+            create: (context) => ProductsBloc(
+                productRepository: RepositoryProvider.of<ProductsRepository>(context)),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            key: scaffoldKey,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            appBar: AppbarWidget(scaffoldKey: scaffoldKey),
+            drawer: const DrawerWidget(),
+            body: const PagesView(),
+            floatingActionButton: const FabWidget(),
+            bottomNavigationBar: const BottombarWidget(),
+          ),
         ),
       ),
     );

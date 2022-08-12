@@ -33,3 +33,5 @@ class UpdateProductsEvent extends ProductsEvent {
 }
 
 class DeleteProductsEvent extends ProductsEvent {}
+
+class ListeningProductsEvent extends ProductsEvent {}

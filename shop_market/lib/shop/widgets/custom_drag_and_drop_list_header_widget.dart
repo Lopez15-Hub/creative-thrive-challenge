@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../createProductOrCategory/models/product_model.dart';
+
 class DragAndDropListHeaderWidget extends StatelessWidget {
-  const DragAndDropListHeaderWidget({
-    Key? key,
-    required this.index,
-  }) : super(key: key);
+  const DragAndDropListHeaderWidget(
+      {Key? key, required this.products, required this.index})
+      : super(key: key);
+  final List<ProductModel> products;
   final int index;
   @override
   Widget build(BuildContext context) {
@@ -13,8 +15,8 @@ class DragAndDropListHeaderWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10),
           child: Text(
-            'Header $index',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            products[index].category.categoryName,
+            style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 30,color: Color(int.parse(products[index].category.categoryColor))),
           ),
         ),
       ],
