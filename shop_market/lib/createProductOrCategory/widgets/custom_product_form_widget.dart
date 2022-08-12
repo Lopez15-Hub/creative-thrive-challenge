@@ -13,22 +13,12 @@ class ProductFormWidget extends StatefulWidget {
 }
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _categoryController.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
     var productModel = ProductModel(
-        productName: _nameController.text,
+        productName: '',
         category: CategoryModel(
             categoryColor: '0xFF4CAF50', categoryName: 'Zapatillas'),
         isFavorite: false,
@@ -53,8 +43,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   ),
                   onChanged: (text) => setState(() {
                         productModel.productName = text;
-                      }),
-                  fieldController: _nameController),
+                      }),),
               CustomFormFieldWidget(
                   keyboardType: TextInputType.text,
                   obscureText: false,
@@ -66,7 +55,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   onChanged: (text) => setState(() {
                         productModel.category.categoryName = text;
                       }),
-                  fieldController: _categoryController),
+                 ),
             ],
           ),
           Column(

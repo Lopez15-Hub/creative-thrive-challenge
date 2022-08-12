@@ -22,7 +22,7 @@ class CategoryModel {
   Map<String, dynamic> toFirestore() {
     return {
        "name": categoryName,
-      "image": categoryColor,
+       "color": categoryColor,
     };
   }
 }
