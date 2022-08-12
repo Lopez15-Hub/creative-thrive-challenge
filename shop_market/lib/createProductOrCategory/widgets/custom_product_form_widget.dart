@@ -84,10 +84,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
             ],
           ),
           CustomFormButtonSubmitWidget(
-              onPressed: () async {
-                print(productModel.toFirestore());
-                productsBloc.add(CreateProductEvent(product: productModel));
-              },
+              onPressed: () async=> productsBloc.add(CreateProductEvent(product: productModel)),
               buttonLabel: 'Submit Product')
         ],
       )),
