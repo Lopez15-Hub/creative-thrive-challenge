@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 
-class FormCreateProductOrCategory extends StatefulWidget {
-  const FormCreateProductOrCategory({Key? key}) : super(key: key);
+class FormCreateProductOrCategoryView extends StatefulWidget {
+  const FormCreateProductOrCategoryView({Key? key}) : super(key: key);
   @override
-  State<FormCreateProductOrCategory> createState() =>
-      _FormCreateProductOrCategoryState();
+  State<FormCreateProductOrCategoryView> createState() =>
+      _FormCreateProductOrCategoryViewState();
 }
 
-class _FormCreateProductOrCategoryState
-    extends State<FormCreateProductOrCategory> {
+class _FormCreateProductOrCategoryViewState
+    extends State<FormCreateProductOrCategoryView> {
   bool formSelected = false;
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,9 @@ class _FormCreateProductOrCategoryState
         children: [
           const Text("Create Product"),
           const Text("Image product"),
-          ElevatedButton(onPressed:()=> showGaleryToPickImage(), child: Text("Select image")),
+          ElevatedButton(
+              onPressed: () => showGaleryToPickImage(),
+              child: Text("Select image")),
           customFormField(
             TextInputType.text,
             false,
