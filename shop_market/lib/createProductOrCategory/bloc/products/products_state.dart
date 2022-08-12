@@ -19,6 +19,13 @@ class ProductsRetrieved extends ProductsState {
   @override
   List<Object> get props => [retrievedProducts];
 }
+class ProductsFavoriteRetrieved extends ProductsState {
+  final List<ProductModel> retrievedProducts;
+  const ProductsFavoriteRetrieved({required this.retrievedProducts});
+
+  @override
+  List<Object> get props => [retrievedProducts];
+}
 class ProductsLoaded extends ProductsState {
 
 }

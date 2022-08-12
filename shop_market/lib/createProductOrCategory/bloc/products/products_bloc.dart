@@ -18,10 +18,17 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<UpdateProductsEvent>((event, emit) {
       productRepository.updateProduct(event.productId, event.product);
     });
+    on<UpdateProductsFavoriteEvent>((event, emit) {
+      productRepository.updateProductIsFavorite(event.productId, event.isFavorite);
+    });
 
     on<ListeningProductsEvent>((event, emit) async{
       List<ProductModel> products = await productRepository.getProducts();
        emit(ProductsRetrieved(retrievedProducts: products));
+    });
+    on<ListeningProductsFavoritesEvent>((event, emit) async{
+      List<ProductModel> products = await productRepository.getProductsFavorites();
+       emit(ProductsFavoriteRetrieved(retrievedProducts: products));
     });
   }
 

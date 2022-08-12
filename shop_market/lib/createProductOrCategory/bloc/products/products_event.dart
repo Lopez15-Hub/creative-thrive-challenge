@@ -27,11 +27,19 @@ class CreateProductEvent extends ProductsEvent {
 class UpdateProductsEvent extends ProductsEvent {
   final String productId;
   final ProductModel product;
-  const UpdateProductsEvent({required this.productId, required this.product});
+  const UpdateProductsEvent({required this.product,this.productId=""});
   @override
-  List<Object> get props => [productId, product];
+  List<Object> get props => [product,productId];
+}
+class UpdateProductsFavoriteEvent extends ProductsEvent {
+  final String productId;
+  final bool isFavorite;
+  const UpdateProductsFavoriteEvent({required this.isFavorite,this.productId=""});
+  @override
+  List<Object> get props => [isFavorite,productId];
 }
 
 class DeleteProductsEvent extends ProductsEvent {}
 
 class ListeningProductsEvent extends ProductsEvent {}
+class ListeningProductsFavoritesEvent extends ProductsEvent {}

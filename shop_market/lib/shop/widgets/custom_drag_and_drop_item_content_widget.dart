@@ -1,7 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_market/createProductOrCategory/models/product_model.dart';
+
+import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 
 class DragAndDropItemContentWidget extends StatelessWidget {
   const DragAndDropItemContentWidget(
@@ -11,6 +14,7 @@ class DragAndDropItemContentWidget extends StatelessWidget {
   final List<ProductModel> products;
   @override
   Widget build(BuildContext context) {
+    final productsBloc = BlocProvider.of<ProductsBloc>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -18,8 +22,12 @@ class DragAndDropItemContentWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: IconButton(
-              onPressed: () => print("fav"),
-              icon: const Icon(Icons.star_border, size: 30)),
+              onPressed: () => productsBloc.add(UpdateProductsFavoriteEvent(
+                  productId: products[index].productId,
+                  isFavorite: !products[index].isFavorite)),
+              icon: Icon(
+                  products[index].isFavorite ? Icons.star : Icons.star_border,
+                  size: 30)),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
@@ -31,7 +39,6 @@ class DragAndDropItemContentWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 products[index].productName,

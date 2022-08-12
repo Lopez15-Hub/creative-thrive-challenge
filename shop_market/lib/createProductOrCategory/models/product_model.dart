@@ -9,16 +9,20 @@ class ProductModel {
     required this.category,
     required this.isFavorite,
     required this.productPrice,
+             this.productId =''          
   });
 
   CategoryModel category;
   String productName;
   String productImage;
   String productPrice;
+  String productId;
   bool isFavorite;
 
   static ProductModel fromSnapshot(DocumentSnapshot snapshot) {
     return ProductModel(
+      //id
+      productId: snapshot.id,
       productName: snapshot['productName'],
       productImage: snapshot['productImage'],
       category: CategoryModel.fromJson(snapshot['category']),
@@ -28,6 +32,7 @@ class ProductModel {
   }
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+        productId: json['id'],
         productName: json["productName"],
         productImage: json["productImage"],
         category: CategoryModel.fromJson(json["category"]),

@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_market/createProductOrCategory/models/product_model.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
-import '../widgets/widgets.dart';
+import '../../shop/widgets/widgets.dart';
 
-class ShopView extends StatefulWidget {
-  const ShopView({Key? key}) : super(key: key);
+class FavoritesView extends StatefulWidget {
+  const FavoritesView({Key? key}) : super(key: key);
 
   @override
-  State createState() => _ShopViewState();
+  State createState() => _FavoritesViewState();
 }
 
-class _ShopViewState extends State<ShopView> {
+class _FavoritesViewState extends State<FavoritesView> {
   late List<DragAndDropList> _contents;
   @override
   void initState() {
@@ -103,22 +103,25 @@ class _ShopViewState extends State<ShopView> {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
-    productsBloc.add(ListeningProductsEvent());
+    productsBloc.add(ListeningProductsFavoritesEvent());
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocBuilder<ProductsBloc, ProductsState>(
           builder: (context, state) {
-            if (state is ProductsRetrieved) {
+            if (state is ProductsFavoriteRetrieved) {
               _contents = List.generate(
                   state.retrievedProducts.length,
                   (index) =>
                       generateDraggableItems(state.retrievedProducts, index));
               print(state.retrievedProducts[0].toJson());
               return configureDraggableItemList();
+
             }
 
-      
-             return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(216, 67, 21, 1),));
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Color.fromRGBO(216, 67, 21, 1),
+            ));
           },
         ));
   }
