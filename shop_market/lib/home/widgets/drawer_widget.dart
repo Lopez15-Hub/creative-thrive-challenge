@@ -51,15 +51,20 @@ class DrawerWidget extends StatelessWidget {
           ListTile(
             title: const Text('Add product'),
             leading: const Icon(Icons.add),
-            onTap: () {
-              navigationBloc.add(const ChangePageView(3));
-              Navigator.pop(context);
-            },
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const FormCreateProductOrCategoryView())),
           ),
           ListTile(
             title: const Text('Add category'),
             leading: const Icon(Icons.add),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> const FormCreateProductOrCategoryView())),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const FormCreateProductOrCategoryView())),
           ),
         ],
       ),

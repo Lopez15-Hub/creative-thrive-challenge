@@ -15,6 +15,7 @@ class FabWidget extends StatelessWidget {
               ? true
               : false,
           child: FloatingActionButton(
+            tooltip: 'Add new product or Cateogry',
             onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(

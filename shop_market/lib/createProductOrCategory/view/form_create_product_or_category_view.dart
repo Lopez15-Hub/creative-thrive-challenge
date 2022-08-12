@@ -10,28 +10,29 @@ class FormCreateProductOrCategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var scaffoldKeyForm = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: scaffoldKeyForm,
-      appBar: AppbarFormWidget(scaffoldKey: scaffoldKeyForm),
+      resizeToAvoidBottomInset: false,
+      appBar: AppbarFormWidget(),
       drawer: const DrawerWidget(),
       body: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: const [
-              Text("Create Category"),
+              Text(
+                "Add Category",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+              ),
               SwitchFormWidget(),
             ],
           ),
-
           BlocBuilder<TitleChangerBloc, bool>(
-            builder: (context, currentForm) =>
-                !currentForm ? const ProductFormWidget() : const CategoryFormWidget(),
+            builder: (context, currentForm) => !currentForm
+                ? const ProductFormWidget()
+                : const CategoryFormWidget(),
           )
         ],
       ),
     );
   }
-
 }

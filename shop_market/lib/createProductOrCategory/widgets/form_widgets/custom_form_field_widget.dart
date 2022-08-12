@@ -14,7 +14,7 @@ class CustomFormFieldWidget extends StatelessWidget {
   final bool obscureText;
   final String label;
   final Icon icon;
-  final Function onChanged;
+  final void Function(String) onChanged;
   final TextEditingController fieldController;
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,9 @@ class CustomFormFieldWidget extends StatelessWidget {
     return Padding(
       padding: edgeInsets,
       child: TextField(
-        controller: fieldController,
+        controller:  fieldController,
         keyboardType: keyboardType,
+        onChanged: onChanged,
         obscureText: obscureText,
         cursorColor: cursorColor,
         decoration: inputDecoration,

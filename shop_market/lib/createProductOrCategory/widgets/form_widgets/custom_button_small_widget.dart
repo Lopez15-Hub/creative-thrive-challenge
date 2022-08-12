@@ -4,21 +4,25 @@ class CustomButtonSmallWidget extends StatelessWidget {
     Key? key,
     required this.label,
     required this.onPressed,
+             this.iconButton
   }) : super(key: key);
   final String label;
+  final IconData? iconButton;
   final void Function () onPressed;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 40,
-        width: 200,
-        child: ElevatedButton(
+        height: 50,
+        width: 400,
+        child: ElevatedButton.icon(
+          icon:  Icon(iconButton),
+          label: Text(label),
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
+            
               primary: Colors.grey,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10))),
-          child: Text(label),
         ));
   }
 }

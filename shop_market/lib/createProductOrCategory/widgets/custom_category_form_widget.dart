@@ -8,26 +8,38 @@ class CategoryFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        child: Column(
-      children: [
-        const Text("Create Category"),
-        CustomFormFieldWidget(
-            keyboardType: TextInputType.text,
-            obscureText: false,
-            label: 'Name of product',
-            icon: const Icon(
-              Icons.description,
-              color: Color.fromRGBO(216, 67, 21, 1),
-            ),
-            onChanged: () {},
-            fieldController: TextEditingController()),
-        const Text("Define color"),
-        ColorPickerWidget(onChangeColorPicker: (color)=> print(color)),
-        CustomFormButtonSubmitWidget(
-            onPressed: () {}, buttonLabel: 'Submit Category')
-      ],
-    ));
+    return Expanded(
+      child: Form(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              const CustomTitleWidget(title: 'Category Name', alignment: TextAlign.start),
+              CustomFormFieldWidget(
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  label: 'Name of category',
+                  icon: const Icon(
+                    Icons.description,
+                    color: Color.fromRGBO(216, 67, 21, 1),
+                  ),
+                  onChanged: (text)=> print("Texto: $text"),
+                  fieldController: TextEditingController()),
+            ],
+          ),
+          Column(
+            children: [
+              const CustomTitleWidget(
+                  title: 'Color', alignment: TextAlign.start),
+              ColorPickerWidget(onChangeColorPicker: (color) => print(color)),
+            ],
+          ),
+          CustomFormButtonSubmitWidget(
+              onPressed: () {}, buttonLabel: 'Submit Category')
+        ],
+      )),
+    );
     ;
   }
 }
