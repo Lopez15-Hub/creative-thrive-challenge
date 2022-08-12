@@ -1,149 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/title_changer/title_changer_bloc.dart';
+import 'package:shop_market/createProductOrCategory/widgets/widgets.dart';
+import '../widgets/form_widgets/widgets.dart';
+import 'package:shop_market/home/home.dart';
 
-class FormCreateProductOrCategoryView extends StatefulWidget {
+class FormCreateProductOrCategoryView extends StatelessWidget {
   const FormCreateProductOrCategoryView({Key? key}) : super(key: key);
-  @override
-  State<FormCreateProductOrCategoryView> createState() =>
-      _FormCreateProductOrCategoryViewState();
-}
 
-class _FormCreateProductOrCategoryViewState
-    extends State<FormCreateProductOrCategoryView> {
-  bool formSelected = false;
   @override
   Widget build(BuildContext context) {
+    var scaffoldKeyForm = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: scaffoldKeyForm,
+      appBar: AppbarFormWidget(scaffoldKey: scaffoldKeyForm),
+      drawer: const DrawerWidget(),
       body: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Text("Create Category"),
-              Switch(
-                activeColor: Colors.white,
-                activeTrackColor: Colors.deepOrange[800],
-                value: formSelected,
-                onChanged: (value) {
-                  setState(() {
-                    formSelected = value;
-                  });
-                },
-              ),
+            children: const [
+              Text("Create Category"),
+              SwitchFormWidget(),
             ],
           ),
-          formSelected ? createProductCategory() : createProductForm(),
+
+          BlocBuilder<TitleChangerBloc, bool>(
+            builder: (context, currentForm) =>
+                !currentForm ? const ProductFormWidget() : const CategoryFormWidget(),
+          )
         ],
       ),
     );
   }
-
-  Widget customFormButtonSubmit(void Function() onPressed, String buttonLabel) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            elevation: 1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            primary: Colors.deepOrange[800],
-          ),
-          child: Text(buttonLabel),
-        ),
-      ),
-    );
-  }
-
-  Widget createProductForm() => Form(
-          child: Column(
-        children: [
-          const Text("Create Product"),
-          const Text("Image product"),
-          ElevatedButton(
-              onPressed: () => "",
-              child:const Text("Select image")),
-          customFormField(
-            TextInputType.text,
-            false,
-            'Name of product',
-            const Icon(
-              Icons.description,
-              color: Color.fromRGBO(216, 67, 21, 1),
-            ),
-          ),
-          customFormField(
-            TextInputType.text,
-            false,
-            'Category',
-            const Icon(
-              Icons.category,
-              color: Color.fromRGBO(216, 67, 21, 1),
-            ),
-          ),
-          customFormButtonSubmit(
-            () {},
-            'Submit product',
-          ),
-        ],
-      ));
-
-  Widget createProductCategory() => Form(
-          child: Column(
-        children: [
-          const Text("Create Category"),
-          customFormField(
-            TextInputType.text,
-            false,
-            'Category Name',
-            const Icon(
-              Icons.description,
-              color: Color.fromRGBO(216, 67, 21, 1),
-            ),
-          ),
-          const Text("Define color"),
-          showColorPicker(),
-          customFormButtonSubmit(
-            () {},
-            'Submit category',
-          ),
-        ],
-      ));
-
-  Widget customFormField(
-          TextInputType type, bool hideText, String label, Icon icon) =>
-      Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: TextField(
-          keyboardType: type,
-          obscureText: hideText,
-          cursorColor: Colors.black,
-          decoration: InputDecoration(
-            labelText: label,
-            labelStyle: const TextStyle(color: Colors.black),
-            icon: icon,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: Color.fromRGBO(216, 67, 21, 1)),
-            ),
-          ),
-        ),
-      );
-
-  ColorPicker showColorPicker() {
-    return ColorPicker(
-      pickerColor: Colors.deepPurple,
-      onColorChanged: (color) => print(color),
-    );
-  }
-
 
 }

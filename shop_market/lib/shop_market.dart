@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_market/home/home.dart';
+import 'createProductOrCategory/create_product_or_category.dart';
 
 class ShopMarket extends StatelessWidget {
   const ShopMarket({Key? key}) : super(key: key);
@@ -13,6 +14,9 @@ class ShopMarket extends StatelessWidget {
         BlocProvider<BottombarNavigationBloc>(
           create: (context) => BottombarNavigationBloc(),
         ),
+        BlocProvider<TitleChangerBloc>(
+          create: (context) => TitleChangerBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -22,7 +26,7 @@ class ShopMarket extends StatelessWidget {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: const FabWidget(),
-          drawer:const DrawerWidget(),
+          drawer: const DrawerWidget(),
           body: const PagesView(),
           bottomNavigationBar: const BottombarWidget(),
         ),
