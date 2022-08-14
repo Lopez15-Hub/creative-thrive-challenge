@@ -3,7 +3,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_market/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../widgets/widgets.dart';
 
@@ -117,8 +117,10 @@ class _ShopViewState extends State<ShopView> {
               return configureDraggableItemList();
             }
 
-      
-             return const Center(child: CircularProgressIndicator(color: Color.fromRGBO(216, 67, 21, 1),));
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Color.fromRGBO(216, 67, 21, 1),
+            ));
           },
         ));
   }

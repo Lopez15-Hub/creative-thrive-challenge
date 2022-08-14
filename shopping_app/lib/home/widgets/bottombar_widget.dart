@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_market/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
+import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BottombarWidget extends StatelessWidget {
@@ -23,8 +23,6 @@ class BottombarWidget extends StatelessWidget {
     final navigationBloc = context.read<BottombarNavigationBloc>();
     return BlocBuilder<BottombarNavigationBloc, int>(
       builder: (context, currentIndex) {
-
-        
         return BottomNavigationBar(
           currentIndex: currentIndex,
           selectedItemColor: Colors.deepOrange[800],

@@ -22,6 +22,7 @@ class CreateProductEvent extends ProductsEvent {
   const CreateProductEvent({required this.product});
   @override
   List<Object> get props => [product];
+
 }
 
 class UpdateProductsEvent extends ProductsEvent {
@@ -43,3 +44,5 @@ class DeleteProductsEvent extends ProductsEvent {}
 
 class ListeningProductsEvent extends ProductsEvent {}
 class ListeningProductsFavoritesEvent extends ProductsEvent {}
+
+class NotifyProductsListIsEmpty extends ProductsEvent {}

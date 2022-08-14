@@ -3,7 +3,8 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_market/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../shop/widgets/widgets.dart';
 
@@ -103,11 +104,25 @@ class _FavoritesViewState extends State<FavoritesView> {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
+    final navigationBloc = BlocProvider.of<BottombarNavigationBloc>(context);
     productsBloc.add(ListeningProductsFavoritesEvent());
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocBuilder<ProductsBloc, ProductsState>(
           builder: (context, state) {
+            if (state is ProductsListIsEmpty) {
+              return Center(
+                child: Column(
+                  children: [
+                    const Text('No products favorites added'),
+                    ElevatedButton(
+                        onPressed: () =>
+                            navigationBloc.add(const ChangePageView(0)),
+                        child: const Text("Back to shop"))
+                  ],
+                ),
+              );
+            }
             if (state is ProductsFavoriteRetrieved) {
               _contents = List.generate(
                   state.retrievedProducts.length,
@@ -115,7 +130,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                       generateDraggableItems(state.retrievedProducts, index));
               print(state.retrievedProducts[0].toJson());
               return configureDraggableItemList();
-
             }
 
             return const Center(

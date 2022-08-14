@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/title_changer/title_changer_bloc.dart';
-import 'package:shop_market/createProductOrCategory/widgets/widgets.dart';
+import 'package:shopping_app/createProductOrCategory/widgets/widgets.dart';
 import '../widgets/form_widgets/widgets.dart';
-import 'package:shop_market/home/home.dart';
+import 'package:shopping_app/home/home.dart';
 
 class FormCreateProductOrCategoryView extends StatelessWidget {
   const FormCreateProductOrCategoryView({Key? key}) : super(key: key);

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_market/createProductOrCategory/bloc/products/products_bloc.dart';
-import 'package:shop_market/createProductOrCategory/repository/products/products_repository.dart';
-import 'package:shop_market/home/home.dart';
+import 'package:shopping_app/categories/repository/categories_repository.dart';
+import 'package:shopping_app/createProductOrCategory/repository/products_repository.dart';
+import 'package:shopping_app/home/home.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
 
 class ShoppingApp extends StatelessWidget {
-  const ShoppingApp({Key? key, required ProductsRepository productRepository})
+  const ShoppingApp(
+      {Key? key,
+      required ProductsRepository productRepository,
+      required CategoriesRepository categoriesRepository})
       : _productRepository = productRepository,
+        _categoriesRepository = categoriesRepository,
         super(key: key);
+
   final ProductsRepository _productRepository;
+  final CategoriesRepository _categoriesRepository;
   @override
   Widget build(BuildContext context) {
     var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -18,6 +24,8 @@ class ShoppingApp extends StatelessWidget {
       providers: [
         RepositoryProvider<ProductsRepository>(
             create: (context) => _productRepository),
+        RepositoryProvider<CategoriesRepository>(
+            create: (context) => _categoriesRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -29,8 +37,10 @@ class ShoppingApp extends StatelessWidget {
           ),
           BlocProvider<ProductsBloc>(
             create: (context) => ProductsBloc(
-                productRepository: RepositoryProvider.of<ProductsRepository>(context)),
+                productRepository:
+                    RepositoryProvider.of<ProductsRepository>(context)),
           ),
+
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

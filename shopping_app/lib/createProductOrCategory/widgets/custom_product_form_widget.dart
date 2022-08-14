@@ -1,9 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_market/createProductOrCategory/models/category_model.dart';
-import 'package:shop_market/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/categories/models/category_model.dart';
+import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import '../bloc/products/products_bloc.dart';
 import 'form_widgets/widgets.dart';
 
@@ -14,7 +16,7 @@ class ProductFormWidget extends StatefulWidget {
 }
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
-  late String productName, categoryName,productPrice;
+  late String productName, categoryName, productPrice;
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
@@ -81,14 +83,13 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
               ),
             ],
           ),
-          
           CustomFormButtonSubmitWidget(
               onPressed: () {
                 int index = Random().nextInt(4);
                 var productModel = ProductModel(
                   productName: productName,
                   productPrice: productPrice,
-                  productImage:  "https://picsum.photos/60/60?image=$index",
+                  productImage: "https://picsum.photos/60/60?image=$index",
                   isFavorite: false,
                   category: CategoryModel(
                     categoryName: categoryName,

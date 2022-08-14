@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_market/createProductOrCategory/bloc/title_changer/title_changer_bloc.dart';
+import 'package:shopping_app/createProductOrCategory/bloc/title_changer/title_changer_bloc.dart';
 
 class DynamicTitleWidget extends StatelessWidget {
   const DynamicTitleWidget({

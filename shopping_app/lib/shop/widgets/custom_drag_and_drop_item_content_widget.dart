@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_market/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 

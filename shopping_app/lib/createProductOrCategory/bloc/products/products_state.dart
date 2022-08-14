@@ -29,4 +29,7 @@ class ProductsFavoriteRetrieved extends ProductsState {
 class ProductsLoaded extends ProductsState {
 
 }
+class ProductsListIsEmpty extends ProductsState {
+
+}
 
