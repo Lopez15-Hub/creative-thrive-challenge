@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -16,7 +14,8 @@ class ProductFormWidget extends StatefulWidget {
 }
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
-  late String productName, categoryName, productPrice;
+  late String productName, productPrice;
+  late CategoryModel productCategory;
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
@@ -43,17 +42,11 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   setState(() => productName = text),
                 },
               ),
-              CustomFormFieldWidget(
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                label: 'Category',
-                icon: const Icon(
-                  Icons.description,
-                  color: Color.fromRGBO(216, 67, 21, 1),
-                ),
-                onChanged: (text) => {
-                  setState(() => categoryName = text),
-                },
+              const CustomTitleWidget(
+                  title: 'Category', alignment: TextAlign.center),
+              CustomDropdownButtonWidget(
+                onCategorySelected: (category) => productCategory =
+                    CategoryModel.fromJson(category!.toJson()),
               ),
               CustomFormFieldWidget(
                 keyboardType: TextInputType.text,
@@ -91,12 +84,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   productPrice: productPrice,
                   productImage: "https://picsum.photos/60/60?image=$index",
                   isFavorite: false,
-                  category: CategoryModel(
-                    categoryName: categoryName,
-                    categoryColor: "0xff6425d3",
-                  ),
+                  category: productCategory,
                 );
-                print(productModel.toJson());
                 productsBloc.add(CreateProductEvent(product: productModel));
               },
               buttonLabel: 'Submit Product')

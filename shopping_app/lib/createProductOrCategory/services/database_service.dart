@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../categories/models/category_model.dart';
 import '../models/product_model.dart';
 
 class DatabaseService {
@@ -10,6 +11,11 @@ class DatabaseService {
   Future<List<ProductModel>> retrieveProducts() {
     return productsCollection.get().then((snapshot) => snapshot.docs
         .map((product) => ProductModel.fromSnapshot(product))
+        .toList());
+  }
+  Future<List<CategoryModel>> retrieveCategories() {
+    return categoriesCollection.get().then((snapshot) => snapshot.docs
+        .map((product) => CategoryModel.fromSnapshot(product))
         .toList());
   }
   Future<List<ProductModel>> retrieveProductsFavorites() {

@@ -41,7 +41,20 @@ class UpdateCategoriesFavoriteEvent extends CategoriesEvent {
 
 class DeleteCategoriesEvent extends CategoriesEvent {}
 
-class ListeningCategoriesEvent extends CategoriesEvent {}
+class ListeningCategoriesEvent extends CategoriesEvent {
+  const ListeningCategoriesEvent();
+  @override
+  List<Object> get props => [];
+}
 class ListeningCategoriesFavoritesEvent extends CategoriesEvent {}
 
 class NotifyCategoriesListIsEmpty extends CategoriesEvent {}
+
+class SelectCategory extends CategoriesEvent {
+  final CategoryModel selectedCategory;
+  final List<CategoryModel> currentCategories;
+
+  const SelectCategory({required this.selectedCategory,required this.currentCategories});
+  @override
+  List<Object> get props => [selectedCategory,currentCategories];
+}

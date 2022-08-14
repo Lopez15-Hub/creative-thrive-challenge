@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/create_product_or_category.dart';
 import '../bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 
-class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({Key? key}) : super(key: key);
+class CustomDrawerWidget extends StatelessWidget {
+  const CustomDrawerWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -7,11 +7,14 @@ class CustomTitleWidget extends StatelessWidget {
   final Color? titleColor = Colors.black;
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      textAlign: alignment,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30,color: titleColor),
-        
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text(
+        title,
+        textAlign: alignment,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30,color: titleColor),
+          
+      ),
     );
   }
 }

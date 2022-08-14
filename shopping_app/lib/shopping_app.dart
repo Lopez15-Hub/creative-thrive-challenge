@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/repository/categories_repository.dart';
 import 'package:shopping_app/createProductOrCategory/repository/products_repository.dart';
 import 'package:shopping_app/home/home.dart';
+import 'categories/view/bloc/categories_bloc.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
 
 class ShoppingApp extends StatelessWidget {
@@ -40,7 +41,11 @@ class ShoppingApp extends StatelessWidget {
                 productRepository:
                     RepositoryProvider.of<ProductsRepository>(context)),
           ),
-
+          BlocProvider<CategoriesBloc>(
+            create: (context) => CategoriesBloc(
+                categoriesRepository:
+                    RepositoryProvider.of<CategoriesRepository>(context)),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -48,11 +53,11 @@ class ShoppingApp extends StatelessWidget {
             key: scaffoldKey,
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
-            appBar: AppbarWidget(scaffoldKey: scaffoldKey),
-            drawer: const DrawerWidget(),
+            appBar: CustomAppbarWidget(scaffoldKey: scaffoldKey),
+            drawer: const CustomDrawerWidget(),
             body: const PagesView(),
-            floatingActionButton: const FabWidget(),
-            bottomNavigationBar: const BottombarWidget(),
+            floatingActionButton: const CustomFabWidget(),
+            bottomNavigationBar: const CustomBottombarWidget(),
           ),
         ),
       ),

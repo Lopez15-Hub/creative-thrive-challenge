@@ -13,7 +13,7 @@ class FormCreateProductOrCategoryView extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppbarFormWidget(),
-      drawer: const DrawerWidget(),
+      drawer: const CustomDrawerWidget(),
       body: Column(
         children: [
           Row(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BottombarWidget extends StatelessWidget {
-  const BottombarWidget({Key? key}) : super(key: key);
+class CustomBottombarWidget extends StatelessWidget {
+  const CustomBottombarWidget({Key? key}) : super(key: key);
   final List<BottomNavigationBarItem> items = const [
     BottomNavigationBarItem(
       icon: Icon(Icons.shopping_cart),

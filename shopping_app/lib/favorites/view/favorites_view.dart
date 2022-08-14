@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+
 
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +128,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                   state.retrievedProducts.length,
                   (index) =>
                       generateDraggableItems(state.retrievedProducts, index));
-              print(state.retrievedProducts[0].toJson());
               return configureDraggableItemList();
             }
 

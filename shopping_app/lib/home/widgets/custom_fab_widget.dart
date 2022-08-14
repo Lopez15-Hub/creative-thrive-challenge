@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/create_product_or_category.dart';
 import '../bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 
-class FabWidget extends StatelessWidget {
-  const FabWidget({Key? key}) : super(key: key);
+class CustomFabWidget extends StatelessWidget {
+  const CustomFabWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

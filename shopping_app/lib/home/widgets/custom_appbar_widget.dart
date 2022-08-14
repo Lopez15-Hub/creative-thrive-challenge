@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../home.dart';
 
-class AppbarWidget extends StatelessWidget with PreferredSizeWidget {
+class CustomAppbarWidget extends StatelessWidget with PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  AppbarWidget({Key? key, required this.scaffoldKey})
+  CustomAppbarWidget({Key? key, required this.scaffoldKey})
       : preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 

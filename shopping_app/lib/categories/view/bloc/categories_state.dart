@@ -1,13 +1,16 @@
 part of 'categories_bloc.dart';
 
 abstract class CategoriesState extends Equatable {
-  const CategoriesState();
+  final dynamic currentCategorySelected;
+  const CategoriesState({this.currentCategorySelected});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [currentCategorySelected];
 }
 
 class CategoriesInitial extends CategoriesState {
+
+
   @override
   List<Object> get props => [];
 }
@@ -31,3 +34,10 @@ class CategoriesFavoriteRetrieved extends CategoriesState {
 class CategoriesLoaded extends CategoriesState {}
 
 class CategoriesListIsEmpty extends CategoriesState {}
+
+class SelectedCategory extends CategoriesState {
+  final CategoryModel category;
+  const SelectedCategory(this.category):super(currentCategorySelected: category);
+  @override
+  List<Object> get props => [category];
+}
