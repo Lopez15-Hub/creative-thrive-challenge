@@ -15,16 +15,13 @@ Future<void> customPopupWidget(context, title, content, categoryId) async {
         actions: <Widget>[
           TextButton(
             child: const Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
               child: const Text('Delete item'),
               onPressed: () {
                 categoriesBloc.add(DeleteCategoryEvent(
                     categoryId: categoryId, context: context));
-
               }),
         ],
       );

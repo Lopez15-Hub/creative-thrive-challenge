@@ -26,6 +26,10 @@ class DatabaseService {
       productsCollection.where("category",isEqualTo: productCategory.toJson()).snapshots().map((snapshot) => snapshot.docs
           .map((product) => ProductModel.fromSnapshot(product))
           .toList());
+  Stream<List<CategoryModel>> retrieveCategoriesStream() =>
+        categoriesCollection.snapshots().map((snapshot) => snapshot.docs
+        .map((category) => CategoryModel.fromSnapshot(category))
+        .toList());
 
 
 
@@ -48,15 +52,19 @@ class DatabaseService {
       await productsCollection
           .doc(productId)
           .update({'isFavorite': isFavorite});
-  Future<void> updateProductCategory(
-          String productId, CategoryModel newCategory) async =>
+  Future<void> updateProductCategory(String productId, CategoryModel newCategory) async =>
       await productsCollection.doc(productId).update({'category': newCategory});
 
 
 
   Future<List<CategoryModel>> retrieveCategories() {
     return categoriesCollection.get().then((snapshot) => snapshot.docs
-        .map((product) => CategoryModel.fromSnapshot(product))
+        .map((category) => CategoryModel.fromSnapshot(category))
+        .toList());
+  }
+  Future<List<CategoryModel>> retrieveCategory(String categoryName) {
+    return categoriesCollection.where("categoryName",isEqualTo: categoryName).get().then((snapshot) => snapshot.docs
+        .map((category) => CategoryModel.fromSnapshot(category))
         .toList());
   }
   Future<void> createCategory(CategoryModel category) async =>await categoriesCollection.add(category.toJson());

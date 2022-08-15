@@ -19,8 +19,6 @@ SnackBar customSnackbarWidget(BuildContext context,
       ],
     ),
     duration: Duration(seconds: snackbarDuration),
-    action: SnackBarAction(
-        label: 'Dismiss',
-        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
+    // action: SnackBarAction(label: 'Dismiss', onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
   );
 }

@@ -14,7 +14,7 @@ class FormValidationsBloc extends Bloc<FormValidationsEvent, bool> {
     on<FormFieldsAreValidEvent>((event, emit) => emit(event.formIsValid));
 
     on<ValidateProductFormEvent>((event, emit) {
-      if (event.dropdownCategory.toJson().isEmpty)return productsBloc.add(ProductFunctionHasErrorEvent(error: 'You must select a category', context: event.context));
+      if (event.dropdownCategory.toJson().isEmpty) return productsBloc.add(ProductFunctionHasErrorEvent(error: 'You must select a category', context: event.context));
       if (!state)return productsBloc.add(ProductFunctionHasErrorEvent( error: 'Fields can\'t be empty', context: event.context));
     });
     on<ValidateCategoryFormEvent>((event, emit) {

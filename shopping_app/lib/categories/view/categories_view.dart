@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/bloc/categories_bloc.dart';
+import 'package:shopping_app/categories/widgets/custom_category_item.dart';
 import 'package:shopping_app/home/bloc/blocs.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 
@@ -18,44 +19,14 @@ class CategoriesView extends StatelessWidget {
     return BlocBuilder<CategoriesBloc, CategoriesState>(
       builder: (context, state) {
         if (state is CategoriesRetrieved) {
-          return ListView.separated(
+          return ListView.builder(
             physics: const BouncingScrollPhysics(),
-            separatorBuilder: (context, index) => const Divider(
-              color: Colors.black,
+
+            itemBuilder: (context, index) => CustomCategoryItem(
+              popupBloc: popupBloc,
+              state: state,
+              index: index,
             ),
-            itemBuilder: (context, index) => Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                background: Container(),
-                secondaryBackground: Container(
-                  color: Colors.red,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Delete Category",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                onDismissed: (direction) {
-                  popupBloc.add(ShowPopupEvent(mustBeShowed: true, context: context,categoryId: state.retrievedCategories[index].categoryId));
-                  // categoriesBloc.add(DeleteCategoryEvent(categoryId: state.retrievedCategories[index].categoryId));
-                  // 
-                },
-                child: ListTile(
-                    title: Text(
-                  state.retrievedCategories[index].categoryName,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Color(int.parse(
-                          state.retrievedCategories[index].categoryColor))),
-                ))),
             itemCount: state.retrievedCategories.length,
           );
         }

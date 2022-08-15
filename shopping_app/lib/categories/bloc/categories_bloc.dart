@@ -14,6 +14,9 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CategoriesEvent>((event, emit) {});
 
     on<CreateCategoryEvent>((event, emit) {
+      CheckIfCategoryExistsEvent(
+          categoryName: event.category.categoryName, context: event.context);
+
       categoriesRepository
           .createCategory(event.category)
           .then((value) => add(CategorySubmittedEvent(context: event.context)))
@@ -24,9 +27,12 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<ListeningCategoriesEvent>((event, emit) async {
       final categoriesList = await categoriesRepository.getCategories();
       if (categoriesList.isEmpty) return emit(CategoriesListIsEmpty());
-      emit(CategoriesRetrieved(
-          retrievedCategories: categoriesList,
-          currentCategory: categoriesList.first));
+      await emit.forEach(
+        categoriesRepository.getCategoriesStream(),
+        onData: (data) => CategoriesRetrieved(
+            retrievedCategories: categoriesList,
+            currentCategory: categoriesList.first),
+      );
     });
     on<CategorySubmittedEvent>((event, emit) async {
       snackbarBloc.add(
@@ -36,18 +42,28 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       categoriesRepository
           .deleteCategory(event.categoryId)
           .then((value) => add(CategoryWasDeletedEvent(context: event.context)))
-          .catchError((error) => add(CategoriesFuctionWasErrorEvent(
-              context: event.context, error: error.toString())));
 
-      Navigator.of(event.context).pop();
+          
+          .catchError((error) => add(CategoriesFuctionWasErrorEvent(context: event.context, error: error.toString())));
     });
     on<CategoryWasDeletedEvent>((event, emit) async {
+      Navigator.of(event.context).pop();
       snackbarBloc.add(
           SnackbarSuccessEvent(event.context, 'Category Deleted Successfully'));
     });
     on<CategoriesFuctionWasErrorEvent>((event, emit) async {
       snackbarBloc.add(SnackbarErrorEvent(
           event.context, 'An ocurred error: ${event.error}'));
+    });
+    on<CheckIfCategoryExistsEvent>((event, emit) async {
+      final categoryName =
+          await categoriesRepository.getCategory(event.categoryName);
+      if (categoryName.isNotEmpty)
+        add(CategoryAlreadyExistsEvent(context: event.context));
+    });
+    on<CategoryAlreadyExistsEvent>((event, emit) {
+      return snackbarBloc
+          .add(SnackbarInfoEvent(event.context, 'Category already exists'));
     });
   }
   final CategoriesRepository categoriesRepository;

@@ -79,7 +79,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           productImage: event.productImage,
           productName: event.productName,
           productPrice: event.productPrice);
-      print(productModel.toJson());
 
       add(CreateProductEvent(context: event.context, product: productModel));
     });

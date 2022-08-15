@@ -18,7 +18,7 @@ extractColorProperty(color) =>
     color.toString().replaceAll("Color(", "").replaceAll(")", "").trim();
 
 class _CategoryFormWidgetState extends State<CategoryFormWidget> {
-  late String categoryName;
+  String categoryName = '';
   Color categoryColor = Colors.white;
   final _formKey = GlobalKey<FormState>();
   @override
@@ -64,16 +64,18 @@ class _CategoryFormWidgetState extends State<CategoryFormWidget> {
               ),
               CustomFormButtonSubmitWidget(
                   onPressed: () {
-                    formBloc.add(FormFieldsAreValidEvent(_formKey.currentState!.validate()));
+                    final formIsValid = _formKey.currentState!.validate();
+                    formBloc.add(FormFieldsAreValidEvent(formIsValid));
                     formBloc.add(ValidateCategoryFormEvent(
                         context: context,
                         categoryColor: extractColorProperty(categoryColor)));
                     var categoryModel = CategoryModel(
                         categoryName: categoryName.trim(),
                         categoryColor: extractColorProperty(categoryColor));
-
-                    if(formBloc.state) categoriesBloc.add(CreateCategoryEvent(context:context,category: categoryModel));
-                    print(categoryModel.toJson());
+   
+                    categoriesBloc.add(CreateCategoryEvent(
+                        context: context, category: categoryModel));
+                    _formKey.currentState!.reset();
                   },
                   buttonLabel: 'Submit Category')
             ],

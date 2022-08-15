@@ -8,12 +8,13 @@ class CustomFormFieldWidget extends StatelessWidget {
       required this.label,
       required this.icon,
       required this.onChanged,
+      this.isEnabled,
       this.fieldController,
-      this.validatorFunction
-      })
+      this.validatorFunction})
       : super(key: key);
   final TextInputType keyboardType;
   final bool obscureText;
+  final bool? isEnabled;
   final String label;
   final Icon icon;
   final void Function(String) onChanged;
@@ -41,6 +42,7 @@ class CustomFormFieldWidget extends StatelessWidget {
       child: TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: fieldController,
+        enabled: isEnabled,
         keyboardType: keyboardType,
         onChanged: onChanged,
         validator: validatorFunction,
