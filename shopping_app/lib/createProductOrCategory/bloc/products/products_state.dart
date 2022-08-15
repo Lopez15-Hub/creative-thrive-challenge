@@ -19,6 +19,7 @@ class ProductsRetrieved extends ProductsState {
   @override
   List<Object> get props => [retrievedProducts];
 }
+
 class ProductsFavoriteRetrieved extends ProductsState {
   final List<ProductModel> retrievedProducts;
   const ProductsFavoriteRetrieved({required this.retrievedProducts});
@@ -26,12 +27,11 @@ class ProductsFavoriteRetrieved extends ProductsState {
   @override
   List<Object> get props => [retrievedProducts];
 }
-class ProductsLoaded extends ProductsState {
 
-}
-class ProductsListIsEmpty extends ProductsState {
+class ProductsLoaded extends ProductsState {}
 
-}
+class ProductsListIsEmpty extends ProductsState {}
+
 class ProductsRetrievedError extends ProductsState {
   final Object error;
   const ProductsRetrievedError({required this.error});
@@ -39,3 +39,9 @@ class ProductsRetrievedError extends ProductsState {
   List<Object> get props => [error];
 }
 
+class ProductsIsOnSubmit extends ProductsState {
+  final bool isOnSubmit;
+  const ProductsIsOnSubmit({this.isOnSubmit = false});
+  @override
+  List<Object> get props => [isOnSubmit];
+}

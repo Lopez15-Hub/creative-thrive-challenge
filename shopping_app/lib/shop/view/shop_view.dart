@@ -52,23 +52,25 @@ class _ShopViewState extends State<ShopView> {
                     );
                   }
                   if (state is ProductsListIsEmpty) {
-                    return  Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                 const CustomTitleWidget(title: 'You dont have products', alignment: TextAlign.center),
-                  Center(
-                    child: CustomButtonSmallWidget(
-                      label: 'Add one',
-                      iconButton: Icons.plus_one,
-                     onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const FormCreateProductOrCategoryView())),),
-                    ),
-                  
-                ],
-              );
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CustomTitleWidget(
+                            title: 'You dont have products',
+                            alignment: TextAlign.center),
+                        Center(
+                          child: CustomButtonSmallWidget(
+                            label: 'Add one',
+                            iconButton: Icons.plus_one,
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const FormCreateProductOrCategoryView())),
+                          ),
+                        ),
+                      ],
+                    );
                   }
 
                   return const CustomCircularProgressIndicatorWidget(
@@ -86,57 +88,71 @@ class _ShopViewState extends State<ShopView> {
 
   generateDraggableItems(List<ProductModel> products, int index) {
     return DragAndDropList(
-      header: BlocBuilder<CategoriesBloc, CategoriesState>(
-        builder: (context, state) {
-          if (state is CategoriesRetrieved) {
-            return Column(
-              children: <Widget>[
-                DragAndDropListHeaderWidget(
-                  index: index,
-                  categories: state.retrievedCategories,
-                ),
-              ],
-            );
-          }
-          return const CustomCircularProgressIndicatorWidget(
-            text: "Loading Categories",
-          );
-        },
-      ),
-      children:List<DragAndDropItem>.generate(products.length, (index) {
-        return DragAndDropItem(
-          child: Dismissible(
-            key: Key(products[index].productId),
-            background: Container(
-              color: Colors.red,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    "Delete",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
+        header: BlocBuilder<CategoriesBloc, CategoriesState>(
+          builder: (context, state) {
+            if (state is CategoriesRetrieved) {
+              return Column(
+                children: <Widget>[
+                  DragAndDropListHeaderWidget(
+                    index: index,
+                    categories: state.retrievedCategories,
                   ),
                 ],
+              );
+            }
+            return const CustomCircularProgressIndicatorWidget(
+              text: "Loading Categories",
+            );
+          },
+        ),
+        children: List<DragAndDropItem>.generate(products.length, (index) {
+          return DragAndDropItem(
+            child: Dismissible(
+              key: UniqueKey(),
+              background: Container(
+                color: Colors.yellow,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:  [
+                    Text(
+                     !products[index].isFavorite? "Add to favorites" : "Remove from favorites",
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              secondaryBackground: Container(
+                color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Delete",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              onDismissed: (direction) {
+                final productsBloc = BlocProvider.of<ProductsBloc>(context);
+                if (direction == DismissDirection.endToStart)productsBloc.add(DeleteProductEvent(productId: products[index].productId));
+                if (direction == DismissDirection.startToEnd)productsBloc.add(UpdateProductsFavoriteEvent(isFavorite: !products[index].isFavorite, productId: products[index].productId));
+              },
+              child: DragAndDropItemContentWidget(
+                index: index,
+                products: products,
               ),
             ),
-            onDismissed: (direction) {
-              final productsBloc = BlocProvider.of<ProductsBloc>(context);
-              productsBloc.add(
-                  DeleteProductEvent(productId: products[index].productId));
-            },
-            direction: DismissDirection.startToEnd,
-            child: DragAndDropItemContentWidget(
-              index: index,
-              products: products,
-            ),
-          ),
-        );
-      }));
-    
+          );
+        }));
   }
 
   configureDraggableItemList() {

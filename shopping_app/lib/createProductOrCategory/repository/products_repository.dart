@@ -1,4 +1,4 @@
-import 'package:shopping_app/createProductOrCategory/services/database_service.dart';
+import 'package:shopping_app/createProductOrCategory/services/services.dart';
 
 import '../../categories/models/category_model.dart';
 import '../models/product_model.dart';
@@ -12,8 +12,11 @@ class ProductsRepository {
   Future<List<ProductModel>> getProductsFavorites() async =>
       await databaseService.retrieveProductsFavorites();
 
-  Future<void> createProduct(ProductModel product) async =>
-      await databaseService.createProduct(product);
+  Future<void> createProduct(ProductModel product) async {
+      return await databaseService.createProduct(product);
+      
+      }
+      
   Future<void> deleteProduct(String productId) async =>
       await databaseService.deleteProduct(productId);
   Future<void> updateProduct(

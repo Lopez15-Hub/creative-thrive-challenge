@@ -39,6 +39,9 @@ class ShoppingApp extends StatelessWidget {
           BlocProvider<TitleChangerBloc>(
             create: (context) => TitleChangerBloc(),
           ),
+          BlocProvider<SnackbarBloc>(
+            create: (context) => SnackbarBloc(),
+          ),
           BlocProvider<ProductsBloc>(
             create: (context) => ProductsBloc(
                 productRepository:

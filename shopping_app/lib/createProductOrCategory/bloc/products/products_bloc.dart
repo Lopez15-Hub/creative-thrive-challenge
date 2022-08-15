@@ -1,18 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:shopping_app/categories/categories.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/home/bloc/snackbar/snackbar_bloc.dart';
 import '../../repository/products_repository.dart';
 part 'products_event.dart';
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
+  SnackbarBloc snackbarBloc = SnackbarBloc();
   ProductsBloc({required this.productRepository}) : super(ProductsInitial()) {
     on<GetProductsEvent>((event, emit) {
       productRepository.getProducts();
     });
     on<CreateProductEvent>((event, emit) {
-      productRepository.createProduct(event.product);
+      productRepository
+          .createProduct(event.product)
+          .then((value) => add(ProductSubmittedEvent(event.context)));
     });
     on<UpdateProductsEvent>((event, emit) {
       productRepository.updateProduct(event.productId, event.product);
@@ -51,8 +56,16 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
       emit(ProductsFavoriteRetrieved(retrievedProducts: favoritesProducts));
     });
-    on<NotifyProductsListIsEmpty>((event, emit) async {
+    on<NotifyProductsListIsEmptyEvent>((event, emit) async {
       emit(ProductsListIsEmpty());
+    });
+
+    on<ProductSubmittedEvent>((event, emit) async {
+      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
+    });
+
+    on<ProductIsOnSubmitedEvent>((event, emit) async {
+      emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
     });
   }
 

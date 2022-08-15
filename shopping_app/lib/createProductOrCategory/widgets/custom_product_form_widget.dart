@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/models/category_model.dart';
 import 'package:shopping_app/createProductOrCategory/bloc/dropdown_button/dropdown_button_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 import '../bloc/products/products_bloc.dart';
 import 'form_widgets/widgets.dart';
 
@@ -21,7 +22,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
-   final dropdownButtonBloc =BlocProvider.of<DropdownButtonBloc>(context);
+    final dropdownButtonBloc = BlocProvider.of<DropdownButtonBloc>(context);
     return Expanded(
       child: Form(
           child: Column(
@@ -48,11 +49,10 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   title: 'Category', alignment: TextAlign.center),
               CustomDropdownButtonWidget(
                 onCategorySelected: (category) {
-
-                  dropdownButtonBloc
-                      .add(SelectCategory(selectedCategory: CategoryModel(categoryColor: category!.categoryColor, categoryName: category.categoryName)));
-
-                
+                  dropdownButtonBloc.add(SelectCategory(
+                      selectedCategory: CategoryModel(
+                          categoryColor: category!.categoryColor,
+                          categoryName: category.categoryName)));
                 },
               ),
               CustomFormFieldWidget(
@@ -85,6 +85,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
           ),
           CustomFormButtonSubmitWidget(
               onPressed: () {
+                productsBloc
+                    .add(const ProductIsOnSubmitedEvent(isOnSubmit: true));
                 int index = Random().nextInt(4);
                 var productModel = ProductModel(
                   productName: productName,
@@ -93,9 +95,20 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   isFavorite: false,
                   category: dropdownButtonBloc.state,
                 );
-                productsBloc.add(CreateProductEvent(product: productModel));
+                productsBloc.add(CreateProductEvent(
+                    product: productModel, context: context));
               },
-              buttonLabel: 'Submit Product')
+              buttonLabel: 'Submit Product'),
+          BlocBuilder<ProductsBloc, ProductsState>(
+            builder: (context, state) {
+              if (state is ProductIsOnSubmitedEvent) {
+                return const CustomCircularProgressIndicatorWidget(
+                  text: 'Saving product',
+                );
+              }
+              return Container();
+            },
+          )
         ],
       )),
     );
