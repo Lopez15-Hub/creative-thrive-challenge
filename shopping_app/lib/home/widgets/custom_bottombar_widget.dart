@@ -11,7 +11,7 @@ class CustomBottombarWidget extends StatelessWidget {
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.star),
-      label: 'Favourites',
+      label: 'Favorites',
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.category),
