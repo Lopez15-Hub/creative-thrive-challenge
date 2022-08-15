@@ -20,15 +20,9 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<ListeningCategoriesEvent>((event, emit) async {
       final categoriesList = await categoriesRepository.getCategories();
       if (categoriesList.isEmpty) return emit(CategoriesListIsEmpty());
-      emit(CategoriesRetrieved(retrievedCategories: categoriesList));
+      emit(CategoriesRetrieved(retrievedCategories: categoriesList,currentCategory: categoriesList.first));
     });
-    on<ChangeDropdownCategoryEvent>((event, emit) async {
-      final categoriesList = await categoriesRepository.getCategories();
-      if (categoriesList.isEmpty) return emit(CategoriesListIsEmpty());
-      emit(CategoriesRetrieved(
-          retrievedCategories: categoriesList,));
-      emit(CategoryIsChanged(category: event.categorySelected));
-    });
+
     on<DeleteCategoryEvent>((event, emit) async {
       await categoriesRepository.deleteCategory(event.categoryId);
     });

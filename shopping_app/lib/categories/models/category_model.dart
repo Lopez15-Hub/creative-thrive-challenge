@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoryModel {
-  CategoryModel({
-    required this.categoryName,
-    required this.categoryColor,
-             this.categoryId = ''
-  });
+  CategoryModel(
+      {required this.categoryName,
+      required this.categoryColor,
+      this.categoryId = ''});
 
   String categoryName;
   String categoryColor;
@@ -19,16 +18,13 @@ class CategoryModel {
     );
   }
 
-
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
         categoryId: json['id'],
         categoryName: json["categoryName"],
         categoryColor: json["categoryColor"],
-
       );
 
   Map<String, dynamic> toJson() => {
-        
         "categoryName": categoryName,
         "categoryColor": categoryColor,
       };

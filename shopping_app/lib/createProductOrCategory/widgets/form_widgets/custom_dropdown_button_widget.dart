@@ -37,6 +37,7 @@ class _CustomDropdownButtonWidgetState
               isExpanded: true,
               items: state.retrievedCategories.map((category) {
                 return DropdownMenuItem<CategoryModel>(
+                    value: category,
                     child: Text(
                       category.categoryName,
                       style: TextStyle(
@@ -44,14 +45,13 @@ class _CustomDropdownButtonWidgetState
                       ),
                     ));
               }).toList(),
-              onChanged:  widget.onCategorySelected,
-              
+              onChanged: widget.onCategorySelected,
               elevation: 3,
               hint: const Text('Select a category'),
-              value: state.currentCategorySelected,
             );
           }
-          if(state is CategoriesListIsEmpty) return  const Text("No categories available, please add one.");
+          if (state is CategoriesListIsEmpty)
+            return const Text("No categories available, please add one.");
           return const CustomCircularProgressIndicatorWidget(
             text: "Retrieving Categories",
           );

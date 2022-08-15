@@ -15,15 +15,17 @@ class CategoriesInitial extends CategoriesState {
 
 class CategoriesRetrieved extends CategoriesState {
   final List<CategoryModel> retrievedCategories;
+    final CategoryModel currentCategory;
   const CategoriesRetrieved(
-      {required this.retrievedCategories});
+      {required this.retrievedCategories,required this.currentCategory}):super(currentCategorySelected: currentCategory);
 
   @override
-  List<Object> get props => [retrievedCategories, ];
+  List<Object> get props => [retrievedCategories, currentCategory];
 }
 
 class CategoriesFavoriteRetrieved extends CategoriesState {
   final List<CategoryModel> retrievedCategories;
+
   const CategoriesFavoriteRetrieved({required this.retrievedCategories});
 
   @override
