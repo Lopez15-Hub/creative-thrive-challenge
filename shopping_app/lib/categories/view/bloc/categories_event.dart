@@ -52,9 +52,8 @@ class NotifyCategoriesListIsEmpty extends CategoriesEvent {}
 
 class SelectCategory extends CategoriesEvent {
   final CategoryModel selectedCategory;
-  final List<CategoryModel> currentCategories;
 
-  const SelectCategory({required this.selectedCategory,required this.currentCategories});
+  const SelectCategory({required this.selectedCategory});
   @override
-  List<Object> get props => [selectedCategory,currentCategories];
+  List<Object> get props => [selectedCategory];
 }

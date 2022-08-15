@@ -8,8 +8,8 @@ part 'categories_event.dart';
 part 'categories_state.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
-  CategoriesBloc({required this.categoriesRepository}) : super(CategoriesInitial()) {
-
+  CategoriesBloc({required this.categoriesRepository})
+      : super(CategoriesInitial()) {
     on<CategoriesEvent>((event, emit) {});
 
     on<CreateCategoryEvent>((event, emit) {
@@ -19,14 +19,13 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<ListeningCategoriesEvent>((event, emit) async {
       final categoriesList = await categoriesRepository.getCategories();
       if (categoriesList.isEmpty) emit(CategoriesListIsEmpty());
-      emit(SelectedCategory(categoriesList.first));
-      emit(CategoriesRetrieved(retrievedCategories: categoriesList));
+      emit(CategoriesRetrieved(
+          retrievedCategories: categoriesList,
+          categorySelected: categoriesList[0]));
     });
 
     on<SelectCategory>((event, emit) {
-
-
-      emit(CategoriesRetrieved(retrievedCategories: event.currentCategories));
+      emit(SelectedCategory(event.selectedCategory));
     });
   }
   final CategoriesRepository categoriesRepository;

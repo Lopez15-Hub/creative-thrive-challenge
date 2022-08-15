@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/models/category_model.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
+import '../../categories/view/bloc/categories_bloc.dart';
 import '../bloc/products/products_bloc.dart';
 import 'form_widgets/widgets.dart';
 
@@ -15,7 +16,8 @@ class ProductFormWidget extends StatefulWidget {
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
   late String productName, productPrice;
-  late CategoryModel productCategory;
+  CategoryModel productCategory =
+      CategoryModel(categoryColor: '', categoryName: '');
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
@@ -45,8 +47,14 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
               const CustomTitleWidget(
                   title: 'Category', alignment: TextAlign.center),
               CustomDropdownButtonWidget(
-                onCategorySelected: (category) => productCategory =
-                    CategoryModel.fromJson(category!.toJson()),
+                selectedCategory: productCategory,
+                onCategorySelected: (category) {
+                  final categoriesBloc =
+                      BlocProvider.of<CategoriesBloc>(context);
+                  productCategory = CategoryModel.fromJson(category!.toJson());
+                  categoriesBloc
+                      .add(SelectCategory(selectedCategory: productCategory));
+                },
               ),
               CustomFormFieldWidget(
                 keyboardType: TextInputType.text,
