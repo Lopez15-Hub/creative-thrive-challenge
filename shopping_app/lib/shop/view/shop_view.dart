@@ -7,6 +7,7 @@ import '../../categories/bloc/categories_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../createProductOrCategory/view/form_create_product_or_category_view.dart';
 import '../../createProductOrCategory/widgets/form_widgets/widgets.dart';
+import '../widgets/custom_drag_and_drop_item_widget.dart';
 import '../widgets/widgets.dart';
 
 class ShopView extends StatefulWidget {
@@ -18,87 +19,49 @@ class ShopView extends StatefulWidget {
 
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
+  late CategoriesBloc categoriesBloc;
+  late ProductsBloc productsBloc;
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<CategoriesBloc>(context)
-        .add(const ListeningCategoriesEvent());
+    categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
+    categoriesBloc.add(const ListeningCategoriesEvent());
+    productsBloc = BlocProvider.of<ProductsBloc>(context);
     //test
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsBloc = BlocProvider.of<ProductsBloc>(context);
-    productsBloc.add(ListeningProductsEvent());
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocBuilder<CategoriesBloc, CategoriesState>(
           builder: (context, state) {
-            if( state is CategoriesListIsEmpty){
+            if (state is CategoriesListIsEmpty) {
               return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CustomTitleWidget(
-                            title: 'You dont have categories and products yet',
-                            alignment: TextAlign.center),
-                        Center(
-                          child: CustomButtonSmallWidget(
-                            label: 'Create my first category',
-                            iconButton: Icons.plus_one,
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FormCreateProductOrCategoryView())),
-                          ),
-                        ),
-                      ],
-                    );
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CustomTitleWidget(
+                      title: 'You dont have categories and products yet',
+                      alignment: TextAlign.center),
+                  Center(
+                    child: CustomButtonSmallWidget(
+                      label: 'Create my first category',
+                      iconButton: Icons.plus_one,
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const FormCreateProductOrCategoryView())),
+                    ),
+                  ),
+                ],
+              );
             }
             if (state is CategoriesRetrieved) {
               final int categoriesIndex = state.retrievedCategories.length;
-              return BlocBuilder<ProductsBloc, ProductsState>(
-                builder: (context, state) {
-                  if (state is ProductsRetrieved) {
-                    _contents = List.generate(
-                        categoriesIndex,
-                        (index) => generateDraggableItems(
-                            state.retrievedProducts, index));
-                    return configureDraggableItemList();
-                  }
-
-                  if (state is ProductsRetrievedError) {
-                    return Center(
-                      child: Text(state.error.toString()),
-                    );
-                  }
-                  if (state is ProductsListIsEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CustomTitleWidget(
-                            title: 'You dont have products',
-                            alignment: TextAlign.center),
-                        Center(
-                          child: CustomButtonSmallWidget(
-                            label: 'Add one',
-                            iconButton: Icons.plus_one,
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FormCreateProductOrCategoryView())),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-
-                  return const CustomCircularProgressIndicatorWidget(
-                    text: "Loading Products",
-                  );
-                },
-              );
+              _contents = List.generate(categoriesIndex,
+                  (categoriesIndex) => generateDraggableItems(categoriesIndex));
+              return configureDraggableItemList();
             }
             return const CustomCircularProgressIndicatorWidget(
               text: "Loading Categories",
@@ -107,18 +70,29 @@ class _ShopViewState extends State<ShopView> {
         ));
   }
 
-  generateDraggableItems(List<ProductModel> products, int index) {
+  generateDraggableItems(int index) {
+    final List<ProductModel> products = [];
     return DragAndDropList(
         header: BlocBuilder<CategoriesBloc, CategoriesState>(
           builder: (context, state) {
             if (state is CategoriesRetrieved) {
-              return Column(
-                children: <Widget>[
-                  DragAndDropListHeaderWidget(
-                    index: index,
-                    categories: state.retrievedCategories,
-                  ),
-                ],
+              final category = state.retrievedCategories;
+              productsBloc.add(ListeningProductsByCategoryEvent(category: state.retrievedCategories[index]));
+
+              return BlocBuilder<ProductsBloc, ProductsState>(
+                builder: (context, state) {
+                  // if (state is ProductsListIsEmpty) const CustomTitleWidget(title: 'You dont have products in this category',alignment: TextAlign.center);
+
+                    return Column(
+                      children: <Widget>[
+                        DragAndDropListHeaderWidget(
+                          index: index,
+                          categories: category,
+                        ),
+                      ],
+                    );
+
+                },
               );
             }
             return const CustomCircularProgressIndicatorWidget(
@@ -126,71 +100,7 @@ class _ShopViewState extends State<ShopView> {
             );
           },
         ),
-        children: List<DragAndDropItem>.generate(products.length, (index) {
-          return DragAndDropItem(
-            child: Dismissible(
-              key: UniqueKey(),
-              background: Container(
-                color: Colors.yellow,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      !products[index].isFavorite
-                          ? "Add to favorites"
-                          : "Remove from favorites",
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              secondaryBackground: Container(
-                color: Colors.red,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Delete",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              onDismissed: (direction) {
-                final productsBloc = BlocProvider.of<ProductsBloc>(context);
-                if (direction == DismissDirection.endToStart) {
-                  productsBloc.add(
-                      DeleteProductEvent(productId: products[index].productId));
-                  productsBloc.add(ProductWasDeletedEvent(context: context));
-                }
-                if (direction == DismissDirection.startToEnd) {
-                  productsBloc.add(UpdateProductsFavoriteEvent(
-                      isFavorite: !products[index].isFavorite,
-                      productId: products[index].productId));
-                  if (!products[index].isFavorite) {
-                    productsBloc
-                        .add(ProductWasAddedToFavoritesEvent(context: context));
-                  } else {
-                    productsBloc.add(
-                        ProductWasDeletedFromFavoritesEvent(context: context));
-                  }
-                }
-              },
-              child: DragAndDropItemContentWidget(
-                index: index,
-                products: products,
-              ),
-            ),
-          );
-        }));
+        children: List<DragAndDropItem>.generate(products.length,(index) => customDragAndDropItemWidget(context, products, index)));
   }
 
   configureDraggableItemList() {
