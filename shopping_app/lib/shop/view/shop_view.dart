@@ -5,6 +5,8 @@ import 'package:shopping_app/categories/view/bloc/categories_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
+import '../../createProductOrCategory/view/form_create_product_or_category_view.dart';
+import '../../createProductOrCategory/widgets/form_widgets/widgets.dart';
 import '../widgets/widgets.dart';
 
 class ShopView extends StatefulWidget {
@@ -50,9 +52,23 @@ class _ShopViewState extends State<ShopView> {
                     );
                   }
                   if (state is ProductsListIsEmpty) {
-                    return const Center(
-                      child: Text('Products list is empty'),
-                    );
+                    return  Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 const CustomTitleWidget(title: 'You dont have products', alignment: TextAlign.center),
+                  Center(
+                    child: CustomButtonSmallWidget(
+                      label: 'Add one',
+                      iconButton: Icons.plus_one,
+                     onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const FormCreateProductOrCategoryView())),),
+                    ),
+                  
+                ],
+              );
                   }
 
                   return const CustomCircularProgressIndicatorWidget(

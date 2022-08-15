@@ -2,6 +2,8 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
+import 'package:shopping_app/createProductOrCategory/widgets/form_widgets/custom_button_small_widget.dart';
+import 'package:shopping_app/createProductOrCategory/widgets/form_widgets/custom_title_widget.dart';
 import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 import '../../categories/view/bloc/categories_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
@@ -120,16 +122,18 @@ class _FavoritesViewState extends State<FavoritesView> {
         body: BlocBuilder<ProductsBloc, ProductsState>(
           builder: (context, state) {
             if (state is ProductsListIsEmpty) {
-              return Center(
-                child: Column(
-                  children: [
-                    const Text('No products favorites added'),
-                    ElevatedButton(
-                        onPressed: () =>
-                            navigationBloc.add(const ChangePageView(0)),
-                        child: const Text("Back to shop"))
-                  ],
-                ),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                 const CustomTitleWidget(title: 'You dont have favorites', alignment: TextAlign.center),
+                  Center(
+                    child: CustomButtonSmallWidget(
+                      label: 'Go to shop',
+                      iconButton: Icons.shopping_cart,
+                      onPressed: () => navigationBloc.add(const ChangePageView(0)),
+                    ),
+                  ),
+                ],
               );
             }
             if (state is ProductsFavoriteRetrieved) {

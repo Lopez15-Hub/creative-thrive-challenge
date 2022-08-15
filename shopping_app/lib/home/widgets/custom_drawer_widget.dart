@@ -49,7 +49,7 @@ class CustomDrawerWidget extends StatelessWidget {
               }),
           const Divider(),
           ListTile(
-            title: const Text('Add product'),
+            title: const Text('Add product or category'),
             leading: const Icon(Icons.add),
             onTap: () => Navigator.push(
                 context,
@@ -57,15 +57,7 @@ class CustomDrawerWidget extends StatelessWidget {
                     builder: (context) =>
                         const FormCreateProductOrCategoryView())),
           ),
-          ListTile(
-            title: const Text('Add category'),
-            leading: const Icon(Icons.add),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const FormCreateProductOrCategoryView())),
-          ),
+
         ],
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/repository/categories_repository.dart';
-import 'package:shopping_app/createProductOrCategory/bloc/dropdown_button/dropdown_button_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/repository/products_repository.dart';
 import 'package:shopping_app/home/home.dart';
 import 'categories/view/bloc/categories_bloc.dart';

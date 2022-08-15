@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
@@ -44,18 +42,11 @@ class DragAndDropItemContentWidget extends StatelessWidget {
                 products[index].productName,
                 style: const TextStyle(fontSize: 18),
               ),
-              Text(
-                products[index].category.categoryName,
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Color(
-                        int.parse(products[index].category.categoryColor))),
-              ),
             ],
           ),
         ),
         Text(
-          '\$ ${products[index].productPrice}',
+          'USD  \$${products[index].productPrice}',
           textAlign: TextAlign.end,
           style: const TextStyle(
             fontSize: 18,
