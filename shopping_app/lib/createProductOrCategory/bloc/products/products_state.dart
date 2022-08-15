@@ -32,4 +32,10 @@ class ProductsLoaded extends ProductsState {
 class ProductsListIsEmpty extends ProductsState {
 
 }
+class ProductsRetrievedError extends ProductsState {
+  final Object error;
+  const ProductsRetrievedError({required this.error});
+  @override
+  List<Object> get props => [error];
+}
 

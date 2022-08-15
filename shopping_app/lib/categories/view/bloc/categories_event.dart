@@ -50,10 +50,3 @@ class ListeningCategoriesFavoritesEvent extends CategoriesEvent {}
 
 class NotifyCategoriesListIsEmpty extends CategoriesEvent {}
 
-class SelectCategory extends CategoriesEvent {
-  final CategoryModel selectedCategory;
-
-  const SelectCategory({required this.selectedCategory});
-  @override
-  List<Object> get props => [selectedCategory];
-}

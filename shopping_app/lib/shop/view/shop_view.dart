@@ -1,7 +1,7 @@
-
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/categories/view/bloc/categories_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
@@ -19,29 +19,108 @@ class _ShopViewState extends State<ShopView> {
   @override
   void initState() {
     super.initState();
-
+    BlocProvider.of<CategoriesBloc>(context)
+        .add(const ListeningCategoriesEvent());
     //test
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final productsBloc = BlocProvider.of<ProductsBloc>(context);
+    productsBloc.add(ListeningProductsEvent());
+    return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: BlocBuilder<CategoriesBloc, CategoriesState>(
+          builder: (context, state) {
+            if (state is CategoriesRetrieved) {
+              final int categoriesIndex = state.retrievedCategories.length;
+              return BlocBuilder<ProductsBloc, ProductsState>(
+                builder: (context, state) {
+                  if (state is ProductsRetrieved) {
+                    _contents = List.generate(
+                        categoriesIndex,
+                        (index) => generateDraggableItems(
+                            state.retrievedProducts, index));
+                    return configureDraggableItemList();
+                  }
+
+                  if (state is ProductsRetrievedError) {
+                    return Center(
+                      child: Text(state.error.toString()),
+                    );
+                  }
+                  if (state is ProductsListIsEmpty) {
+                    return const Center(
+                      child: Text('Products list is empty'),
+                    );
+                  }
+
+                  return const CustomCircularProgressIndicatorWidget(
+                    text: "Loading Products",
+                  );
+                },
+              );
+            }
+            return const CustomCircularProgressIndicatorWidget(
+              text: "Loading Categories",
+            );
+          },
+        ));
   }
 
   generateDraggableItems(List<ProductModel> products, int index) {
     return DragAndDropList(
-      header: Column(
-        children: <Widget>[
-          DragAndDropListHeaderWidget(
-            index: index,
-            products: products,
-          ),
-        ],
+      header: BlocBuilder<CategoriesBloc, CategoriesState>(
+        builder: (context, state) {
+          if (state is CategoriesRetrieved) {
+            return Column(
+              children: <Widget>[
+                DragAndDropListHeaderWidget(
+                  index: index,
+                  categories: state.retrievedCategories,
+                ),
+              ],
+            );
+          }
+          return const CustomCircularProgressIndicatorWidget(
+            text: "Loading Categories",
+          );
+        },
       ),
-      children: <DragAndDropItem>[
-        DragAndDropItem(
-          child: DragAndDropItemContentWidget(
-            index: index,
-            products: products,
+      children:List<DragAndDropItem>.generate(products.length, (index) {
+        return DragAndDropItem(
+          child: Dismissible(
+            key: Key(products[index].productId),
+            background: Container(
+              color: Colors.red,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    "Delete",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            onDismissed: (direction) {
+              final productsBloc = BlocProvider.of<ProductsBloc>(context);
+              productsBloc.add(
+                  DeleteProductEvent(productId: products[index].productId));
+            },
+            direction: DismissDirection.startToEnd,
+            child: DragAndDropItemContentWidget(
+              index: index,
+              products: products,
+            ),
           ),
-        ),
-      ],
-    );
+        );
+      }));
+    
   }
 
   configureDraggableItemList() {
@@ -98,27 +177,6 @@ class _ShopViewState extends State<ShopView> {
         ),
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final productsBloc = BlocProvider.of<ProductsBloc>(context);
-    productsBloc.add(ListeningProductsEvent());
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: BlocBuilder<ProductsBloc, ProductsState>(
-          builder: (context, state) {
-            if (state is ProductsRetrieved) {
-              _contents = List.generate(
-                  state.retrievedProducts.length,
-                  (index) =>
-                      generateDraggableItems(state.retrievedProducts, index));
-              return configureDraggableItemList();
-            }
-
-            return const CustomCircularProgressIndicatorWidget(text: "Loading Products",);
-          },
-        ));
   }
 
   _onItemReorder(

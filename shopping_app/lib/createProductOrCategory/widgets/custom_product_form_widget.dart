@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/models/category_model.dart';
+import 'package:shopping_app/createProductOrCategory/bloc/dropdown_button/dropdown_button_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
-import '../../categories/view/bloc/categories_bloc.dart';
 import '../bloc/products/products_bloc.dart';
 import 'form_widgets/widgets.dart';
 
@@ -21,7 +21,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
-
+   final dropdownButtonBloc =BlocProvider.of<DropdownButtonBloc>(context);
     return Expanded(
       child: Form(
           child: Column(
@@ -47,13 +47,12 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
               const CustomTitleWidget(
                   title: 'Category', alignment: TextAlign.center),
               CustomDropdownButtonWidget(
-                selectedCategory: productCategory,
                 onCategorySelected: (category) {
-                  final categoriesBloc =
-                      BlocProvider.of<CategoriesBloc>(context);
-                  productCategory = CategoryModel.fromJson(category!.toJson());
-                  categoriesBloc
-                      .add(SelectCategory(selectedCategory: productCategory));
+
+                  dropdownButtonBloc
+                      .add(SelectCategory(selectedCategory: CategoryModel(categoryColor: category!.categoryColor, categoryName: category.categoryName)));
+
+                
                 },
               ),
               CustomFormFieldWidget(
@@ -92,7 +91,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   productPrice: productPrice,
                   productImage: "https://picsum.photos/60/60?image=$index",
                   isFavorite: false,
-                  category: productCategory,
+                  category: dropdownButtonBloc.state,
                 );
                 productsBloc.add(CreateProductEvent(product: productModel));
               },

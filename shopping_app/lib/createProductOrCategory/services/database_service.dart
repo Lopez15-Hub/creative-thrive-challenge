@@ -4,24 +4,31 @@ import '../../categories/models/category_model.dart';
 import '../models/product_model.dart';
 
 class DatabaseService {
-
   final productsCollection = FirebaseFirestore.instance.collection("products");
-  final categoriesCollection = FirebaseFirestore.instance.collection("categories");
-  
+  final categoriesCollection =
+      FirebaseFirestore.instance.collection("categories");
+  Stream<List<ProductModel>> retrieveProductsStream() =>
+      productsCollection.orderBy("category").snapshots().map((snapshot) => snapshot.docs
+          .map((product) => ProductModel.fromSnapshot(product))
+          .toList());
+          
   Future<List<ProductModel>> retrieveProducts() {
     return productsCollection.get().then((snapshot) => snapshot.docs
         .map((product) => ProductModel.fromSnapshot(product))
         .toList());
   }
+
   Future<List<CategoryModel>> retrieveCategories() {
     return categoriesCollection.get().then((snapshot) => snapshot.docs
         .map((product) => CategoryModel.fromSnapshot(product))
         .toList());
   }
+
   Future<List<ProductModel>> retrieveProductsFavorites() {
-    return productsCollection.where('isFavorite',isEqualTo:true ).get().then((snapshot) => snapshot.docs
-        .map((product) => ProductModel.fromSnapshot(product))
-        .toList());
+    return productsCollection.where('isFavorite', isEqualTo: true).get().then(
+        (snapshot) => snapshot.docs
+            .map((product) => ProductModel.fromSnapshot(product))
+            .toList());
   }
 
   Future<void> createProduct(ProductModel product) async =>
@@ -33,7 +40,10 @@ class DatabaseService {
       await productsCollection.doc(productId).update(newProductData.toJson());
   Future<void> updateProductIsFavorite(
           String productId, bool isFavorite) async =>
-      await productsCollection.doc(productId).update({
-        'isFavorite': isFavorite
-      });
+      await productsCollection
+          .doc(productId)
+          .update({'isFavorite': isFavorite});
+  Future<void> updateProductCategory(
+          String productId, CategoryModel newCategory) async =>
+      await productsCollection.doc(productId).update({'category': newCategory});
 }

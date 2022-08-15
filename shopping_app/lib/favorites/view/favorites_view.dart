@@ -1,11 +1,11 @@
-
-
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
+import '../../categories/view/bloc/categories_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
+import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 import '../../shop/widgets/widgets.dart';
 
 class FavoritesView extends StatefulWidget {
@@ -28,9 +28,18 @@ class _FavoritesViewState extends State<FavoritesView> {
     return DragAndDropList(
       header: Column(
         children: <Widget>[
-          DragAndDropListHeaderWidget(
-            index: index,
-            products: products,
+          BlocBuilder<CategoriesBloc, CategoriesState>(
+            builder: (context, state) {
+              if (state is CategoriesRetrieved) {
+                return DragAndDropListHeaderWidget(
+                  index: index,
+                  categories: state.retrievedCategories,
+                );
+              }
+              return const CustomCircularProgressIndicatorWidget(
+                text: "Loading Categories",
+              );
+            },
           ),
         ],
       ),

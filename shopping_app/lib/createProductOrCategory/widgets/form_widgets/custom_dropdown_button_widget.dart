@@ -5,11 +5,11 @@ import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_wid
 import '../../../categories/models/category_model.dart';
 import '../../../categories/view/bloc/categories_bloc.dart';
 
+
 class CustomDropdownButtonWidget extends StatefulWidget {
-  const CustomDropdownButtonWidget({Key? key, required this.onCategorySelected, this.selectedCategory})
+  const CustomDropdownButtonWidget({Key? key, required this.onCategorySelected})
       : super(key: key);
   final void Function(CategoryModel?)? onCategorySelected;
-  final CategoryModel? selectedCategory;
   @override
   State<CustomDropdownButtonWidget> createState() =>
       _CustomDropdownButtonWidgetState();
@@ -26,7 +26,6 @@ class _CustomDropdownButtonWidgetState
 
   @override
   Widget build(BuildContext context) {
-
     return Material(
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.5,
@@ -34,7 +33,7 @@ class _CustomDropdownButtonWidgetState
             builder: (context, state) {
           if (state is CategoriesRetrieved) {
             return DropdownButton<CategoryModel>(
-                value: state.categorySelected,
+                
                 icon: const Icon(Icons.arrow_downward),
                 isExpanded: true,
                 items: state.retrievedCategories.map((category) {

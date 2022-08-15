@@ -1,10 +1,12 @@
 import 'package:shopping_app/createProductOrCategory/services/database_service.dart';
 
+import '../../categories/models/category_model.dart';
 import '../models/product_model.dart';
 
 class ProductsRepository {
   final databaseService = DatabaseService();
-
+  Stream<List<ProductModel>> getProductsStream() =>
+      databaseService.retrieveProductsStream();
   Future<List<ProductModel>> getProducts() async =>
       await databaseService.retrieveProducts();
   Future<List<ProductModel>> getProductsFavorites() async =>
@@ -20,4 +22,7 @@ class ProductsRepository {
   Future<void> updateProductIsFavorite(
           String productId, bool isFavorite) async =>
       await databaseService.updateProductIsFavorite(productId, isFavorite);
+  Future<void> updateProductCategory(
+          String productId, CategoryModel newCategory) async =>
+      await databaseService.updateProductCategory(productId, newCategory);
 }

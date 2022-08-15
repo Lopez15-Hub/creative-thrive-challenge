@@ -24,9 +24,6 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
           categorySelected: categoriesList[0]));
     });
 
-    on<SelectCategory>((event, emit) {
-      emit(SelectedCategory(event.selectedCategory));
-    });
   }
   final CategoriesRepository categoriesRepository;
 }

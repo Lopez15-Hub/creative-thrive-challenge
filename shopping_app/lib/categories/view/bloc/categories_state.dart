@@ -34,10 +34,3 @@ class CategoriesFavoriteRetrieved extends CategoriesState {
 class CategoriesLoaded extends CategoriesState {}
 
 class CategoriesListIsEmpty extends CategoriesState {}
-
-class SelectedCategory extends CategoriesState {
-  final CategoryModel category;
-  const SelectedCategory(this.category);
-  @override
-  List<Object> get props => [category];
-}
