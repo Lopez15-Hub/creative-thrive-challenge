@@ -5,7 +5,7 @@ import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import 'package:shopping_app/createProductOrCategory/widgets/form_widgets/custom_button_small_widget.dart';
 import 'package:shopping_app/createProductOrCategory/widgets/form_widgets/custom_title_widget.dart';
 import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
-import '../../categories/view/bloc/categories_bloc.dart';
+import '../../categories/bloc/categories_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 import '../../shop/widgets/widgets.dart';
@@ -26,34 +26,90 @@ class _FavoritesViewState extends State<FavoritesView> {
     //test
   }
 
-  generateDraggableItems(List<ProductModel> products, int index) {
+   generateDraggableItems(List<ProductModel> products, int index) {
     return DragAndDropList(
-      header: Column(
-        children: <Widget>[
-          BlocBuilder<CategoriesBloc, CategoriesState>(
-            builder: (context, state) {
-              if (state is CategoriesRetrieved) {
-                return DragAndDropListHeaderWidget(
-                  index: index,
-                  categories: state.retrievedCategories,
-                );
-              }
-              return const CustomCircularProgressIndicatorWidget(
-                text: "Loading Categories",
+        header: BlocBuilder<CategoriesBloc, CategoriesState>(
+          builder: (context, state) {
+            if (state is CategoriesRetrieved) {
+              return Column(
+                children: <Widget>[
+                  DragAndDropListHeaderWidget(
+                    index: index,
+                    categories: state.retrievedCategories,
+                  ),
+                ],
               );
-            },
-          ),
-        ],
-      ),
-      children: <DragAndDropItem>[
-        DragAndDropItem(
-          child: DragAndDropItemContentWidget(
-            index: index,
-            products: products,
-          ),
+            }
+            return const CustomCircularProgressIndicatorWidget(
+              text: "Loading Categories",
+            );
+          },
         ),
-      ],
-    );
+        children: List<DragAndDropItem>.generate(products.length, (index) {
+          return DragAndDropItem(
+            child: Dismissible(
+              key: UniqueKey(),
+              background: Container(
+                color: Colors.yellow,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      !products[index].isFavorite
+                          ? "Add to favorites"
+                          : "Remove from favorites",
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              secondaryBackground: Container(
+                color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Delete",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              onDismissed: (direction) {
+                final productsBloc = BlocProvider.of<ProductsBloc>(context);
+                if (direction == DismissDirection.endToStart) {
+                  productsBloc.add(
+                      DeleteProductEvent(productId: products[index].productId));
+                  productsBloc.add(ProductWasDeletedEvent(context: context));
+                }
+                if (direction == DismissDirection.startToEnd) {
+                  productsBloc.add(UpdateProductsFavoriteEvent(
+                      isFavorite: !products[index].isFavorite,
+                      productId: products[index].productId));
+                  if (!products[index].isFavorite) {
+                    productsBloc
+                        .add(ProductWasAddedToFavoritesEvent(context: context));
+                  } else {
+                    productsBloc.add(
+                        ProductWasDeletedFromFavoritesEvent(context: context));
+                  }
+                }
+              },
+              child: DragAndDropItemContentWidget(
+                index: index,
+                products: products,
+              ),
+            ),
+          );
+        }));
   }
 
   configureDraggableItemList() {

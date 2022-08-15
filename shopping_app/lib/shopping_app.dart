@@ -3,20 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/repository/categories_repository.dart';
 import 'package:shopping_app/createProductOrCategory/repository/products_repository.dart';
 import 'package:shopping_app/home/home.dart';
-import 'categories/view/bloc/categories_bloc.dart';
+import 'package:shopping_app/home/repository/permission_repository.dart';
+
+import 'categories/bloc/categories_bloc.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
 
 class ShoppingApp extends StatelessWidget {
   const ShoppingApp(
       {Key? key,
       required ProductsRepository productRepository,
-      required CategoriesRepository categoriesRepository})
+      required CategoriesRepository categoriesRepository,
+      required PermissionRepository permissionRepository})
       : _productRepository = productRepository,
         _categoriesRepository = categoriesRepository,
+        _permissionRepository = permissionRepository,
         super(key: key);
 
   final ProductsRepository _productRepository;
   final CategoriesRepository _categoriesRepository;
+  final PermissionRepository _permissionRepository;
   @override
   Widget build(BuildContext context) {
     var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -27,6 +32,8 @@ class ShoppingApp extends StatelessWidget {
             create: (context) => _productRepository),
         RepositoryProvider<CategoriesRepository>(
             create: (context) => _categoriesRepository),
+        RepositoryProvider<PermissionRepository>(
+            create: (context) => _permissionRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -38,6 +45,11 @@ class ShoppingApp extends StatelessWidget {
           ),
           BlocProvider<TitleChangerBloc>(
             create: (context) => TitleChangerBloc(),
+          ),
+          BlocProvider<PermissionBloc>(
+            create: (context) => PermissionBloc(
+                permissionRepository:
+                    RepositoryProvider.of<PermissionRepository>(context)),
           ),
           BlocProvider<SnackbarBloc>(
             create: (context) => SnackbarBloc(),
@@ -52,7 +64,6 @@ class ShoppingApp extends StatelessWidget {
                 categoriesRepository:
                     RepositoryProvider.of<CategoriesRepository>(context)),
           ),
-
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

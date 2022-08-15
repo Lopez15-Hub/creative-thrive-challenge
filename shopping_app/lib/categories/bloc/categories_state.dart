@@ -5,7 +5,7 @@ abstract class CategoriesState extends Equatable {
   const CategoriesState({this.currentCategorySelected});
 
   @override
-  List<Object> get props => [currentCategorySelected];
+  List<Object> get props => [];
 }
 
 class CategoriesInitial extends CategoriesState {
@@ -14,10 +14,9 @@ class CategoriesInitial extends CategoriesState {
 }
 
 class CategoriesRetrieved extends CategoriesState {
-  final CategoryModel categorySelected;
   final List<CategoryModel> retrievedCategories;
   const CategoriesRetrieved(
-      {required this.retrievedCategories, required this.categorySelected});
+      {required this.retrievedCategories});
 
   @override
   List<Object> get props => [retrievedCategories, ];
@@ -34,3 +33,9 @@ class CategoriesFavoriteRetrieved extends CategoriesState {
 class CategoriesLoaded extends CategoriesState {}
 
 class CategoriesListIsEmpty extends CategoriesState {}
+class CategoryIsChanged extends CategoriesState {
+  final CategoryModel category;
+  const CategoryIsChanged({required this.category}): super (currentCategorySelected: category);
+  @override
+  List<Object> get props => [category];
+}

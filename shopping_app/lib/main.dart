@@ -4,11 +4,15 @@ import 'package:shopping_app/createProductOrCategory/repository/products_reposit
 import 'categories/repository/categories_repository.dart';
 import 'package:shopping_app/shopping_app.dart';
 
+import 'home/repository/permission_repository.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(ShoppingApp(
-    productRepository: ProductsRepository(),
+
     categoriesRepository: CategoriesRepository(),
+    productRepository: ProductsRepository(),
+    permissionRepository: PermissionRepository(),
   ));
 }

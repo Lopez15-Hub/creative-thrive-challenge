@@ -18,11 +18,7 @@ class DatabaseService {
         .toList());
   }
 
-  Future<List<CategoryModel>> retrieveCategories() {
-    return categoriesCollection.get().then((snapshot) => snapshot.docs
-        .map((product) => CategoryModel.fromSnapshot(product))
-        .toList());
-  }
+
 
   Future<List<ProductModel>> retrieveProductsFavorites() {
     return productsCollection.where('isFavorite', isEqualTo: true).get().then(
@@ -46,4 +42,15 @@ class DatabaseService {
   Future<void> updateProductCategory(
           String productId, CategoryModel newCategory) async =>
       await productsCollection.doc(productId).update({'category': newCategory});
+
+
+
+  Future<List<CategoryModel>> retrieveCategories() {
+    return categoriesCollection.get().then((snapshot) => snapshot.docs
+        .map((product) => CategoryModel.fromSnapshot(product))
+        .toList());
+  }
+  Future<void> createCategory(CategoryModel category) async =>await categoriesCollection.add(category.toJson());
+  Future<void> deleteCategory(String categoryId) async => await categoriesCollection.doc(categoryId).delete();
+  Future<void> updateCategory( String categoryId, CategoryModel newCategoryData) async => await categoriesCollection.doc(categoryId).update(newCategoryData.toJson());
 }

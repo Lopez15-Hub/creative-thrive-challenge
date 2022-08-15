@@ -77,3 +77,23 @@ class ProductIsOnSubmitedEvent extends ProductsEvent {
   @override
   List<Object> get props => [isOnSubmit];
 }
+
+class ProductWasDeletedEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductWasDeletedEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}
+
+class ProductWasAddedToFavoritesEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductWasAddedToFavoritesEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}
+class ProductWasDeletedFromFavoritesEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductWasDeletedFromFavoritesEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}

@@ -39,7 +39,12 @@ class UpdateCategoriesFavoriteEvent extends CategoriesEvent {
   List<Object> get props => [categoryId];
 }
 
-class DeleteCategoriesEvent extends CategoriesEvent {}
+class DeleteCategoryEvent extends CategoriesEvent {
+  final String categoryId;
+  const DeleteCategoryEvent({required this.categoryId});
+  @override
+  List<Object> get props => [categoryId];
+}
 
 class ListeningCategoriesEvent extends CategoriesEvent {
   const ListeningCategoriesEvent();
@@ -50,3 +55,17 @@ class ListeningCategoriesFavoritesEvent extends CategoriesEvent {}
 
 class NotifyCategoriesListIsEmpty extends CategoriesEvent {}
 
+class ChangeDropdownCategoryEvent  extends CategoriesEvent {
+  final CategoryModel categorySelected;
+  final List<CategoryModel> retrievedCategories;
+  const ChangeDropdownCategoryEvent({required this.categorySelected,required this.retrievedCategories});
+  @override
+  List<Object> get props => [categorySelected,retrievedCategories];
+}
+
+class CategoryWasDeletedEvent extends CategoriesEvent {
+  final BuildContext context;
+  const CategoryWasDeletedEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}

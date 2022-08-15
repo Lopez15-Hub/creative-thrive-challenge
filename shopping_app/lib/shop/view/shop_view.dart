@@ -1,9 +1,9 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopping_app/categories/view/bloc/categories_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
+import '../../categories/bloc/categories_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../createProductOrCategory/view/form_create_product_or_category_view.dart';
 import '../../createProductOrCategory/widgets/form_widgets/widgets.dart';
@@ -34,6 +34,27 @@ class _ShopViewState extends State<ShopView> {
         backgroundColor: Colors.transparent,
         body: BlocBuilder<CategoriesBloc, CategoriesState>(
           builder: (context, state) {
+            if( state is CategoriesListIsEmpty){
+              return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CustomTitleWidget(
+                            title: 'You dont have categories and products yet',
+                            alignment: TextAlign.center),
+                        Center(
+                          child: CustomButtonSmallWidget(
+                            label: 'Create my first category',
+                            iconButton: Icons.plus_one,
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const FormCreateProductOrCategoryView())),
+                          ),
+                        ),
+                      ],
+                    );
+            }
             if (state is CategoriesRetrieved) {
               final int categoriesIndex = state.retrievedCategories.length;
               return BlocBuilder<ProductsBloc, ProductsState>(
@@ -113,9 +134,11 @@ class _ShopViewState extends State<ShopView> {
                 color: Colors.yellow,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children:  [
+                  children: [
                     Text(
-                     !products[index].isFavorite? "Add to favorites" : "Remove from favorites",
+                      !products[index].isFavorite
+                          ? "Add to favorites"
+                          : "Remove from favorites",
                       textAlign: TextAlign.start,
                       style: const TextStyle(
                           color: Colors.black,
@@ -143,8 +166,23 @@ class _ShopViewState extends State<ShopView> {
               ),
               onDismissed: (direction) {
                 final productsBloc = BlocProvider.of<ProductsBloc>(context);
-                if (direction == DismissDirection.endToStart)productsBloc.add(DeleteProductEvent(productId: products[index].productId));
-                if (direction == DismissDirection.startToEnd)productsBloc.add(UpdateProductsFavoriteEvent(isFavorite: !products[index].isFavorite, productId: products[index].productId));
+                if (direction == DismissDirection.endToStart) {
+                  productsBloc.add(
+                      DeleteProductEvent(productId: products[index].productId));
+                  productsBloc.add(ProductWasDeletedEvent(context: context));
+                }
+                if (direction == DismissDirection.startToEnd) {
+                  productsBloc.add(UpdateProductsFavoriteEvent(
+                      isFavorite: !products[index].isFavorite,
+                      productId: products[index].productId));
+                  if (!products[index].isFavorite) {
+                    productsBloc
+                        .add(ProductWasAddedToFavoritesEvent(context: context));
+                  } else {
+                    productsBloc.add(
+                        ProductWasDeletedFromFavoritesEvent(context: context));
+                  }
+                }
               },
               child: DragAndDropItemContentWidget(
                 index: index,

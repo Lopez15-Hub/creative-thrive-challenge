@@ -60,12 +60,26 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       emit(ProductsListIsEmpty());
     });
 
+    on<ProductIsOnSubmitedEvent>((event, emit) async {
+      emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
+    });
+
+
+
     on<ProductSubmittedEvent>((event, emit) async {
       snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
     });
-
-    on<ProductIsOnSubmitedEvent>((event, emit) async {
-      emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
+    on<ProductWasDeletedEvent>((event, emit) async {
+      snackbarBloc
+          .add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
+    });
+    on<ProductWasAddedToFavoritesEvent>((event, emit) async {
+      snackbarBloc
+          .add(SnackbarSuccessEvent(event.context, 'Product added to favorites'));
+    });
+    on<ProductWasDeletedFromFavoritesEvent>((event, emit) async {
+      snackbarBloc
+          .add(SnackbarSuccessEvent(event.context, 'Product removed from favorites'));
     });
   }
 

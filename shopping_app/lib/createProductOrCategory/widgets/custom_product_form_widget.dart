@@ -52,7 +52,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   dropdownButtonBloc.add(SelectCategory(
                       selectedCategory: CategoryModel(
                           categoryColor: category!.categoryColor,
-                          categoryName: category.categoryName)));
+                          categoryName: category.categoryName)
+                          ));
                 },
               ),
               CustomFormFieldWidget(

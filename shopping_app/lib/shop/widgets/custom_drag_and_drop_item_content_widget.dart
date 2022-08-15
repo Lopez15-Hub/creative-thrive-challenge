@@ -20,9 +20,16 @@ class DragAndDropItemContentWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: IconButton(
-              onPressed: () => productsBloc.add(UpdateProductsFavoriteEvent(
-                  productId: products[index].productId,
-                  isFavorite: !products[index].isFavorite)),
+              onPressed: () {
+                productsBloc.add(UpdateProductsFavoriteEvent(
+                    productId: products[index].productId,
+                    isFavorite: !products[index].isFavorite));
+                if(!products[index].isFavorite){
+                  productsBloc.add(ProductWasAddedToFavoritesEvent(context: context));
+                }else{
+                  productsBloc.add(ProductWasDeletedFromFavoritesEvent(context: context));
+                }
+              },
               icon: Icon(
                   products[index].isFavorite ? Icons.star : Icons.star_border,
                   size: 30)),

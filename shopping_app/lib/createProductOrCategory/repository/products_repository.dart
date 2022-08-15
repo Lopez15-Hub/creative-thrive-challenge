@@ -4,28 +4,28 @@ import '../../categories/models/category_model.dart';
 import '../models/product_model.dart';
 
 class ProductsRepository {
-  final databaseService = DatabaseService();
+  final _databaseService = DatabaseService();
   Stream<List<ProductModel>> getProductsStream() =>
-      databaseService.retrieveProductsStream();
+      _databaseService.retrieveProductsStream();
   Future<List<ProductModel>> getProducts() async =>
-      await databaseService.retrieveProducts();
+      await _databaseService.retrieveProducts();
   Future<List<ProductModel>> getProductsFavorites() async =>
-      await databaseService.retrieveProductsFavorites();
+      await _databaseService.retrieveProductsFavorites();
 
   Future<void> createProduct(ProductModel product) async {
-      return await databaseService.createProduct(product);
+      return await _databaseService.createProduct(product);
       
       }
       
   Future<void> deleteProduct(String productId) async =>
-      await databaseService.deleteProduct(productId);
+      await _databaseService.deleteProduct(productId);
   Future<void> updateProduct(
           String productId, ProductModel newProductData) async =>
-      await databaseService.updateProduct(productId, newProductData);
+      await _databaseService.updateProduct(productId, newProductData);
   Future<void> updateProductIsFavorite(
           String productId, bool isFavorite) async =>
-      await databaseService.updateProductIsFavorite(productId, isFavorite);
+      await _databaseService.updateProductIsFavorite(productId, isFavorite);
   Future<void> updateProductCategory(
           String productId, CategoryModel newCategory) async =>
-      await databaseService.updateProductCategory(productId, newCategory);
+      await _databaseService.updateProductCategory(productId, newCategory);
 }
