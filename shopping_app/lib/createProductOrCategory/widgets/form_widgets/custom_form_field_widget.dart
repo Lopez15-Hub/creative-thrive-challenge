@@ -8,13 +8,16 @@ class CustomFormFieldWidget extends StatelessWidget {
       required this.label,
       required this.icon,
       required this.onChanged,
-      this.fieldController})
+      this.fieldController,
+      this.validatorFunction
+      })
       : super(key: key);
   final TextInputType keyboardType;
   final bool obscureText;
   final String label;
   final Icon icon;
   final void Function(String) onChanged;
+  final String? Function(String?)? validatorFunction;
   final TextEditingController? fieldController;
   @override
   Widget build(BuildContext context) {
@@ -35,10 +38,12 @@ class CustomFormFieldWidget extends StatelessWidget {
     var cursorColor = Colors.black;
     return Padding(
       padding: edgeInsets,
-      child: TextField(
+      child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: fieldController,
         keyboardType: keyboardType,
         onChanged: onChanged,
+        validator: validatorFunction,
         obscureText: obscureText,
         cursorColor: cursorColor,
         decoration: inputDecoration,

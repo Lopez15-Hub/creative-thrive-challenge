@@ -17,6 +17,15 @@ class DatabaseService {
         .map((product) => ProductModel.fromSnapshot(product))
         .toList());
   }
+  Future<List<ProductModel>> retrieveProductsByCategory(CategoryModel productCategory) {
+    return productsCollection.where("category",isEqualTo: productCategory.toJson()).get().then((snapshot) => snapshot.docs
+          .map((product) => ProductModel.fromSnapshot(product))
+          .toList());
+  }
+  Stream<List<ProductModel>> retrieveProductsByCategoryStream(CategoryModel productCategory) =>
+      productsCollection.where("category",isEqualTo: productCategory.toJson()).snapshots().map((snapshot) => snapshot.docs
+          .map((product) => ProductModel.fromSnapshot(product))
+          .toList());
 
 
 

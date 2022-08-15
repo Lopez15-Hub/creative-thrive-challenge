@@ -17,7 +17,9 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<CreateProductEvent>((event, emit) {
       productRepository
           .createProduct(event.product)
-          .then((value) => add(ProductSubmittedEvent(event.context)));
+          .then((value) => add(ProductSubmittedEvent(event.context)))
+          .catchError((error) => add(ProductFunctionHasErrorEvent(
+              context: event.context, error: error.toString())));
     });
     on<UpdateProductsEvent>((event, emit) {
       productRepository.updateProduct(event.productId, event.product);
@@ -38,9 +40,20 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<ListeningProductsEvent>((event, emit) async {
       List<ProductModel> productsList = await productRepository.getProducts();
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());
-
       await emit.forEach<List<ProductModel>>(
         productRepository.getProductsStream(),
+        onData: (productsList) =>
+            ProductsRetrieved(retrievedProducts: productsList),
+        onError: (error, stackTrace) => ProductsRetrievedError(error: error),
+      );
+      emit(ProductsRetrieved(retrievedProducts: productsList));
+    });
+    on<ListeningProductsByCategoryEvent>((event, emit) async {
+      List<ProductModel> productsList = await productRepository.getProductsByCategory(event.category);
+
+      if (productsList.isEmpty) return emit(ProductsListIsEmpty());
+      await emit.forEach<List<ProductModel>>(
+        productRepository.getProductsByCategoryStream(event.category),
         onData: (productsList) =>
             ProductsRetrieved(retrievedProducts: productsList),
         onError: (error, stackTrace) => ProductsRetrievedError(error: error),
@@ -59,12 +72,25 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<NotifyProductsListIsEmptyEvent>((event, emit) async {
       emit(ProductsListIsEmpty());
     });
+    on<ProductOnSubmitedEvent>((event, emit) async {
+      final productModel = ProductModel(
+          category: event.productCategory,
+          isFavorite: event.isFavorite,
+          productImage: event.productImage,
+          productName: event.productName,
+          productPrice: event.productPrice);
+      print(productModel.toJson());
 
+      add(CreateProductEvent(context: event.context, product: productModel));
+    });
     on<ProductIsOnSubmitedEvent>((event, emit) async {
       emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
     });
 
-
+    on<ProductFunctionHasErrorEvent>((event, emit) async {
+      snackbarBloc.add(SnackbarErrorEvent(
+          event.context, 'An ocurred error: ${event.error}'));
+    });
 
     on<ProductSubmittedEvent>((event, emit) async {
       snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
@@ -74,12 +100,12 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           .add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
     });
     on<ProductWasAddedToFavoritesEvent>((event, emit) async {
-      snackbarBloc
-          .add(SnackbarSuccessEvent(event.context, 'Product added to favorites'));
+      snackbarBloc.add(
+          SnackbarSuccessEvent(event.context, 'Product added to favorites'));
     });
     on<ProductWasDeletedFromFavoritesEvent>((event, emit) async {
-      snackbarBloc
-          .add(SnackbarSuccessEvent(event.context, 'Product removed from favorites'));
+      snackbarBloc.add(SnackbarSuccessEvent(
+          event.context, 'Product removed from favorites'));
     });
   }
 

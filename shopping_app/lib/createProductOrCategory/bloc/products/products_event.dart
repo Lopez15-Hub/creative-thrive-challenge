@@ -58,6 +58,12 @@ class DeleteProductEvent extends ProductsEvent {
 }
 
 class ListeningProductsEvent extends ProductsEvent {}
+class ListeningProductsByCategoryEvent extends ProductsEvent {
+  final CategoryModel category;
+  const ListeningProductsByCategoryEvent({required this.category});
+  @override
+  List<Object> get props => [category];
+}
 
 class ListeningProductsFavoritesEvent extends ProductsEvent {}
 
@@ -91,9 +97,42 @@ class ProductWasAddedToFavoritesEvent extends ProductsEvent {
   @override
   List<Object> get props => [context];
 }
+
 class ProductWasDeletedFromFavoritesEvent extends ProductsEvent {
   final BuildContext context;
   const ProductWasDeletedFromFavoritesEvent({required this.context});
   @override
   List<Object> get props => [context];
+}
+
+class ProductFunctionHasErrorEvent extends ProductsEvent {
+  final String error;
+  final BuildContext context;
+  const ProductFunctionHasErrorEvent(
+      {required this.error, required this.context});
+  @override
+  List<Object> get props => [error, context];
+}
+
+class ProductOnSubmitedEvent extends ProductsEvent {
+  final BuildContext context;
+  final String productName, productPrice, productImage;
+  final CategoryModel productCategory;
+  final bool isFavorite;
+  const ProductOnSubmitedEvent(
+      {required this.context,
+      required this.productName,
+      required this.productPrice,
+      required this.productCategory,
+      required this.productImage,
+      required this.isFavorite});
+  @override
+  List<Object> get props => [
+        context,
+        productName,
+        productPrice,
+        productCategory,
+        productImage,
+        isFavorite
+      ];
 }

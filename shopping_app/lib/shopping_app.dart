@@ -4,7 +4,6 @@ import 'package:shopping_app/categories/repository/categories_repository.dart';
 import 'package:shopping_app/createProductOrCategory/repository/products_repository.dart';
 import 'package:shopping_app/home/home.dart';
 import 'package:shopping_app/home/repository/permission_repository.dart';
-
 import 'categories/bloc/categories_bloc.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
 
@@ -37,8 +36,13 @@ class ShoppingApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<FormValidationsBloc>(
+              create: (context) => FormValidationsBloc()),
           BlocProvider<BottombarNavigationBloc>(
             create: (context) => BottombarNavigationBloc(),
+          ),
+          BlocProvider<ShowPopupBloc>(
+            create: (context) => ShowPopupBloc(),
           ),
           BlocProvider<DropdownButtonBloc>(
             create: (context) => DropdownButtonBloc(),

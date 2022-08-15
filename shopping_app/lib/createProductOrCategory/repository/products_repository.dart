@@ -5,10 +5,10 @@ import '../models/product_model.dart';
 
 class ProductsRepository {
   final _databaseService = DatabaseService();
-  Stream<List<ProductModel>> getProductsStream() =>
-      _databaseService.retrieveProductsStream();
-  Future<List<ProductModel>> getProducts() async =>
-      await _databaseService.retrieveProducts();
+  Stream<List<ProductModel>> getProductsStream() =>_databaseService.retrieveProductsStream();
+  Stream<List<ProductModel>> getProductsByCategoryStream(CategoryModel productCategory) =>_databaseService.retrieveProductsByCategoryStream(productCategory);
+  Future<List<ProductModel>> getProducts() async =>await _databaseService.retrieveProducts();
+  Future<List<ProductModel>> getProductsByCategory(CategoryModel productCategory) async =>await _databaseService.retrieveProductsByCategory(productCategory);
   Future<List<ProductModel>> getProductsFavorites() async =>
       await _databaseService.retrieveProductsFavorites();
 

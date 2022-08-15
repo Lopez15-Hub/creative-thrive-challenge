@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/bloc/categories_bloc.dart';
+import 'package:shopping_app/home/bloc/blocs.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 
 import '../../createProductOrCategory/view/form_create_product_or_category_view.dart';
@@ -12,6 +13,7 @@ class CategoriesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
+    final popupBloc = BlocProvider.of<ShowPopupBloc>(context);
     categoriesBloc.add(const ListeningCategoriesEvent());
     return BlocBuilder<CategoriesBloc, CategoriesState>(
       builder: (context, state) {
@@ -42,9 +44,9 @@ class CategoriesView extends StatelessWidget {
                   ),
                 ),
                 onDismissed: (direction) {
-                  categoriesBloc.add(DeleteCategoryEvent(
-                      categoryId: state.retrievedCategories[index].categoryId));
-                  categoriesBloc.add(CategoryWasDeletedEvent(context: context));
+                  popupBloc.add(ShowPopupEvent(mustBeShowed: true, context: context,categoryId: state.retrievedCategories[index].categoryId));
+                  // categoriesBloc.add(DeleteCategoryEvent(categoryId: state.retrievedCategories[index].categoryId));
+                  // 
                 },
                 child: ListTile(
                     title: Text(
@@ -62,7 +64,8 @@ class CategoriesView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const CustomTitleWidget(
-                  title: 'You dont have categories yet.', alignment: TextAlign.center),
+                  title: 'You dont have categories yet.',
+                  alignment: TextAlign.center),
               Center(
                 child: CustomButtonSmallWidget(
                   label: 'Add one',

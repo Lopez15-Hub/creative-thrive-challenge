@@ -14,20 +14,40 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CategoriesEvent>((event, emit) {});
 
     on<CreateCategoryEvent>((event, emit) {
-      categoriesRepository.createCategory(event.category);
+      categoriesRepository
+          .createCategory(event.category)
+          .then((value) => add(CategorySubmittedEvent(context: event.context)))
+          .catchError((error) => add(CategoriesFuctionWasErrorEvent(
+              context: event.context, error: error.toString())));
     });
 
     on<ListeningCategoriesEvent>((event, emit) async {
       final categoriesList = await categoriesRepository.getCategories();
       if (categoriesList.isEmpty) return emit(CategoriesListIsEmpty());
-      emit(CategoriesRetrieved(retrievedCategories: categoriesList,currentCategory: categoriesList.first));
+      emit(CategoriesRetrieved(
+          retrievedCategories: categoriesList,
+          currentCategory: categoriesList.first));
     });
+    on<CategorySubmittedEvent>((event, emit) async {
+      snackbarBloc.add(
+          SnackbarSuccessEvent(event.context, 'Category added successfully'));
+    });
+    on<DeleteCategoryEvent>((event, emit) {
+      categoriesRepository
+          .deleteCategory(event.categoryId)
+          .then((value) => add(CategoryWasDeletedEvent(context: event.context)))
+          .catchError((error) => add(CategoriesFuctionWasErrorEvent(
+              context: event.context, error: error.toString())));
 
-    on<DeleteCategoryEvent>((event, emit) async {
-      await categoriesRepository.deleteCategory(event.categoryId);
+      Navigator.of(event.context).pop();
     });
     on<CategoryWasDeletedEvent>((event, emit) async {
-      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Category Deleted Successfully'));
+      snackbarBloc.add(
+          SnackbarSuccessEvent(event.context, 'Category Deleted Successfully'));
+    });
+    on<CategoriesFuctionWasErrorEvent>((event, emit) async {
+      snackbarBloc.add(SnackbarErrorEvent(
+          event.context, 'An ocurred error: ${event.error}'));
     });
   }
   final CategoriesRepository categoriesRepository;

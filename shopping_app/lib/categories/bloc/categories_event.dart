@@ -18,32 +18,33 @@ class GetCategoryEvent extends CategoriesEvent {}
 
 class CreateCategoryEvent extends CategoriesEvent {
   final CategoryModel category;
-
-  const CreateCategoryEvent({required this.category});
+  final BuildContext context;
+  const CreateCategoryEvent({required this.category, required this.context});
   @override
-  List<Object> get props => [category];
-
+  List<Object> get props => [category, context];
 }
 
 class UpdateCategoriesEvent extends CategoriesEvent {
   final String categoryId;
   final CategoryModel category;
-  const UpdateCategoriesEvent({required this.category,this.categoryId=""});
+  const UpdateCategoriesEvent({required this.category, this.categoryId = ""});
   @override
-  List<Object> get props => [category,categoryId];
+  List<Object> get props => [category, categoryId];
 }
+
 class UpdateCategoriesFavoriteEvent extends CategoriesEvent {
   final String categoryId;
-  const UpdateCategoriesFavoriteEvent({this.categoryId=""});
+  const UpdateCategoriesFavoriteEvent({this.categoryId = ""});
   @override
   List<Object> get props => [categoryId];
 }
 
 class DeleteCategoryEvent extends CategoriesEvent {
   final String categoryId;
-  const DeleteCategoryEvent({required this.categoryId});
+  final BuildContext context;
+  const DeleteCategoryEvent({required this.categoryId,required this.context});
   @override
-  List<Object> get props => [categoryId];
+  List<Object> get props => [categoryId, context];
 }
 
 class ListeningCategoriesEvent extends CategoriesEvent {
@@ -51,16 +52,23 @@ class ListeningCategoriesEvent extends CategoriesEvent {
   @override
   List<Object> get props => [];
 }
+
 class ListeningCategoriesFavoritesEvent extends CategoriesEvent {}
 
-class NotifyCategoriesListIsEmpty extends CategoriesEvent {}
+class CategorySubmittedEvent extends CategoriesEvent {
+  final BuildContext context;
+  const CategorySubmittedEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}
 
-class ChangeDropdownCategoryEvent  extends CategoriesEvent {
+class ChangeDropdownCategoryEvent extends CategoriesEvent {
   final CategoryModel categorySelected;
   final List<CategoryModel> retrievedCategories;
-  const ChangeDropdownCategoryEvent({required this.categorySelected,required this.retrievedCategories});
+  const ChangeDropdownCategoryEvent(
+      {required this.categorySelected, required this.retrievedCategories});
   @override
-  List<Object> get props => [categorySelected,retrievedCategories];
+  List<Object> get props => [categorySelected, retrievedCategories];
 }
 
 class CategoryWasDeletedEvent extends CategoriesEvent {
@@ -68,4 +76,13 @@ class CategoryWasDeletedEvent extends CategoriesEvent {
   const CategoryWasDeletedEvent({required this.context});
   @override
   List<Object> get props => [context];
+}
+
+class CategoriesFuctionWasErrorEvent extends CategoriesEvent {
+  final BuildContext context;
+  final String error;
+  const CategoriesFuctionWasErrorEvent(
+      {required this.context, required this.error});
+  @override
+  List<Object> get props => [context, error];
 }

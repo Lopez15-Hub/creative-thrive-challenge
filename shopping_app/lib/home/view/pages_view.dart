@@ -5,6 +5,8 @@ import 'package:shopping_app/favorites/view/favorites_view.dart';
 import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
 import 'package:shopping_app/shop/view/shop_view.dart';
 
+import '../../shop/view/shop_view_example.dart';
+
 class PagesView extends StatelessWidget {
   const PagesView({Key? key}) : super(key: key);
 

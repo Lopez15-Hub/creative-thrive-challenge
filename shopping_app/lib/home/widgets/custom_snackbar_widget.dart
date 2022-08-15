@@ -14,7 +14,7 @@ SnackBar customSnackbarWidget(BuildContext context,
         Text(
           snackbarTitle,
           style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
         )
       ],
     ),

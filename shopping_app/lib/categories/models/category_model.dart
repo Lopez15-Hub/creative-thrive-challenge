@@ -19,7 +19,7 @@ class CategoryModel {
   }
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-        categoryId: json['id'],
+        categoryId: json['id']?? '',
         categoryName: json["categoryName"],
         categoryColor: json["categoryColor"],
       );
