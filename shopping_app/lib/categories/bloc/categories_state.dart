@@ -32,7 +32,12 @@ class CategoriesFavoriteRetrieved extends CategoriesState {
   List<Object> get props => [retrievedCategories];
 }
 
-class CategoriesLoaded extends CategoriesState {}
+class CategoriesIsLoading extends CategoriesState {
+  final bool isLoading;
+  const CategoriesIsLoading({required this.isLoading});
+  @override
+  List<Object> get props => [];
+}
 
 class CategoriesListIsEmpty extends CategoriesState {}
 class CategoryIsChanged extends CategoriesState {
@@ -40,4 +45,16 @@ class CategoryIsChanged extends CategoriesState {
   const CategoryIsChanged({required this.category}): super (currentCategorySelected: category);
   @override
   List<Object> get props => [category];
+}
+class CategoriesRetrievedError extends CategoriesState {
+  final Object error;
+  const CategoriesRetrievedError({required this.error});
+  @override
+  List<Object> get props => [error];
+}
+class CategoryExists extends CategoriesState {
+  final bool categoryExists;
+  const CategoryExists({required this.categoryExists});
+  @override
+  List<Object> get props => [categoryExists];
 }

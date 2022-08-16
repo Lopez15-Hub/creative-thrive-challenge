@@ -24,6 +24,7 @@ class _CustomDropdownButtonWidgetState
     _categoriesBloc.add(const ListeningCategoriesEvent());
   }
 
+  CategoryModel? currentCategory;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -33,13 +34,19 @@ class _CustomDropdownButtonWidgetState
             builder: (context, state) {
           if (state is CategoriesRetrieved) {
             return DropdownButton<CategoryModel>(
-              
               icon: const Icon(Icons.arrow_downward),
               isExpanded: true,
-
+              value: currentCategory,
+              elevation: 3,
+              hint: const Text('Select a category'),
+              onChanged: (CategoryModel? value) {
+                setState(() {
+                  currentCategory = value!;
+                  widget.onCategorySelected?.call(value);
+                });
+              },
               items: state.retrievedCategories.map((category) {
                 return DropdownMenuItem<CategoryModel>(
-                  
                     value: category,
                     child: Text(
                       category.categoryName,
@@ -48,9 +55,7 @@ class _CustomDropdownButtonWidgetState
                       ),
                     ));
               }).toList(),
-              onChanged: widget.onCategorySelected,
-              elevation: 3,
-              hint: const Text('Select a category'),
+          
             );
           }
           if (state is CategoriesListIsEmpty) return const Text("No categories available, please add one.");

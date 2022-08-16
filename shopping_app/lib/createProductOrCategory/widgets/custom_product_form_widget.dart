@@ -20,6 +20,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   late CategoriesBloc categoriesBloc;
   late FormValidationsBloc formBloc;
   late DropdownButtonBloc dropdownButtonBloc;
+  late UploadImageBloc uploadImageBloc;
+  late FilePickerBloc filePickerBloc;
 
   String productName = '', productPrice = '';
   CategoryModel productCategory =
@@ -28,6 +30,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   void initState() {
     super.initState();
     productsBloc = BlocProvider.of<ProductsBloc>(context);
+    filePickerBloc = BlocProvider.of<FilePickerBloc>(context);
+    uploadImageBloc = BlocProvider.of<UploadImageBloc>(context);
     dropdownButtonBloc = BlocProvider.of<DropdownButtonBloc>(context);
     formBloc = BlocProvider.of<FormValidationsBloc>(context);
     categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
@@ -106,7 +110,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                         padding: const EdgeInsets.only(top: 20.0),
                         child: CustomButtonSmallWidget(
                           label: 'Upload File',
-                          onPressed: () {},
+                          onPressed: () =>
+                              filePickerBloc.add(LauchFilePickerEvent()),
                           iconButton: Icons.upload_file,
                         ),
                       ),
@@ -114,20 +119,33 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   ),
                   BlocBuilder<ProductsBloc, ProductsState>(
                     builder: (context, state) {
-                      if (state is ProductIsOnSubmitedEvent) {
+                      if (state is ProductsIsOnSubmit) {
                         return const CustomCircularProgressIndicatorWidget(
                           text: 'Saving product',
                         );
                       }
+                      if (state is ProducWasSubmitEvent) {
+                        return Container();
+                      }
                       return Container();
                     },
                   ),
-                  CustomFormButtonSubmitWidget(
-                      isEnabled: state is CategoriesListIsEmpty ? false : true,
-                      onPressed: state is CategoriesListIsEmpty
-                          ? () {}
-                          : () => addProduct(),
-                      buttonLabel: 'Submit Product'),
+                  BlocBuilder<UploadImageBloc, UploadImageState>(
+                    builder: (context, uploadImageState) {
+                      return BlocBuilder<FilePickerBloc, FilePickerState>(
+                        builder: (context, filePickerState) {
+                          // if (filePickerState is SetImageFile) uploadImageBloc.add(UploadImageEvent(fileModel: filePickerState.file, context: context));
+                          return CustomFormButtonSubmitWidget(
+                              isEnabled:
+                                  state is CategoriesListIsEmpty ? false : true,
+                              onPressed: state is CategoriesListIsEmpty
+                                  ? () {}
+                                  : () => Future.wait([addProduct(filePickerState, uploadImageState) ]),
+                              buttonLabel: 'Submit Product');
+                        },
+                      );
+                    },
+                  ),
                 ],
               ));
         },
@@ -135,23 +153,22 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     );
   }
 
-  addProduct() {
+  Future<void> addProduct(FilePickerState filePickerState,
+      UploadImageState uploadImageState) async {
     try {
-      formBloc.add(FormFieldsAreValidEvent(_formKey.currentState!.validate()));
-      int index = Random().nextInt(4);
-      productsBloc.add(const ProductIsOnSubmitedEvent(isOnSubmit: true));
-      formBloc.add(ValidateProductFormEvent(
-          context: context, dropdownCategory: dropdownButtonBloc.state));
-
-      if (formBloc.state) {
+        productsBloc.add(const ProductIsOnSubmitedEvent(isOnSubmit: true));
+        formBloc.add(FormFieldsAreValidEvent(_formKey.currentState!.validate()));
+        productsBloc.add(const ProductIsOnSubmitedEvent(isOnSubmit: true));
+        formBloc.add(ValidateProductFormEvent(context: context, dropdownCategory: dropdownButtonBloc.state));
         return productsBloc.add(ProductOnSubmitedEvent(
             isFavorite: false,
             productCategory: dropdownButtonBloc.state,
-            productImage: "https://picsum.photos/60/60?image=$index",
+            // productImage: uploadImageBloc.state.imageUrl.toString(),
+            productImage: 'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
             productName: productName,
             productPrice: productPrice.toString(),
             context: context));
-      }
+      
     } catch (error) {
       return productsBloc.add(ProductFunctionHasErrorEvent(
           error: error.toString(), context: context));

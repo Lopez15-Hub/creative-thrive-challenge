@@ -18,13 +18,23 @@ class CustomDrawerWidget extends StatelessWidget {
             ),
             child: Center(
                 child: Text(
-              'Shop Market',
+              'Shopping app',
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 30,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold),
             )),
           ),
+          ListTile(
+            title: const Text('Add product or category'),
+            leading: const Icon(Icons.add),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const FormCreateProductOrCategoryView())),
+          ),
+            const Divider(),
           ListTile(
             title: const Text('Shop'),
             leading: const Icon(Icons.shopping_bag),
@@ -34,7 +44,7 @@ class CustomDrawerWidget extends StatelessWidget {
             },
           ),
           ListTile(
-              title: const Text('Favourites'),
+              title: const Text('Favorites'),
               leading: const Icon(Icons.star),
               onTap: () {
                 navigationBloc.add(const ChangePageView(1));
@@ -47,16 +57,8 @@ class CustomDrawerWidget extends StatelessWidget {
                 navigationBloc.add(const ChangePageView(2));
                 Navigator.pop(context);
               }),
-          const Divider(),
-          ListTile(
-            title: const Text('Add product or category'),
-            leading: const Icon(Icons.add),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const FormCreateProductOrCategoryView())),
-          ),
+        
+          
 
         ],
       ),

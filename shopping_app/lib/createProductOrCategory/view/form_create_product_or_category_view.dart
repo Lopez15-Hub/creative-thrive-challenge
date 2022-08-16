@@ -7,7 +7,7 @@ import 'package:shopping_app/home/home.dart';
 
 class FormCreateProductOrCategoryView extends StatelessWidget {
   const FormCreateProductOrCategoryView({Key? key}) : super(key: key);
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

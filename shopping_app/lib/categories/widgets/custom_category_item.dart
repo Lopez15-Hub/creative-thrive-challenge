@@ -19,7 +19,10 @@ class CustomCategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
     var dangerContainer = Container(
-      color: Colors.red,
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
@@ -32,20 +35,20 @@ class CustomCategoryItem extends StatelessWidget {
         ],
       ),
     );
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 4,
-      child: Dismissible(
-        key: UniqueKey(),
-        direction: DismissDirection.endToStart,
-        background: Container(),
-        secondaryBackground: dangerContainer,
-        onDismissed: (direction) {
-          popupBloc.add(ShowPopupEvent(
-              mustBeShowed: true,
-              context: context,
-              categoryId: state.categoryId));
-        },
+    return Dismissible(
+      key: UniqueKey(),
+      direction: DismissDirection.endToStart,
+      background: Container(),
+      secondaryBackground: dangerContainer,
+      onDismissed: (direction) {
+        popupBloc.add(ShowPopupEvent(
+            mustBeShowed: true,
+            context: context,
+            categoryId: state.categoryId));
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 4,
         child: ListTile(
           title: Text(
             state.categoryName,

@@ -44,9 +44,9 @@ class UpdateCategoriesStatusEvent extends CategoriesEvent {
   final String categoryId;
   final BuildContext context;
   const UpdateCategoriesStatusEvent(
-      {required this.isOpen, required this.categoryId,required this.context});
+      {required this.isOpen, required this.categoryId, required this.context});
   @override
-  List<Object> get props => [isOpen, categoryId,context];
+  List<Object> get props => [isOpen, categoryId, context];
 }
 
 class DeleteCategoryEvent extends CategoriesEvent {
@@ -58,9 +58,10 @@ class DeleteCategoryEvent extends CategoriesEvent {
 }
 
 class ListeningCategoriesEvent extends CategoriesEvent {
-  const ListeningCategoriesEvent();
+  final bool isLoadedData;
+  const ListeningCategoriesEvent({this.isLoadedData = false});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [isLoadedData];
 }
 
 class ListeningCategoriesFavoritesEvent extends CategoriesEvent {}
@@ -70,15 +71,6 @@ class CategorySubmittedEvent extends CategoriesEvent {
   const CategorySubmittedEvent({required this.context});
   @override
   List<Object> get props => [context];
-}
-
-class ChangeDropdownCategoryEvent extends CategoriesEvent {
-  final CategoryModel categorySelected;
-  final List<CategoryModel> retrievedCategories;
-  const ChangeDropdownCategoryEvent(
-      {required this.categorySelected, required this.retrievedCategories});
-  @override
-  List<Object> get props => [categorySelected, retrievedCategories];
 }
 
 class CategoryWasDeletedEvent extends CategoriesEvent {
@@ -99,11 +91,12 @@ class CategoriesFuctionWasErrorEvent extends CategoriesEvent {
 
 class CheckIfCategoryExistsEvent extends CategoriesEvent {
   final String categoryName;
+  final CategoryModel category;
   final BuildContext context;
   const CheckIfCategoryExistsEvent(
-      {required this.categoryName, required this.context});
+      {required this.categoryName, required this.context,required this.category});
   @override
-  List<Object> get props => [categoryName, context];
+  List<Object> get props => [categoryName, context,category];
 }
 
 class CategoryAlreadyExistsEvent extends CategoriesEvent {
@@ -111,4 +104,11 @@ class CategoryAlreadyExistsEvent extends CategoriesEvent {
   const CategoryAlreadyExistsEvent({required this.context});
   @override
   List<Object> get props => [context];
+}
+
+class CategoriesAreOnLoadingEvent extends CategoriesEvent {
+  final bool isLoading;
+  const CategoriesAreOnLoadingEvent({required this.isLoading});
+  @override
+  List<Object> get props => [isLoading];
 }

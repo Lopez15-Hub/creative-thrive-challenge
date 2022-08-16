@@ -136,3 +136,12 @@ class ProductOnSubmitedEvent extends ProductsEvent {
         isFavorite
       ];
 }
+class GetProductImageEvent extends ProductsEvent {
+  final String productImageUrl;
+  const GetProductImageEvent({required this.productImageUrl});
+  @override
+  List<Object> get props => [productImageUrl];
+}
+class ProducWasSubmitEvent extends ProductsEvent {
+
+}

@@ -72,11 +72,12 @@ class _CategoryFormWidgetState extends State<CategoryFormWidget> {
                     var categoryModel = CategoryModel(
                         categoryName: categoryName.trim(),
                         categoryColor: extractColorProperty(categoryColor),
-                        isOpen: true
-                        );
-   
-                    categoriesBloc.add(CreateCategoryEvent(
-                        context: context, category: categoryModel));
+                        isOpen: true);
+
+                    categoriesBloc.add(CheckIfCategoryExistsEvent(categoryName: categoryName, context: context,category: categoryModel));
+
+                    if (categoriesBloc.state is CategoryExists) return;
+
                     _formKey.currentState!.reset();
                   },
                   buttonLabel: 'Submit Category')

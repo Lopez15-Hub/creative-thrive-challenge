@@ -14,8 +14,6 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CategoriesEvent>((event, emit) {});
 
     on<CreateCategoryEvent>((event, emit) {
-      CheckIfCategoryExistsEvent(
-          categoryName: event.category.categoryName, context: event.context);
       categoriesRepository
           .createCategory(event.category)
           .then((value) => add(CategorySubmittedEvent(context: event.context)))
@@ -26,12 +24,12 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<ListeningCategoriesEvent>((event, emit) async {
       final categoriesList = await categoriesRepository.getCategories();
       if (categoriesList.isEmpty) return emit(CategoriesListIsEmpty());
-      await emit.forEach(
-        categoriesRepository.getCategoriesStream(),
-        onData: (data) => CategoriesRetrieved(
-            retrievedCategories: categoriesList,
-            currentCategory: categoriesList.first),
-      );
+      await emit.forEach(categoriesRepository.getCategoriesStream(),
+          onData: (data) => CategoriesRetrieved(
+              retrievedCategories: categoriesList,
+              currentCategory: categoriesList.first),
+          onError: (error, stackTrace) =>
+              CategoriesRetrievedError(error: error.toString()));
     });
 
     on<CategorySubmittedEvent>((event, emit) async {
@@ -55,18 +53,34 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
           event.context, 'An ocurred error: ${event.error}'));
     });
     on<CheckIfCategoryExistsEvent>((event, emit) async {
-      final categoryName =
-          await categoriesRepository.getCategory(event.categoryName);
-      if (categoryName.isNotEmpty)add(CategoryAlreadyExistsEvent(context: event.context));
+      final List<CategoryModel> categoriesOnBd =await categoriesRepository.getCategory(event.categoryName);
+
+      if (categoriesOnBd.isNotEmpty) {
+              print(CategoryExists);
+       return add(CategoryAlreadyExistsEvent(context: event.context));
+      } 
+      if(categoriesOnBd.isEmpty){
+        return add(CreateCategoryEvent( category: event.category, context: event.context));
+      }
     });
+
     on<CategoryAlreadyExistsEvent>((event, emit) {
+      emit(const CategoryExists(categoryExists: true));
       return snackbarBloc
           .add(SnackbarInfoEvent(event.context, 'Category already exists'));
     });
+
     on<UpdateCategoriesStatusEvent>((event, emit) {
-      categoriesRepository.updateCategoryStatus(event.isOpen, event.categoryId).then((value) => snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Category is now ${event.isOpen ? 'open' : 'closed'}'))
-      );
-          add(const ListeningCategoriesEvent());
+      categoriesRepository
+          .updateCategoryStatus(event.isOpen, event.categoryId)
+          .then((value) {
+                if (event.isOpen)return snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Category is now open'));
+                snackbarBloc.add(SnackbarInfoEvent(event.context, 'Category is now closed'));
+              });
+      add(const ListeningCategoriesEvent(isLoadedData: true));
+    });
+    on<CategoriesAreOnLoadingEvent>((event, emit) {
+      emit(CategoriesIsLoading(isLoading: event.isLoading));
     });
   }
   final CategoriesRepository categoriesRepository;

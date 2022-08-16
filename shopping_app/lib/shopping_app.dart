@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/repository/categories_repository.dart';
+import 'package:shopping_app/createProductOrCategory/repository/file_picker_repository.dart';
 import 'package:shopping_app/createProductOrCategory/repository/products_repository.dart';
+import 'package:shopping_app/createProductOrCategory/repository/storage_repository.dart';
 import 'package:shopping_app/favorites/bloc/favorites_bloc.dart';
 import 'package:shopping_app/favorites/repository/favorites_repository.dart';
 import 'package:shopping_app/home/home.dart';
@@ -15,17 +17,24 @@ class ShoppingApp extends StatelessWidget {
       required ProductsRepository productRepository,
       required CategoriesRepository categoriesRepository,
       required PermissionRepository permissionRepository,
-      required FavoritesRepository favoritesRepository})
+      required FavoritesRepository favoritesRepository,
+      required FilePickerRepository filePickerRepository,
+      required StorageRepository storageRepository
+      })
       : _productRepository = productRepository,
         _categoriesRepository = categoriesRepository,
         _permissionRepository = permissionRepository,
         _favoritesRepository = favoritesRepository,
+        _filePickerRepository = filePickerRepository,
+        _storageRepository = storageRepository,
         super(key: key);
 
   final ProductsRepository _productRepository;
   final CategoriesRepository _categoriesRepository;
   final PermissionRepository _permissionRepository;
   final FavoritesRepository _favoritesRepository;
+  final FilePickerRepository _filePickerRepository;
+  final StorageRepository _storageRepository;
   @override
   Widget build(BuildContext context) {
     var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -40,6 +49,9 @@ class ShoppingApp extends StatelessWidget {
             create: (context) => _permissionRepository),
         RepositoryProvider<FavoritesRepository>(
             create: (context) => _favoritesRepository),
+        RepositoryProvider<FilePickerRepository>(
+            create: (context) => _filePickerRepository),
+        RepositoryProvider<StorageRepository>(create: (context) => _storageRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -80,6 +92,13 @@ class ShoppingApp extends StatelessWidget {
                 favoritesRepository:
                     RepositoryProvider.of<FavoritesRepository>(context)),
           ),
+          BlocProvider<FilePickerBloc>(
+            create: (context) => FilePickerBloc(filePickerRepository:RepositoryProvider.of<FilePickerRepository>(context)),
+          ),
+          BlocProvider<UploadImageBloc>(
+            create: (context) => UploadImageBloc(storageRepository:RepositoryProvider.of<StorageRepository>(context)),
+          ),
+
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
