@@ -4,7 +4,7 @@ part 'dropdown_button_event.dart';
 
 
 class DropdownButtonBloc extends Bloc<DropdownButtonEvent, CategoryModel> {
-  DropdownButtonBloc() : super(CategoryModel(categoryName: '', categoryColor:'')) {
+  DropdownButtonBloc() : super(CategoryModel(categoryName: '', categoryColor:'', isOpen: true)) {
     on<SelectCategory> ((event, emit) {
       emit(event.selectedCategory);
     });

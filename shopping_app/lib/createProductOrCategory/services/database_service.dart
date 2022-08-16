@@ -77,6 +77,7 @@ class DatabaseService {
   Future<void> createCategory(CategoryModel category) async =>await categoriesCollection.add(category.toJson());
   Future<void> deleteCategory(String categoryId) async => await categoriesCollection.doc(categoryId).delete();
   Future<void> updateCategory( String categoryId, CategoryModel newCategoryData) async => await categoriesCollection.doc(categoryId).update(newCategoryData.toJson());
+  Future<void> updateCategoryStatus(bool isOpen,String categoryId) async => await categoriesCollection.doc(categoryId).update({'isOpen': isOpen});
 
 
 

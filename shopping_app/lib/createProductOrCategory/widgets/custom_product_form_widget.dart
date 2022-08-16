@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
 
   String productName = '', productPrice = '';
   CategoryModel productCategory =
-      CategoryModel(categoryColor: '', categoryName: '');
+      CategoryModel(categoryColor: '', categoryName: '', isOpen: true);
   @override
   void initState() {
     super.initState();
@@ -75,7 +74,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                           dropdownButtonBloc.add(SelectCategory(
                               selectedCategory: CategoryModel(
                                   categoryColor: category!.categoryColor,
-                                  categoryName: category.categoryName)));
+                                  categoryName: category.categoryName,
+                                  isOpen: true)));
                         },
                       ),
                       CustomFormFieldWidget(
@@ -124,7 +124,9 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   ),
                   CustomFormButtonSubmitWidget(
                       isEnabled: state is CategoriesListIsEmpty ? false : true,
-                      onPressed: state is CategoriesListIsEmpty ?(){}: ()=>addProduct(),
+                      onPressed: state is CategoriesListIsEmpty
+                          ? () {}
+                          : () => addProduct(),
                       buttonLabel: 'Submit Product'),
                 ],
               ));

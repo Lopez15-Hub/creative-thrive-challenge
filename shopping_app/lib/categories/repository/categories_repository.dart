@@ -11,4 +11,5 @@ class CategoriesRepository {
   Future<void> createCategory(CategoryModel category) async =>await _databaseService.createCategory(category);
   Future<void> deleteCategory(String categoryId) async =>await _databaseService.deleteCategory(categoryId);
   Future<void> updateCategory(String categoryId, CategoryModel newCategoryData) async =>await _databaseService.updateCategory(categoryId, newCategoryData);
+  Future<void> updateCategoryStatus(bool isOpen,String categoryId) async =>await _databaseService.updateCategoryStatus(isOpen,categoryId);
 }

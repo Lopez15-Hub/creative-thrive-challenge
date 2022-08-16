@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/bloc/categories_bloc.dart';
@@ -27,11 +26,21 @@ class _CategoriesViewState extends State<CategoriesView> {
       builder: (context, state) {
         List<CategoryModel> categories = [];
         if (state is CategoriesRetrieved) {
-            categories.addAll(state.retrievedCategories);
+          categories.addAll(state.retrievedCategories);
           return ReorderableListView(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(left: 20, right: 20),
-            onReorder: (int oldIndex, int newIndex) =>print("{oldIndex:$oldIndex, newIndex:$newIndex}"),
+            onReorder: (int oldIndex, int newIndex) => {
+              setState(() {
+                
+                if (oldIndex < newIndex) {
+                  newIndex -= 1;
+                }
+                final  item = categories.removeAt(oldIndex);
+                categories.insert(newIndex, item);
+              })
+            },
+
             children: categories
                 .map(
                   (categories) => CustomCategoryItem(
@@ -65,7 +74,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             ],
           );
         }
-        
+
         return const CustomCircularProgressIndicatorWidget(
           text: 'Retrieving Categories',
         );

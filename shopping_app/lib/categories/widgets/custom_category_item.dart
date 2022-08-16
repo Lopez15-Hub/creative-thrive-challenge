@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../home/bloc/blocs.dart';
+import '../bloc/categories_bloc.dart';
 
 class CustomCategoryItem extends StatelessWidget {
   const CustomCategoryItem(
@@ -15,6 +17,7 @@ class CustomCategoryItem extends StatelessWidget {
   final int index;
   @override
   Widget build(BuildContext context) {
+    final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
     var dangerContainer = Container(
       color: Colors.red,
       child: Row(
@@ -30,7 +33,7 @@ class CustomCategoryItem extends StatelessWidget {
       ),
     );
     return Card(
-      shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 4,
       child: Dismissible(
         key: UniqueKey(),
@@ -38,30 +41,32 @@ class CustomCategoryItem extends StatelessWidget {
         background: Container(),
         secondaryBackground: dangerContainer,
         onDismissed: (direction) {
-            popupBloc.add(ShowPopupEvent(
-                mustBeShowed: true,
-                context: context,
-                categoryId: state.categoryId));
-          },
+          popupBloc.add(ShowPopupEvent(
+              mustBeShowed: true,
+              context: context,
+              categoryId: state.categoryId));
+        },
         child: ListTile(
-            title: Text(
-              state.categoryName,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Color(int.parse(
-                      state.categoryColor))),
-            ),
-            subtitle: const Text(
-              "Status: closed",
-              style: TextStyle(fontSize: 12, color: Colors.blue),
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.archive,
-                  size: 30, semanticLabel: 'Close category'),
-              onPressed: () => print("s"),
-            ),
+          title: Text(
+            state.categoryName,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Color(int.parse(state.categoryColor))),
           ),
+          subtitle: Text(
+           !state.isOpen? "Status: closed" : "Status: open",
+            style: TextStyle(fontSize: 12, color: !state.isOpen? Colors.blue: Colors.green),
+          ),
+          trailing: IconButton(
+            icon: Icon( !state.isOpen?Icons.archive : Icons.send_and_archive,
+                size: 30, semanticLabel: 'Close category'),
+            onPressed: () => categoriesBloc.add(UpdateCategoriesStatusEvent(
+                isOpen: !state.isOpen,
+                categoryId: state.categoryId,
+                context: context)),
+          ),
+        ),
       ),
     );
   }

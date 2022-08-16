@@ -33,6 +33,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
             currentCategory: categoriesList.first),
       );
     });
+
     on<CategorySubmittedEvent>((event, emit) async {
       snackbarBloc.add(
           SnackbarSuccessEvent(event.context, 'Category added successfully'));
@@ -41,9 +42,8 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       categoriesRepository
           .deleteCategory(event.categoryId)
           .then((value) => add(CategoryWasDeletedEvent(context: event.context)))
-
-          
-          .catchError((error) => add(CategoriesFuctionWasErrorEvent(context: event.context, error: error.toString())));
+          .catchError((error) => add(CategoriesFuctionWasErrorEvent(
+              context: event.context, error: error.toString())));
     });
     on<CategoryWasDeletedEvent>((event, emit) async {
       Navigator.of(event.context).pop();
@@ -62,6 +62,11 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CategoryAlreadyExistsEvent>((event, emit) {
       return snackbarBloc
           .add(SnackbarInfoEvent(event.context, 'Category already exists'));
+    });
+    on<UpdateCategoriesStatusEvent>((event, emit) {
+      categoriesRepository.updateCategoryStatus(event.isOpen, event.categoryId).then((value) => snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Category is now ${event.isOpen ? 'open' : 'closed'}'))
+      );
+          add(const ListeningCategoriesEvent());
     });
   }
   final CategoriesRepository categoriesRepository;

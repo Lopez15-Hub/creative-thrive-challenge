@@ -39,6 +39,16 @@ class UpdateCategoriesFavoriteEvent extends CategoriesEvent {
   List<Object> get props => [categoryId];
 }
 
+class UpdateCategoriesStatusEvent extends CategoriesEvent {
+  final bool isOpen;
+  final String categoryId;
+  final BuildContext context;
+  const UpdateCategoriesStatusEvent(
+      {required this.isOpen, required this.categoryId,required this.context});
+  @override
+  List<Object> get props => [isOpen, categoryId,context];
+}
+
 class DeleteCategoryEvent extends CategoriesEvent {
   final String categoryId;
   final BuildContext context;
@@ -95,9 +105,10 @@ class CheckIfCategoryExistsEvent extends CategoriesEvent {
   @override
   List<Object> get props => [categoryName, context];
 }
+
 class CategoryAlreadyExistsEvent extends CategoriesEvent {
-    final BuildContext context;
-    const CategoryAlreadyExistsEvent({required this.context});
-    @override
-    List<Object> get props => [context];
+  final BuildContext context;
+  const CategoryAlreadyExistsEvent({required this.context});
+  @override
+  List<Object> get props => [context];
 }

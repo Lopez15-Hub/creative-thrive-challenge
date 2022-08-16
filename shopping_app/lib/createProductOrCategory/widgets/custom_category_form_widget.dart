@@ -71,7 +71,9 @@ class _CategoryFormWidgetState extends State<CategoryFormWidget> {
                         categoryColor: extractColorProperty(categoryColor)));
                     var categoryModel = CategoryModel(
                         categoryName: categoryName.trim(),
-                        categoryColor: extractColorProperty(categoryColor));
+                        categoryColor: extractColorProperty(categoryColor),
+                        isOpen: true
+                        );
    
                     categoriesBloc.add(CreateCategoryEvent(
                         context: context, category: categoryModel));
