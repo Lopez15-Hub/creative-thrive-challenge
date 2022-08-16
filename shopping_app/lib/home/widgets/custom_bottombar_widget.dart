@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_app/home/bloc/bottombar_navigation/bottombar_navigation_bloc.dart';
+import 'package:shopping_app/home/bloc/blocs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomBottombarWidget extends StatelessWidget {
@@ -20,8 +20,8 @@ class CustomBottombarWidget extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    final navigationBloc = context.read<BottombarNavigationBloc>();
-    return BlocBuilder<BottombarNavigationBloc, int>(
+    final navigationBloc = context.read<NavigationBloc>();
+    return BlocBuilder<NavigationBloc, int>(
       builder: (context, currentIndex) {
         return BottomNavigationBar(
           currentIndex: currentIndex,

@@ -44,7 +44,9 @@ class CustomCategoryItem extends StatelessWidget {
         popupBloc.add(ShowPopupEvent(
             mustBeShowed: true,
             context: context,
-            categoryId: state.categoryId));
+            categoryId: state.categoryId,
+            categories: state.categories,
+            ));
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

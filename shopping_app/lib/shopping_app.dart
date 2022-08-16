@@ -7,7 +7,6 @@ import 'package:shopping_app/createProductOrCategory/repository/storage_reposito
 import 'package:shopping_app/favorites/bloc/favorites_bloc.dart';
 import 'package:shopping_app/favorites/repository/favorites_repository.dart';
 import 'package:shopping_app/home/home.dart';
-import 'package:shopping_app/home/repository/permission_repository.dart';
 import 'categories/bloc/categories_bloc.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
 
@@ -16,14 +15,13 @@ class ShoppingApp extends StatelessWidget {
       {Key? key,
       required ProductsRepository productRepository,
       required CategoriesRepository categoriesRepository,
-      required PermissionRepository permissionRepository,
       required FavoritesRepository favoritesRepository,
       required FilePickerRepository filePickerRepository,
       required StorageRepository storageRepository
       })
       : _productRepository = productRepository,
         _categoriesRepository = categoriesRepository,
-        _permissionRepository = permissionRepository,
+
         _favoritesRepository = favoritesRepository,
         _filePickerRepository = filePickerRepository,
         _storageRepository = storageRepository,
@@ -31,7 +29,6 @@ class ShoppingApp extends StatelessWidget {
 
   final ProductsRepository _productRepository;
   final CategoriesRepository _categoriesRepository;
-  final PermissionRepository _permissionRepository;
   final FavoritesRepository _favoritesRepository;
   final FilePickerRepository _filePickerRepository;
   final StorageRepository _storageRepository;
@@ -45,8 +42,6 @@ class ShoppingApp extends StatelessWidget {
             create: (context) => _productRepository),
         RepositoryProvider<CategoriesRepository>(
             create: (context) => _categoriesRepository),
-        RepositoryProvider<PermissionRepository>(
-            create: (context) => _permissionRepository),
         RepositoryProvider<FavoritesRepository>(
             create: (context) => _favoritesRepository),
         RepositoryProvider<FilePickerRepository>(
@@ -57,8 +52,8 @@ class ShoppingApp extends StatelessWidget {
         providers: [
           BlocProvider<FormValidationsBloc>(
               create: (context) => FormValidationsBloc()),
-          BlocProvider<BottombarNavigationBloc>(
-            create: (context) => BottombarNavigationBloc(),
+          BlocProvider<NavigationBloc>(
+            create: (context) => NavigationBloc(),
           ),
           BlocProvider<ShowPopupBloc>(
             create: (context) => ShowPopupBloc(),
@@ -69,11 +64,7 @@ class ShoppingApp extends StatelessWidget {
           BlocProvider<TitleChangerBloc>(
             create: (context) => TitleChangerBloc(),
           ),
-          BlocProvider<PermissionBloc>(
-            create: (context) => PermissionBloc(
-                permissionRepository:
-                    RepositoryProvider.of<PermissionRepository>(context)),
-          ),
+          
           BlocProvider<SnackbarBloc>(
             create: (context) => SnackbarBloc(),
           ),

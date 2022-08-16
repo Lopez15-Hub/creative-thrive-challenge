@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../createProductOrCategory/bloc/blocs.dart';
 import 'custom_drag_and_drop_item_content_widget.dart';
 
- customDragAndDropItemWidget(context, products, index) {
+ customDragAndDropItemWidget(context, products, index,categories) {
   var container = Container(
     color: Colors.red,
     child: Row(
@@ -41,20 +41,20 @@ import 'custom_drag_and_drop_item_content_widget.dart';
       key: UniqueKey(),
       background: container2,
       secondaryBackground: container,
-      onDismissed: (direction) =>
-          onDismissed(direction, context, products, index),
+      onDismissed: (direction) => onDismissed(direction, context, products, index,categories),
       child: DragAndDropItemContentWidget(
         index: index,
         products: products,
+        categories: categories,
       ),
     ),
   );
 }
 
-void onDismissed(direction, context, products, index) {
+void onDismissed(direction, context, products, index,categories) {
   final productsBloc = BlocProvider.of<ProductsBloc>(context);
   if (direction == DismissDirection.endToStart) {
-    productsBloc.add(DeleteProductEvent(productId: products[index].productId));
+    productsBloc.add(DeleteProductEvent(productId: products[index].productId,categories: categories));
     productsBloc.add(ProductWasDeletedEvent(context: context));
   }
   if (direction == DismissDirection.startToEnd) {

@@ -5,7 +5,7 @@ class DragAndDropListHeaderWidget extends StatelessWidget {
   const DragAndDropListHeaderWidget(
       {Key? key, required this.categories, required this.index})
       : super(key: key);
-  final List<CategoryModel> categories;
+  final CategoryModel categories;
   final int index;
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,8 @@ class DragAndDropListHeaderWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(10),
           child: Text(
-            categories[index].categoryName,
-            style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 30,color: Color(int.parse(categories[index].categoryColor))),
+            categories.categoryName,
+            style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 30,color: Color(int.parse(categories.categoryColor))),
           ),
         ),
       ],

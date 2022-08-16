@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/categories/categories.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
@@ -8,11 +9,12 @@ import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 
 class DragAndDropItemContentWidget extends StatelessWidget {
   const DragAndDropItemContentWidget(
-      {Key? key, required this.index, required this.products,this.isFavoriteView= false})
+      {Key? key, required this.index, required this.products,this.isFavoriteView= false,required this.categories})
       : super(key: key);
   final int index;
   final bool isFavoriteView;
   final List<ProductModel> products;
+  final List<CategoryModel> categories;
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);

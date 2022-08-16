@@ -52,12 +52,20 @@ class UpdateProductsFavoriteEvent extends ProductsEvent {
 
 class DeleteProductEvent extends ProductsEvent {
   final String productId;
-  const DeleteProductEvent({required this.productId});
+  final List<CategoryModel> categories;
+  const DeleteProductEvent({required this.productId,required this.categories});
   @override
-  List<Object> get props => [productId];
+  List<Object> get props => [productId,categories];
 }
 
-class ListeningProductsEvent extends ProductsEvent {}
+class ListeningProductsEvent extends ProductsEvent {
+    final List<CategoryModel> category;
+  const ListeningProductsEvent({required this.category});
+
+  @override
+  List<Object> get props => [category];
+}
+
 class ListeningProductsByCategoryEvent extends ProductsEvent {
   final CategoryModel category;
   const ListeningProductsByCategoryEvent({required this.category});
@@ -65,7 +73,12 @@ class ListeningProductsByCategoryEvent extends ProductsEvent {
   List<Object> get props => [category];
 }
 
-class ListeningProductsFavoritesEvent extends ProductsEvent {}
+class ListeningProductsFavoritesEvent extends ProductsEvent {
+  final CategoryModel categories;
+  const ListeningProductsFavoritesEvent({required this.categories});
+  @override
+  List<Object> get props => [categories];
+}
 
 class NotifyProductsListIsEmptyEvent extends ProductsEvent {}
 
@@ -136,12 +149,27 @@ class ProductOnSubmitedEvent extends ProductsEvent {
         isFavorite
       ];
 }
+
 class GetProductImageEvent extends ProductsEvent {
   final String productImageUrl;
   const GetProductImageEvent({required this.productImageUrl});
   @override
   List<Object> get props => [productImageUrl];
 }
-class ProducWasSubmitEvent extends ProductsEvent {
 
+class ProducWasSubmitEvent extends ProductsEvent {}
+
+class RetrieveProductsWithCategoryEvent extends ProductsEvent {
+  final List<CategoryModel> category;
+  const RetrieveProductsWithCategoryEvent({required this.category});
+
+  @override
+  List<Object> get props => [category];
+}
+class RetrieveProductsFavoritesWithCategoryEvent extends ProductsEvent {
+  final List<CategoryModel> category;
+  const RetrieveProductsFavoritesWithCategoryEvent({required this.category});
+
+  @override
+  List<Object> get props => [category];
 }

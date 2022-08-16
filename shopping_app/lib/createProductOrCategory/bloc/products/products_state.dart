@@ -21,7 +21,7 @@ class ProductsRetrieved extends ProductsState {
 }
 
 class ProductsFavoriteRetrieved extends ProductsState {
-  final List<ProductModel> retrievedProducts;
+  final List<ProductArragmentModel> retrievedProducts;
   const ProductsFavoriteRetrieved({required this.retrievedProducts});
 
   @override
@@ -44,4 +44,11 @@ class ProductsIsOnSubmit extends ProductsState {
   const ProductsIsOnSubmit({this.isOnSubmit = false});
   @override
   List<Object> get props => [isOnSubmit];
+}
+class ProductsArragmentRetrieved extends ProductsState {
+  final List<ProductArragmentModel> retrievedProducts;
+  const ProductsArragmentRetrieved({required this.retrievedProducts});
+
+  @override
+  List<Object> get props => [retrievedProducts];
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/createProductOrCategory/bloc/blocs.dart';
 
 import '../../categories/bloc/categories_bloc.dart';
 
-Future<void> customPopupWidget(context, title, content, categoryId) async {
+Future<void> customPopupWidget(context, title, content, categoryId,{required productId, required categories}) async {
   final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
+  final productsBloc = BlocProvider.of<ProductsBloc>(context);
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
@@ -20,8 +22,9 @@ Future<void> customPopupWidget(context, title, content, categoryId) async {
           TextButton(
               child: const Text('Delete item'),
               onPressed: () {
-                categoriesBloc.add(DeleteCategoryEvent(
-                    categoryId: categoryId, context: context));
+                if(categoryId) categoriesBloc.add(DeleteCategoryEvent(categoryId: categoryId, context: context));
+                if(productId) productsBloc.add(DeleteProductEvent(productId: productId,categories:categories ));
+
               }),
         ],
       );

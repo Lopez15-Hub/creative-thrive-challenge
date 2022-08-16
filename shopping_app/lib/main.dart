@@ -5,7 +5,6 @@ import 'package:shopping_app/favorites/repository/favorites_repository.dart';
 import 'categories/repository/categories_repository.dart';
 import 'package:shopping_app/shopping_app.dart';
 
-import 'home/repository/permission_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +14,6 @@ void main() async {
     filePickerRepository: FilePickerRepository(),
     categoriesRepository: CategoriesRepository(),
     productRepository: ProductsRepository(),
-    permissionRepository: PermissionRepository(),
     storageRepository: StorageRepository(),
   ));
 }

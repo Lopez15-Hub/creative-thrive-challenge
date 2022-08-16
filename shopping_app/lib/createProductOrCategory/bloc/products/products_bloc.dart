@@ -8,28 +8,28 @@ import 'package:shopping_app/favorites/bloc/favorites_bloc.dart';
 import 'package:shopping_app/favorites/models/favorite_model.dart';
 import 'package:shopping_app/favorites/repository/favorites_repository.dart';
 import 'package:shopping_app/home/bloc/snackbar/snackbar_bloc.dart';
+import 'package:shopping_app/shop/models/product_arragment_model.dart';
 import '../../repository/repositories.dart';
 part 'products_event.dart';
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   SnackbarBloc snackbarBloc = SnackbarBloc();
-  FavoritesBloc favoritesBloc =  FavoritesBloc(favoritesRepository: FavoritesRepository());
-  UploadImageBloc uploadImageBloc = UploadImageBloc(storageRepository: StorageRepository());
+  FavoritesBloc favoritesBloc =
+      FavoritesBloc(favoritesRepository: FavoritesRepository());
+  UploadImageBloc uploadImageBloc =
+      UploadImageBloc(storageRepository: StorageRepository());
   ProductsBloc({required this.productRepository}) : super(ProductsInitial()) {
-    
-    
     on<GetProductsEvent>((event, emit) {
       productRepository.getProducts();
     });
-
 
     on<CreateProductEvent>((event, emit) {
       productRepository
           .createProduct(event.product)
           .then((value) => add(ProductSubmittedEvent(event.context)))
-          .catchError((error) => add(ProductFunctionHasErrorEvent(context: event.context, error: error.toString())));
-          
+          .catchError((error) => add(ProductFunctionHasErrorEvent(
+              context: event.context, error: error.toString())));
     });
 
     on<UpdateProductsEvent>((event, emit) {
@@ -49,29 +49,19 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     });
 
     on<UpdateProductsCategoryEvent>((event, emit) {
-      productRepository.updateProductCategory(event.productId, event.newCategory);
+      productRepository.updateProductCategory(
+          event.productId, event.newCategory);
     });
 
     on<DeleteProductEvent>((event, emit) {
       productRepository.deleteProduct(event.productId);
-      add(ListeningProductsEvent());
+      add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
-    on<ListeningProductsEvent>((event, emit) async {
-      List<ProductModel> productsList = await productRepository.getProducts();
-      if (productsList.isEmpty) return emit(ProductsListIsEmpty());
-      await emit.forEach<List<ProductModel>>(
-        productRepository.getProductsStream(),
-        onData: (productsList) =>
-            ProductsRetrieved(retrievedProducts: productsList),
-        onError: (error, stackTrace) => ProductsRetrievedError(error: error),
-      );
-      emit(ProductsRetrieved(retrievedProducts: productsList));
-    });
 
     on<ListeningProductsFavoritesEvent>((event, emit) async {
-      List<ProductModel> favoritesProducts =
-          await productRepository.getProductsFavorites();
+      List<ProductArragmentModel> favoritesProducts =
+          await productRepository.getProductsFavorites(event.categories);
 
       if (favoritesProducts.isEmpty) return emit(ProductsListIsEmpty());
 
@@ -105,7 +95,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
     });
     on<ProductWasDeletedEvent>((event, emit) async {
-      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
+      snackbarBloc
+          .add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
     });
     on<ProductWasAddedToFavoritesEvent>((event, emit) async {
       snackbarBloc.add(
@@ -116,6 +107,31 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           event.context, 'Product removed from favorites'));
     });
 
+    on<RetrieveProductsWithCategoryEvent>((event, emit) async {
+      List<ProductArragmentModel> productsList = [];
+      List<CategoryModel> categories = event.category;
+      
+      for(int i=0; i<categories.length; i++) {
+       final response = await productRepository.getProductsWithCategory(categories[i]);
+        productsList.addAll(response);
+      }
+      
+      if (productsList.isEmpty) return emit(ProductsListIsEmpty());
+      emit(ProductsArragmentRetrieved(retrievedProducts: productsList));
+    });
+
+    on<RetrieveProductsFavoritesWithCategoryEvent>((event, emit) async {
+      List<ProductArragmentModel> productsList = [];
+      List<CategoryModel> categories = event.category;
+      
+      for(int i=0; i<categories.length; i++) {
+       final response = await productRepository.getProductsFavorites(categories[i]);
+        productsList.addAll(response);
+      }
+      
+      if (productsList.isEmpty) return emit(ProductsListIsEmpty());
+      emit(ProductsFavoriteRetrieved(retrievedProducts: productsList));
+    });
   }
 
   final ProductsRepository productRepository;

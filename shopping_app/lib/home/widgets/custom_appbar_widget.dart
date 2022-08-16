@@ -39,7 +39,7 @@ class DynamicTextAppbarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BottombarNavigationBloc, int>(
+    return BlocBuilder<NavigationBloc, int>(
       builder: (context, currentIndex) {
         switch (currentIndex) {
           case 0:
