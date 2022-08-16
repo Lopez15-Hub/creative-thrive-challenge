@@ -82,6 +82,9 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CategoriesAreOnLoadingEvent>((event, emit) {
       emit(CategoriesIsLoading(isLoading: event.isLoading));
     });
+    on<UpdateCategoriesPositionEvent>((event, emit) {
+       emit(CategoriesRetrieved(currentCategory: event.categoriesList.first,retrievedCategories:event.categoriesList));
+    });
   }
   final CategoriesRepository categoriesRepository;
 }

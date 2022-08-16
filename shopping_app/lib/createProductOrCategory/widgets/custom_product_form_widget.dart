@@ -22,10 +22,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   late DropdownButtonBloc dropdownButtonBloc;
   late UploadImageBloc uploadImageBloc;
   late FilePickerBloc filePickerBloc;
-
   String productName = '', productPrice = '';
-  CategoryModel productCategory =
-      CategoryModel(categoryColor: '', categoryName: '', isOpen: true);
+  CategoryModel productCategory =CategoryModel(categoryColor: '', categoryName: '', isOpen: true);
   @override
   void initState() {
     super.initState();

@@ -112,3 +112,10 @@ class CategoriesAreOnLoadingEvent extends CategoriesEvent {
   @override
   List<Object> get props => [isLoading];
 }
+
+class UpdateCategoriesPositionEvent extends CategoriesEvent {
+  final List<CategoryModel> categoriesList;
+  const UpdateCategoriesPositionEvent({required this.categoriesList});
+  @override
+  List<Object> get props => [categoriesList];
+}

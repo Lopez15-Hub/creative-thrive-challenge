@@ -15,23 +15,22 @@ class CategoriesView extends StatefulWidget {
   @override
   State<CategoriesView> createState() => _CategoriesViewState();
 }
-@override
 
+@override
 class _CategoriesViewState extends State<CategoriesView> {
   late final CategoriesBloc categoriesBloc;
-  late final ShowPopupBloc showPopupBloc; 
+  late final ShowPopupBloc showPopupBloc;
   @override
   void initState() {
     super.initState();
     categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
-    showPopupBloc= BlocProvider.of<ShowPopupBloc>(context);
+    showPopupBloc = BlocProvider.of<ShowPopupBloc>(context);
     categoriesBloc.add(const CategoriesAreOnLoadingEvent(isLoading: true));
     categoriesBloc.add(const ListeningCategoriesEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return BlocBuilder<CategoriesBloc, CategoriesState>(
       builder: (context, state) {
         List<CategoryModel> categories = [];
@@ -42,16 +41,18 @@ class _CategoriesViewState extends State<CategoriesView> {
             padding: const EdgeInsets.only(left: 20, right: 20),
             onReorder: (int oldIndex, int newIndex) => {
               setState(() {
-                if (oldIndex < newIndex) {
-                  newIndex -= 1;
-                }
-                final  item = categories.removeAt(oldIndex);
+                final List<CategoryModel> newCategoryList = [];
+                if (oldIndex < newIndex) newIndex -= 1;
+                final item = categories.removeAt(oldIndex);
                 categories.insert(newIndex, item);
+                newCategoryList.addAll(categories);
+                categoriesBloc.add(UpdateCategoriesPositionEvent(
+                    categoriesList: newCategoryList));
               })
             },
-
-            children: categories.map((categories) => 
-            CustomCategoryItem(
+            children: categories
+                .map(
+                  (categories) => CustomCategoryItem(
                     key: ValueKey(categories.categoryId),
                     popupBloc: showPopupBloc,
                     state: categories,
@@ -82,11 +83,15 @@ class _CategoriesViewState extends State<CategoriesView> {
             ],
           );
         }
-        if(state is CategoriesIsLoading){
-          return const CustomCircularProgressIndicatorWidget(text: 'Retrieving categories',);
+        if (state is CategoriesIsLoading) {
+          return const CustomCircularProgressIndicatorWidget(
+            text: 'Retrieving categories',
+          );
         }
-        if(state is CategoriesRetrievedError){
-          return CustomTitleWidget(title: 'An ocurred error: ${state.error}', alignment: TextAlign.center);
+        if (state is CategoriesRetrievedError) {
+          return CustomTitleWidget(
+              title: 'An ocurred error: ${state.error}',
+              alignment: TextAlign.center);
         }
         return const CustomCircularProgressIndicatorWidget(
           text: 'Retrieving Categories',
