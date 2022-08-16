@@ -9,6 +9,7 @@ import '../../categories/bloc/categories_bloc.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 import '../../shop/widgets/widgets.dart';
+import '../bloc/favorites_bloc.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({Key? key}) : super(key: key);
@@ -26,7 +27,8 @@ class _FavoritesViewState extends State<FavoritesView> {
     //test
   }
 
-   generateDraggableItems(List<ProductModel> products, int index) {
+   generateDraggableItems(List<ProductModel> products, int index,state) {
+    BlocProvider.of<FavoritesBloc>(context).add(ListeningFavoriteDateAddEvent(productId: state.retrievedProducts[index].productId));
     return DragAndDropList(
         header: BlocBuilder<CategoriesBloc, CategoriesState>(
           builder: (context, state) {
@@ -104,9 +106,11 @@ class _FavoritesViewState extends State<FavoritesView> {
                 }
               },
               child: DragAndDropItemContentWidget(
+                isFavoriteView: true,
                 index: index,
                 products: products,
               ),
+              
             ),
           );
         }));
@@ -193,10 +197,10 @@ class _FavoritesViewState extends State<FavoritesView> {
               );
             }
             if (state is ProductsFavoriteRetrieved) {
+
               _contents = List.generate(
                   state.retrievedProducts.length,
-                  (index) =>
-                      generateDraggableItems(state.retrievedProducts, index));
+                  (index) => generateDraggableItems(state.retrievedProducts, index,state));
               return configureDraggableItemList();
             }
 

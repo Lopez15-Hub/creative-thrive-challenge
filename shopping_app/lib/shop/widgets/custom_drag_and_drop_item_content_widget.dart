@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
+import '../../favorites/bloc/favorites_bloc.dart';
+import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 
 class DragAndDropItemContentWidget extends StatelessWidget {
   const DragAndDropItemContentWidget(
-      {Key? key, required this.index, required this.products})
+      {Key? key, required this.index, required this.products,this.isFavoriteView= false})
       : super(key: key);
   final int index;
+  final bool isFavoriteView;
   final List<ProductModel> products;
   @override
   Widget build(BuildContext context) {
@@ -24,10 +27,12 @@ class DragAndDropItemContentWidget extends StatelessWidget {
                 productsBloc.add(UpdateProductsFavoriteEvent(
                     productId: products[index].productId,
                     isFavorite: !products[index].isFavorite));
-                if(!products[index].isFavorite){
-                  productsBloc.add(ProductWasAddedToFavoritesEvent(context: context));
-                }else{
-                  productsBloc.add(ProductWasDeletedFromFavoritesEvent(context: context));
+                if (!products[index].isFavorite) {
+                  productsBloc
+                      .add(ProductWasAddedToFavoritesEvent(context: context));
+                } else {
+                  productsBloc.add(
+                      ProductWasDeletedFromFavoritesEvent(context: context));
                 }
               },
               icon: Icon(
@@ -48,6 +53,22 @@ class DragAndDropItemContentWidget extends StatelessWidget {
               Text(
                 products[index].productName,
                 style: const TextStyle(fontSize: 18),
+              ),
+              Visibility(
+                visible: isFavoriteView,
+                child: BlocBuilder<FavoritesBloc, FavoritesState>(
+                  builder: (context, state) {
+                    if (state is FavoritesDateAddRetrieved) {
+                      return Text(
+                       "Added: ${state.favoritesList[index].dateAdded.toString().substring(0,10)}",
+                        style: const TextStyle(fontSize: 14),
+                      );
+                    }
+                    return const CustomCircularProgressIndicatorWidget(
+                      text: "Loading Products",
+                    );
+                  },
+                ),
               ),
             ],
           ),

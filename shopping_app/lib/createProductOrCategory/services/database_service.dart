@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shopping_app/favorites/models/favorite_model.dart';
 
 import '../../categories/models/category_model.dart';
 import '../models/product_model.dart';
 
 class DatabaseService {
-  final productsCollection = FirebaseFirestore.instance.collection("products");
-  final categoriesCollection =
-      FirebaseFirestore.instance.collection("categories");
+  final productsCollection   = FirebaseFirestore.instance.collection("products");
+  final categoriesCollection = FirebaseFirestore.instance.collection("categories");
+  final favoritesCollection  = FirebaseFirestore.instance.collection("favorites");
   Stream<List<ProductModel>> retrieveProductsStream() =>
       productsCollection.orderBy("category").snapshots().map((snapshot) => snapshot.docs
           .map((product) => ProductModel.fromSnapshot(product))
@@ -26,12 +27,6 @@ class DatabaseService {
       productsCollection.where("category",isEqualTo: productCategory.toJson()).snapshots().map((snapshot) => snapshot.docs
           .map((product) => ProductModel.fromSnapshot(product))
           .toList());
-  Stream<List<CategoryModel>> retrieveCategoriesStream() =>
-        categoriesCollection.snapshots().map((snapshot) => snapshot.docs
-        .map((category) => CategoryModel.fromSnapshot(category))
-        .toList());
-
-
 
   Future<List<ProductModel>> retrieveProductsFavorites() {
     return productsCollection.where('isFavorite', isEqualTo: true).get().then(
@@ -57,6 +52,18 @@ class DatabaseService {
 
 
 
+
+
+  Stream<List<CategoryModel>> retrieveCategoriesStream() =>
+        categoriesCollection.orderBy('pos',descending: true).snapshots().map((snapshot) => snapshot.docs
+        .map((category) => CategoryModel.fromSnapshot(category))
+        .toList());
+
+
+
+
+
+
   Future<List<CategoryModel>> retrieveCategories() {
     return categoriesCollection.get().then((snapshot) => snapshot.docs
         .map((category) => CategoryModel.fromSnapshot(category))
@@ -70,4 +77,15 @@ class DatabaseService {
   Future<void> createCategory(CategoryModel category) async =>await categoriesCollection.add(category.toJson());
   Future<void> deleteCategory(String categoryId) async => await categoriesCollection.doc(categoryId).delete();
   Future<void> updateCategory( String categoryId, CategoryModel newCategoryData) async => await categoriesCollection.doc(categoryId).update(newCategoryData.toJson());
+
+
+
+ Future<List<FavoriteModel>> retrieveFavoriteDateAdd(productId) {
+    return favoritesCollection.where("productId",isEqualTo: productId).get().then((snapshot) => snapshot.docs
+        .map((favorite) => FavoriteModel.fromSnapshot(favorite))
+        .toList());
+  }
+  Future<void> createFavorite(FavoriteModel favorite) async =>await favoritesCollection.doc(favorite.productId).set(favorite.toJson());
+  Future<void> deleteFavorite(String productId) async => await favoritesCollection.doc(productId).delete();
+  
 }

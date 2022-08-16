@@ -16,7 +16,6 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CreateCategoryEvent>((event, emit) {
       CheckIfCategoryExistsEvent(
           categoryName: event.category.categoryName, context: event.context);
-
       categoriesRepository
           .createCategory(event.category)
           .then((value) => add(CategorySubmittedEvent(context: event.context)))
@@ -58,8 +57,7 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<CheckIfCategoryExistsEvent>((event, emit) async {
       final categoryName =
           await categoriesRepository.getCategory(event.categoryName);
-      if (categoryName.isNotEmpty)
-        add(CategoryAlreadyExistsEvent(context: event.context));
+      if (categoryName.isNotEmpty)add(CategoryAlreadyExistsEvent(context: event.context));
     });
     on<CategoryAlreadyExistsEvent>((event, emit) {
       return snackbarBloc
