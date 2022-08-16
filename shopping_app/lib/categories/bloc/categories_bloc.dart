@@ -40,23 +40,19 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
       categoriesRepository
           .deleteCategory(event.categoryId)
           .then((value) => add(CategoryWasDeletedEvent(context: event.context)))
-          .catchError((error) => add(CategoriesFuctionWasErrorEvent(
-              context: event.context, error: error.toString())));
+          .catchError((error) => add(CategoriesFuctionWasErrorEvent(context: event.context, error: error.toString())));
     });
     on<CategoryWasDeletedEvent>((event, emit) async {
       Navigator.of(event.context).pop();
-      snackbarBloc.add(
-          SnackbarSuccessEvent(event.context, 'Category Deleted Successfully'));
+      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Category Deleted Successfully'));
     });
     on<CategoriesFuctionWasErrorEvent>((event, emit) async {
-      snackbarBloc.add(SnackbarErrorEvent(
-          event.context, 'An ocurred error: ${event.error}'));
+      snackbarBloc.add(SnackbarErrorEvent(event.context, 'An ocurred error: ${event.error}'));
     });
     on<CheckIfCategoryExistsEvent>((event, emit) async {
       final List<CategoryModel> categoriesOnBd =await categoriesRepository.getCategory(event.categoryName);
 
       if (categoriesOnBd.isNotEmpty) {
-              print(CategoryExists);
        return add(CategoryAlreadyExistsEvent(context: event.context));
       } 
       if(categoriesOnBd.isEmpty){

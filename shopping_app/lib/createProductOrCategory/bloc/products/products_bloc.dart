@@ -7,7 +7,7 @@ import 'package:shopping_app/createProductOrCategory/models/product_model.dart';
 import 'package:shopping_app/favorites/bloc/favorites_bloc.dart';
 import 'package:shopping_app/favorites/models/favorite_model.dart';
 import 'package:shopping_app/favorites/repository/favorites_repository.dart';
-import 'package:shopping_app/home/bloc/snackbar/snackbar_bloc.dart';
+import 'package:shopping_app/home/bloc/blocs.dart';
 import 'package:shopping_app/shop/models/product_arragment_model.dart';
 import '../../repository/repositories.dart';
 part 'products_event.dart';
@@ -55,7 +55,11 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     });
 
     on<DeleteProductEvent>((event, emit) {
-      productRepository.deleteProduct(event.productId);
+      productRepository
+          .deleteProduct(event.productId)
+          .then((value) => add(ProductWasDeletedEvent(context: event.context)))
+          .onError((error, stackTrace) => ProductFunctionHasErrorEvent(
+              error: error.toString(), context: event.context));
       add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
@@ -96,7 +100,9 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
     });
     on<ProductWasDeletedEvent>((event, emit) async {
+      Navigator.of(event.context).pop();
       snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
+
     });
     on<ProductWasAddedToFavoritesEvent>((event, emit) async {
       snackbarBloc.add(
@@ -114,7 +120,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       for (int i = 0; i < categories.length; i++) {
         final response =
             await productRepository.getProductsWithCategory(categories[i]);
-            productsList.addAll(response);
+        productsList.addAll(response);
       }
 
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());

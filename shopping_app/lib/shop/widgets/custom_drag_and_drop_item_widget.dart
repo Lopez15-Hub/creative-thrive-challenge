@@ -56,7 +56,9 @@ void onDismissed(direction, context, products, index, categories) {
   final productsBloc = BlocProvider.of<ProductsBloc>(context);
   if (direction == DismissDirection.endToStart) {
     productsBloc.add(DeleteProductEvent(
-        productId: products[index].productId, categories: categories));
+        context: context,
+        productId: products[index].productId,
+        categories: categories));
     productsBloc.add(ProductWasDeletedEvent(context: context));
   }
   if (direction == DismissDirection.startToEnd) {

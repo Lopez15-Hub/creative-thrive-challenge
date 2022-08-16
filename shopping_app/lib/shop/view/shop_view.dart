@@ -8,6 +8,7 @@ import '../../categories/models/category_model.dart';
 import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../createProductOrCategory/view/form_create_product_or_category_view.dart';
 import '../../createProductOrCategory/widgets/form_widgets/widgets.dart';
+import '../../home/bloc/blocs.dart';
 import '../widgets/widgets.dart';
 
 class ShopView extends StatefulWidget {
@@ -20,6 +21,7 @@ class ShopView extends StatefulWidget {
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
   late List<CategoryModel> _categories;
+    late ShowPopupBloc _showPopupBloc;
   late ProductsBloc _productsBloc;
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _ShopViewState extends State<ShopView> {
     BlocProvider.of<CategoriesBloc>(context)
         .add(const ListeningCategoriesEvent());
     _productsBloc = BlocProvider.of<ProductsBloc>(context);
+    _showPopupBloc = BlocProvider.of<ShowPopupBloc>(context);
   }
 
   generateDraggableItems(List<ProductArragmentModel> products, int index) {
@@ -81,11 +84,14 @@ class _ShopViewState extends State<ShopView> {
               onDismissed: (direction) {
                 final productsBloc = BlocProvider.of<ProductsBloc>(context);
                 if (direction == DismissDirection.endToStart) {
-                  productsBloc.add(DeleteProductEvent(
-                      productId:
-                          products[index].products[productIndex].productId,
+                  _showPopupBloc.add(ShowPopupEvent(
+                      mustBeShowed: true,
+                      context: context,
+                      categoryId: '',
+                      productId: products[productIndex]
+                          .products[productIndex]
+                          .productId,
                       categories: _categories));
-                  productsBloc.add(ProductWasDeletedEvent(context: context));
                 }
                 if (direction == DismissDirection.startToEnd) {
                   productsBloc.add(UpdateProductsFavoriteEvent(

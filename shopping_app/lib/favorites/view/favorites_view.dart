@@ -94,7 +94,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                           .productId,
                       categories: _categories));
 
-                  productsBloc.add(ProductWasDeletedEvent(context: context));
+                  // productsBloc.add(ProductWasDeletedEvent(context: context));
                 }
                 if (direction == DismissDirection.startToEnd) {
                   productsBloc.add(UpdateProductsFavoriteEvent(
