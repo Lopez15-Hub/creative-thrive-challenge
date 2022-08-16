@@ -89,14 +89,16 @@ class _FavoritesViewState extends State<FavoritesView> {
                       mustBeShowed: true,
                       context: context,
                       categoryId: '',
-                      productId: products[productIndex].products[productIndex].productId,
-                      categories: _categories
-                          ));
+                      productId: products[productIndex]
+                          .products[productIndex]
+                          .productId,
+                      categories: _categories));
 
                   productsBloc.add(ProductWasDeletedEvent(context: context));
                 }
                 if (direction == DismissDirection.startToEnd) {
                   productsBloc.add(UpdateProductsFavoriteEvent(
+                      categories: _categories,
                       isFavorite:
                           !products[index].products[productIndex].isFavorite,
                       productId:
@@ -222,7 +224,7 @@ class _FavoritesViewState extends State<FavoritesView> {
             if (state is CategoriesRetrieved) {
               _productsBloc.add(RetrieveProductsFavoritesWithCategoryEvent(
                   category: state.retrievedCategories));
-              final int categoriesIndex = state.retrievedCategories.length;
+              int categoriesIndex = state.retrievedCategories.length;
               return BlocBuilder<ProductsBloc, ProductsState>(
                 builder: (context, state) {
                   if (state is ProductsFavoriteRetrieved) {

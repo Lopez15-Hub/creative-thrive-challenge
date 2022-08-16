@@ -46,6 +46,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       } else {
         favoritesBloc.add(DeleteFavoriteEvent(productId: event.productId));
       }
+      add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
     on<UpdateProductsCategoryEvent>((event, emit) {
@@ -57,7 +58,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       productRepository.deleteProduct(event.productId);
       add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
-
 
     on<ListeningProductsFavoritesEvent>((event, emit) async {
       List<ProductArragmentModel> favoritesProducts =
@@ -84,6 +84,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
     on<ProductIsOnSubmitedEvent>((event, emit) async {
       emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
+      add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
     on<ProductFunctionHasErrorEvent>((event, emit) async {
@@ -95,8 +96,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
     });
     on<ProductWasDeletedEvent>((event, emit) async {
-      snackbarBloc
-          .add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
+      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
     });
     on<ProductWasAddedToFavoritesEvent>((event, emit) async {
       snackbarBloc.add(
@@ -110,12 +110,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<RetrieveProductsWithCategoryEvent>((event, emit) async {
       List<ProductArragmentModel> productsList = [];
       List<CategoryModel> categories = event.category;
-      
-      for(int i=0; i<categories.length; i++) {
-       final response = await productRepository.getProductsWithCategory(categories[i]);
-        productsList.addAll(response);
+
+      for (int i = 0; i < categories.length; i++) {
+        final response =
+            await productRepository.getProductsWithCategory(categories[i]);
+            productsList.addAll(response);
       }
-      
+
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());
       emit(ProductsArragmentRetrieved(retrievedProducts: productsList));
     });
@@ -123,12 +124,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<RetrieveProductsFavoritesWithCategoryEvent>((event, emit) async {
       List<ProductArragmentModel> productsList = [];
       List<CategoryModel> categories = event.category;
-      
-      for(int i=0; i<categories.length; i++) {
-       final response = await productRepository.getProductsFavorites(categories[i]);
+
+      for (int i = 0; i < categories.length; i++) {
+        final response =
+            await productRepository.getProductsFavorites(categories[i]);
         productsList.addAll(response);
       }
-      
+
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());
       emit(ProductsFavoriteRetrieved(retrievedProducts: productsList));
     });

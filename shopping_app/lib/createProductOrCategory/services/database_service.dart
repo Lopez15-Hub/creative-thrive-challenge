@@ -73,8 +73,7 @@ class DatabaseService {
   Future<List<ProductArragmentModel>> retrieveProductsFavorites({required CategoryModel productCategory} ) async {
     List<ProductArragmentModel> productArragmentModelList = [];
     List<ProductModel> productsList = [];
-    await productsCollection
-        .where("category.categoryName", isEqualTo: productCategory.categoryName).where("isFavorite",isEqualTo: true)
+    await productsCollection.where("category.categoryName", isEqualTo: productCategory.categoryName).where("isFavorite",isEqualTo: true)
         .get()
         .then((value) {
       productsList.addAll(value.docs

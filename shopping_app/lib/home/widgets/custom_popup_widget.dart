@@ -4,7 +4,8 @@ import 'package:shopping_app/createProductOrCategory/bloc/blocs.dart';
 
 import '../../categories/bloc/categories_bloc.dart';
 
-Future<void> customPopupWidget(context, title, content, categoryId,{required productId, required categories}) async {
+Future<void> customPopupWidget(context, title, content, categoryId,
+    {required productId, required categories}) async {
   final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
   final productsBloc = BlocProvider.of<ProductsBloc>(context);
   return showDialog<void>(
@@ -17,14 +18,16 @@ Future<void> customPopupWidget(context, title, content, categoryId,{required pro
         actions: <Widget>[
           TextButton(
             child: const Text('Cancel'),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              categoriesBloc.add(const ListeningCategoriesEvent());
+              Navigator.of(context).pop();
+            },
           ),
           TextButton(
               child: const Text('Delete item'),
               onPressed: () {
-                if(categoryId) categoriesBloc.add(DeleteCategoryEvent(categoryId: categoryId, context: context));
-                if(productId) productsBloc.add(DeleteProductEvent(productId: productId,categories:categories ));
-
+                if (categoryId)categoriesBloc.add(DeleteCategoryEvent( categoryId: categoryId, context: context));
+                if (productId)productsBloc.add(DeleteProductEvent(productId: productId, categories: categories));
               }),
         ],
       );

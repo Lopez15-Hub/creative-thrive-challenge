@@ -9,7 +9,11 @@ import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 
 class DragAndDropItemContentWidget extends StatelessWidget {
   const DragAndDropItemContentWidget(
-      {Key? key, required this.index, required this.products,this.isFavoriteView= false,required this.categories})
+      {Key? key,
+      required this.index,
+      required this.products,
+      this.isFavoriteView = false,
+      required this.categories})
       : super(key: key);
   final int index;
   final bool isFavoriteView;
@@ -27,6 +31,7 @@ class DragAndDropItemContentWidget extends StatelessWidget {
           child: IconButton(
               onPressed: () {
                 productsBloc.add(UpdateProductsFavoriteEvent(
+                    categories: categories,
                     productId: products[index].productId,
                     isFavorite: !products[index].isFavorite));
                 if (!products[index].isFavorite) {
@@ -62,7 +67,7 @@ class DragAndDropItemContentWidget extends StatelessWidget {
                   builder: (context, state) {
                     if (state is FavoritesDateAddRetrieved) {
                       return Text(
-                       "Added: ${state.favoritesList[index].dateAdded.toString().substring(0,10)}",
+                        "Added: ${state.favoritesList[index].dateAdded.toString().substring(0, 10)}",
                         style: const TextStyle(fontSize: 14),
                       );
                     }

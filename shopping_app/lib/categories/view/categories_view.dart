@@ -20,6 +20,7 @@ class CategoriesView extends StatefulWidget {
 class _CategoriesViewState extends State<CategoriesView> {
   late final CategoriesBloc categoriesBloc;
   late final ShowPopupBloc showPopupBloc;
+   late List<CategoryModel> _categories;
   @override
   void initState() {
     super.initState();
@@ -35,6 +36,7 @@ class _CategoriesViewState extends State<CategoriesView> {
       builder: (context, state) {
         List<CategoryModel> categories = [];
         if (state is CategoriesRetrieved) {
+          _categories = state.retrievedCategories;
           categories.addAll(state.retrievedCategories);
           return ReorderableListView(
             physics: const BouncingScrollPhysics(),
@@ -57,6 +59,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     popupBloc: showPopupBloc,
                     state: categories,
                     index: 0,
+                    categories: _categories,
                   ),
                 )
                 .toList(),

@@ -89,6 +89,7 @@ class _ShopViewState extends State<ShopView> {
                 }
                 if (direction == DismissDirection.startToEnd) {
                   productsBloc.add(UpdateProductsFavoriteEvent(
+                      categories: _categories,
                       isFavorite:
                           !products[index].products[productIndex].isFavorite,
                       productId:
@@ -213,8 +214,7 @@ class _ShopViewState extends State<ShopView> {
             }
             if (state is CategoriesRetrieved) {
               _categories = state.retrievedCategories;
-              _productsBloc.add(RetrieveProductsWithCategoryEvent(
-                  category: state.retrievedCategories));
+              _productsBloc.add(RetrieveProductsWithCategoryEvent(category: state.retrievedCategories));
 
               final int categoriesIndex = state.retrievedCategories.length;
               return BlocBuilder<ProductsBloc, ProductsState>(
@@ -223,8 +223,7 @@ class _ShopViewState extends State<ShopView> {
                     // print(state.retrievedProducts.map((e) => e.products[0].toJson()));
                     _contents = List.generate(
                         categoriesIndex,
-                        (index) => generateDraggableItems(
-                            state.retrievedProducts, index));
+                        (index) => generateDraggableItems(state.retrievedProducts, index));
                     return configureDraggableItemList();
                   }
 

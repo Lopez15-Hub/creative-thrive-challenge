@@ -3,18 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../home/bloc/blocs.dart';
 import '../bloc/categories_bloc.dart';
+import '../models/category_model.dart';
 
 class CustomCategoryItem extends StatelessWidget {
   const CustomCategoryItem(
       {Key? key,
       required this.popupBloc,
       required this.state,
-      required this.index})
+      required this.categories,
+      required this.index
+      })
       : super(key: key);
 
   final ShowPopupBloc popupBloc;
   final dynamic state;
   final int index;
+  final List<CategoryModel> categories;
   @override
   Widget build(BuildContext context) {
     final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
@@ -45,7 +49,7 @@ class CustomCategoryItem extends StatelessWidget {
             mustBeShowed: true,
             context: context,
             categoryId: state.categoryId,
-            categories: state.categories,
+            categories: categories,
             ));
       },
       child: Card(

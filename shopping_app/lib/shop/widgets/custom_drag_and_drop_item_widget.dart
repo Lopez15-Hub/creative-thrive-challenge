@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../createProductOrCategory/bloc/blocs.dart';
 import 'custom_drag_and_drop_item_content_widget.dart';
 
- customDragAndDropItemWidget(context, products, index,categories) {
+customDragAndDropItemWidget(context, products, index, categories) {
   var container = Container(
     color: Colors.red,
     child: Row(
@@ -41,7 +41,8 @@ import 'custom_drag_and_drop_item_content_widget.dart';
       key: UniqueKey(),
       background: container2,
       secondaryBackground: container,
-      onDismissed: (direction) => onDismissed(direction, context, products, index,categories),
+      onDismissed: (direction) =>
+          onDismissed(direction, context, products, index, categories),
       child: DragAndDropItemContentWidget(
         index: index,
         products: products,
@@ -51,14 +52,16 @@ import 'custom_drag_and_drop_item_content_widget.dart';
   );
 }
 
-void onDismissed(direction, context, products, index,categories) {
+void onDismissed(direction, context, products, index, categories) {
   final productsBloc = BlocProvider.of<ProductsBloc>(context);
   if (direction == DismissDirection.endToStart) {
-    productsBloc.add(DeleteProductEvent(productId: products[index].productId,categories: categories));
+    productsBloc.add(DeleteProductEvent(
+        productId: products[index].productId, categories: categories));
     productsBloc.add(ProductWasDeletedEvent(context: context));
   }
   if (direction == DismissDirection.startToEnd) {
     productsBloc.add(UpdateProductsFavoriteEvent(
+        categories: categories,
         isFavorite: !products[index].isFavorite,
         productId: products[index].productId));
     if (!products[index].isFavorite) {
