@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -201,82 +202,85 @@ class _FavoritesViewState extends State<FavoritesView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: BlocBuilder<CategoriesBloc, CategoriesState>(
-          builder: (context, state) {
-            if (state is CategoriesListIsEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CustomTitleWidget(
-                      title: 'You dont have categories and products yet',
-                      alignment: TextAlign.center),
-                  Center(
-                    child: CustomButtonSmallWidget(
-                      isEnabled: true,
-                      label: 'Create my first category',
-                      iconButton: Icons.plus_one,
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const FormCreateProductOrCategoryView(
-                                    addCategory: true,
-                                  ))),
+        body: FadeIn(
+          animate: true,
+          child: BlocBuilder<CategoriesBloc, CategoriesState>(
+            builder: (context, state) {
+              if (state is CategoriesListIsEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CustomTitleWidget(
+                        title: 'You dont have categories and products yet',
+                        alignment: TextAlign.center),
+                    Center(
+                      child: CustomButtonSmallWidget(
+                        isEnabled: true,
+                        label: 'Create my first category',
+                        iconButton: Icons.plus_one,
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const FormCreateProductOrCategoryView(
+                                      addCategory: true,
+                                    ))),
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }
-            if (state is CategoriesRetrieved) {
-              _productsBloc.add(RetrieveProductsFavoritesWithCategoryEvent(category: state.retrievedCategories));
-              int categoriesIndex = state.retrievedCategories.length;
-              return BlocBuilder<ProductsBloc, ProductsState>(
-                builder: (context, state) {
-                  if (state is ProductsFavoriteRetrieved) {
-                    _contents = List.generate(
-                        categoriesIndex,
-                        (index) => generateDraggableItems(state.retrievedProducts, index));
-                    return configureDraggableItemList();
-                  }
-
-                  if (state is ProductsRetrievedError) {
-                    return Center(
-                      child: Text(state.error.toString()),
-                    );
-                  }
-                  if (state is ProductsListIsEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CustomTitleWidget(
-                            title: 'You dont have products',
-                            alignment: TextAlign.center),
-                        Center(
-                          child: CustomButtonSmallWidget(
-                            isEnabled: true,
-                            label: 'Add one',
-                            iconButton: Icons.plus_one,
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FormCreateProductOrCategoryView())),
+                  ],
+                );
+              }
+              if (state is CategoriesRetrieved) {
+                _productsBloc.add(RetrieveProductsFavoritesWithCategoryEvent(category: state.retrievedCategories));
+                int categoriesIndex = state.retrievedCategories.length;
+                return BlocBuilder<ProductsBloc, ProductsState>(
+                  builder: (context, state) {
+                    if (state is ProductsFavoriteRetrieved) {
+                      _contents = List.generate(
+                          categoriesIndex,
+                          (index) => generateDraggableItems(state.retrievedProducts, index));
+                      return configureDraggableItemList();
+                    }
+        
+                    if (state is ProductsRetrievedError) {
+                      return Center(
+                        child: Text(state.error.toString()),
+                      );
+                    }
+                    if (state is ProductsListIsEmpty) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CustomTitleWidget(
+                              title: 'You dont have products',
+                              alignment: TextAlign.center),
+                          Center(
+                            child: CustomButtonSmallWidget(
+                              isEnabled: true,
+                              label: 'Add one',
+                              iconButton: Icons.plus_one,
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FormCreateProductOrCategoryView())),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      );
+                    }
+        
+                    return const CustomCircularProgressIndicatorWidget(
+                      text: "Loading Products",
                     );
-                  }
-
-                  return const CustomCircularProgressIndicatorWidget(
-                    text: "Loading Products",
-                  );
-                },
+                  },
+                );
+              }
+              return const CustomCircularProgressIndicatorWidget(
+                text: "Loading Categories",
               );
-            }
-            return const CustomCircularProgressIndicatorWidget(
-              text: "Loading Categories",
-            );
-          },
+            },
+          ),
         ));
   }
 }

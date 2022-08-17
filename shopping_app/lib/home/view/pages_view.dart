@@ -15,13 +15,13 @@ class PagesView extends StatelessWidget {
       builder: (context, currentIndex) {
         switch (currentIndex) {
           case 0:
-            return FadeIn(animate:true,child: const ShopView());
+            return const ShopView();
           case 1:
-            return FadeIn(animate:true,child: const FavoritesView());
+            return const FavoritesView();
           case 2:
-            return FadeIn(animate:true,child: const CategoriesView());
+            return const CategoriesView();
           default:
-            return FadeIn(animate:true,child: const ShopView());
+            return const ShopView();
         }
       },
     );

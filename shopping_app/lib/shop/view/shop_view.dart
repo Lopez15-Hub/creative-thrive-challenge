@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -222,107 +223,110 @@ class _ShopViewState extends State<ShopView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: BlocBuilder<CategoriesBloc, CategoriesState>(
-          builder: (context, state) {
-            if (state is CategoriesListIsEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CustomTitleWidget(
-                      title: 'You dont have categories and products yet',
-                      alignment: TextAlign.center),
-                  Center(
-                    child: CustomButtonSmallWidget(
+        body: FadeIn(
+          animate: true,
+          child: BlocBuilder<CategoriesBloc, CategoriesState>(
+            builder: (context, state) {
+              if (state is CategoriesListIsEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CustomTitleWidget(
+                        title: 'You dont have categories and products yet',
+                        alignment: TextAlign.center),
+                    Center(
+                      child: CustomButtonSmallWidget(
+                        isEnabled: true,
+                        label: 'Create my first category',
+                        iconButton: Icons.plus_one,
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const FormCreateProductOrCategoryView(
+                                      addCategory: true,
+                                    ))),
+                      ),
+                    ),
+                  ],
+                );
+              }
+              if (state is CategoriesRetrieved) {
+                _categories = state.retrievedCategories;
+                _productsBloc.add(RetrieveProductsWithCategoryEvent(
+                    category: state.retrievedCategories));
+                final int categoriesIndex = state.retrievedCategories.length;
+        
+                return Column(
+                  children: [
+                    Form(
+                        child: CustomFormFieldWidget(
+                      label: 'Search ',
                       isEnabled: true,
-                      label: 'Create my first category',
-                      iconButton: Icons.plus_one,
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const FormCreateProductOrCategoryView(
-                                    addCategory: true,
-                                  ))),
-                    ),
-                  ),
-                ],
-              );
-            }
-            if (state is CategoriesRetrieved) {
-              _categories = state.retrievedCategories;
-              _productsBloc.add(RetrieveProductsWithCategoryEvent(
-                  category: state.retrievedCategories));
-              final int categoriesIndex = state.retrievedCategories.length;
-
-              return Column(
-                children: [
-                  Form(
-                      child: CustomFormFieldWidget(
-                    label: 'Search ',
-                    isEnabled: true,
-                    keyboardType: TextInputType.text,
-                    obscureText: false,
-                    onChanged: (value) => _productsBloc
-                        .add(SearchProductEvent(searchTerm: value)),
-                    icon: const Icon(Icons.search),
-                  )),
-                  Expanded(
-                    child: BlocBuilder<ProductsBloc, ProductsState>(
-                      builder: (context, state) {
-                        if (state is ProductsArragmentRetrieved) {
-                          _contents = List.generate(
-                              categoriesIndex,
-                              (index) => generateDraggableItems(
-                                  state.retrievedProducts, index));
-                          return configureDraggableItemList();
-                        }
-
-                        if (state is ProductsRetrievedError) {
-                          return Center(
-                            child: Text(state.error.toString()),
-                          );
-                        }
-                        if (state is ProductsListIsEmpty) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const CustomTitleWidget(
-                                  title: 'You dont have products',
-                                  alignment: TextAlign.center),
-                              Center(
-                                child: CustomButtonSmallWidget(
-                                  isEnabled: true,
-                                  label: 'Add one',
-                                  iconButton: Icons.plus_one,
-                                  onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const FormCreateProductOrCategoryView())),
+                      keyboardType: TextInputType.text,
+                      obscureText: false,
+                      onChanged: (value) => _productsBloc
+                          .add(SearchProductEvent(searchTerm: value)),
+                      icon: const Icon(Icons.search),
+                    )),
+                    Expanded(
+                      child: BlocBuilder<ProductsBloc, ProductsState>(
+                        builder: (context, state) {
+                          if (state is ProductsArragmentRetrieved) {
+                            _contents = List.generate(
+                                categoriesIndex,
+                                (index) => generateDraggableItems(
+                                    state.retrievedProducts, index));
+                            return configureDraggableItemList();
+                          }
+        
+                          if (state is ProductsRetrievedError) {
+                            return Center(
+                              child: Text(state.error.toString()),
+                            );
+                          }
+                          if (state is ProductsListIsEmpty) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const CustomTitleWidget(
+                                    title: 'You dont have products',
+                                    alignment: TextAlign.center),
+                                Center(
+                                  child: CustomButtonSmallWidget(
+                                    isEnabled: true,
+                                    label: 'Add one',
+                                    iconButton: Icons.plus_one,
+                                    onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const FormCreateProductOrCategoryView())),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            );
+                          }
+        
+                          return const CustomCircularProgressIndicatorWidget(
+                            text: "Loading Products",
                           );
-                        }
-
-                        return const CustomCircularProgressIndicatorWidget(
-                          text: "Loading Products",
-                        );
-                      },
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                );
+              }
+              if (state is CategoriesRetrievedError) {
+                return Center(
+                  child: Text(state.error.toString()),
+                );
+              }
+              return const CustomCircularProgressIndicatorWidget(
+                text: "Loading Categories",
               );
-            }
-            if (state is CategoriesRetrievedError) {
-              return Center(
-                child: Text(state.error.toString()),
-              );
-            }
-            return const CustomCircularProgressIndicatorWidget(
-              text: "Loading Categories",
-            );
-          },
+            },
+          ),
         ));
   }
 }
