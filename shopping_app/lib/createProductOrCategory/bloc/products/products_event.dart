@@ -176,10 +176,12 @@ class ProducWasSubmitEvent extends ProductsEvent {}
 
 class RetrieveProductsWithCategoryEvent extends ProductsEvent {
   final List<CategoryModel> category;
-  const RetrieveProductsWithCategoryEvent({required this.category});
+  final String search;
+  const RetrieveProductsWithCategoryEvent(
+      {required this.category, this.search = ''});
 
   @override
-  List<Object> get props => [category];
+  List<Object> get props => [category, search];
 }
 
 class RetrieveProductsFavoritesWithCategoryEvent extends ProductsEvent {
@@ -218,18 +220,23 @@ class CheckIfProductExistsEvent extends ProductsEvent {
   final ProductModel product;
   final BuildContext context;
   const CheckIfProductExistsEvent(
-      {
-        required this.productName,
-        required this.context,
-        required this.product
-
-      });
+      {required this.productName,
+      required this.context,
+      required this.product});
   @override
   List<Object> get props => [productName, context, product];
 }
+
 class ProductAlreadyExistsEvent extends ProductsEvent {
   final BuildContext context;
   const ProductAlreadyExistsEvent({required this.context});
   @override
   List<Object> get props => [context];
+}
+
+class SearchProductEvent extends ProductsEvent {
+  final String searchTerm;
+  const SearchProductEvent({required this.searchTerm});
+  @override
+  List<Object> get props => [searchTerm];
 }

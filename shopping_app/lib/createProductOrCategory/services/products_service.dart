@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shopping_app/favorites/models/favorite_model.dart';
 
 import '../../categories/models/category_model.dart';
 import '../../shop/models/product_arragment_model.dart';
-import '../models/product_model.dart';
+import '../models/models.dart';
 
-class DatabaseService {
+class ProductsService{
+  
   final productsCollection = FirebaseFirestore.instance.collection("products");
-  final categoriesCollection =
-      FirebaseFirestore.instance.collection("categories");
-  final favoritesCollection =
-      FirebaseFirestore.instance.collection("favorites");
 
 //? Products Database operations
   Stream<List<ProductModel>> retrieveProductsStream() => productsCollection
@@ -43,14 +39,6 @@ class DatabaseService {
           .snapshots()
           .map((snapshot) => snapshot.docs
               .map((product) => ProductModel.fromSnapshot(product))
-              .toList());
-  Stream<List<ProductArragmentModel>> retrieveProductsWithCategoryStream(
-          CategoryModel productCategory) =>
-      productsCollection
-          .where("category", isEqualTo: productCategory.toJson())
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((product) => ProductArragmentModel.fromSnapshot(product))
               .toList());
 
   Future<List<ProductArragmentModel>> retrieveProductsWithCategory(
@@ -111,9 +99,9 @@ class DatabaseService {
         .then((snapshot) => snapshot.docs
             .map((product) => ProductModel.fromSnapshot(product))
             .toList());
-      for (int i = 0; i < products.length; i++) {
-        await productsCollection.doc(products[i].productId).delete();
-      }
+    for (int i = 0; i < products.length; i++) {
+      await productsCollection.doc(products[i].productId).delete();
+    }
   }
 
   Future<void> updateProduct(
@@ -130,52 +118,11 @@ class DatabaseService {
           .doc(productId)
           .update({'category': newCategory.toJson()});
 
-//? Categories Database operations
-  Stream<List<CategoryModel>> retrieveCategoriesStream() => categoriesCollection
-      .orderBy('pos', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((category) => CategoryModel.fromSnapshot(category))
-          .toList());
+  //Search products
+  Stream<List<ProductModel>> searchProductsStream( {required String searchTerm}) {
 
-  Future<List<CategoryModel>> retrieveCategories() {
-    return categoriesCollection.get().then((snapshot) => snapshot.docs
-        .map((category) => CategoryModel.fromSnapshot(category))
-        .toList());
+    return productsCollection.where("productName", isGreaterThanOrEqualTo: searchTerm).snapshots().map((snapshot) => snapshot.docs .map((product) => ProductModel.fromSnapshot(product)) .toList());
+    
+
   }
-
-  Future<List<CategoryModel>> retrieveCategory(String categoryName) {
-    return categoriesCollection
-        .where("categoryName", isEqualTo: categoryName)
-        .get()
-        .then((snapshot) => snapshot.docs
-            .map((category) => CategoryModel.fromSnapshot(category))
-            .toList());
-  }
-
-  Future<void> createCategory(CategoryModel category) async =>
-      await categoriesCollection.add(category.toJson());
-  Future<void> deleteCategory(String categoryId) async =>
-      await categoriesCollection.doc(categoryId).delete();
-  Future<void> updateCategory(
-          String categoryId, CategoryModel newCategoryData) async =>
-      await categoriesCollection
-          .doc(categoryId)
-          .update(newCategoryData.toJson());
-  Future<void> updateCategoryStatus(bool isOpen, String categoryId) async =>
-      await categoriesCollection.doc(categoryId).update({'isOpen': isOpen});
-
-  Future<List<FavoriteModel>> retrieveFavoriteDateAdd(productId) {
-    return favoritesCollection
-        .where("productId", isEqualTo: productId)
-        .get()
-        .then((snapshot) => snapshot.docs
-            .map((favorite) => FavoriteModel.fromSnapshot(favorite))
-            .toList());
-  }
-
-  Future<void> createFavorite(FavoriteModel favorite) async =>
-      await favoritesCollection.doc(favorite.productId).set(favorite.toJson());
-  Future<void> deleteFavorite(String productId) async =>
-      await favoritesCollection.doc(productId).delete();
 }

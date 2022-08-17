@@ -16,7 +16,7 @@ class ProductFormWidget extends StatefulWidget {
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
   final _formKey = GlobalKey<FormState>();
-  final bool isEnabled = false;
+  final bool isEnabled = true;
   List<CategoryModel> categories = [];
   String productName = '', productPrice = '';
   CategoryModel productCategory =
@@ -45,8 +45,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     return Expanded(
       child: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (context, state) {
-          if (state is CategoriesRetrieved)
-            categories = state.retrievedCategories;
+          if (state is CategoriesRetrieved)categories = state.retrievedCategories;
           return Form(
               key: _formKey,
               child: Column(
@@ -140,10 +139,13 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                     builder: (context, uploadImageState) {
                       return BlocBuilder<FilePickerBloc, FilePickerState>(
                         builder: (context, filePickerState) {
-                          if (filePickerState is SetImageFile)
+                          if (filePickerState is SetImageFile) {
                             uploadImageBloc.add(UploadImageEvent(
                                 fileModel: filePickerState.file,
                                 context: context));
+                         
+                          }
+                          ;
                           return CustomFormButtonSubmitWidget(
                               isEnabled:
                                   state is CategoriesListIsEmpty ? false : true,
@@ -165,8 +167,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     );
   }
 
-  Future<void> addProduct(FilePickerState filePickerState,
-      UploadImageState uploadImageState) async {
+  Future<void> addProduct(FilePickerState filePickerState,UploadImageState uploadImageState) async {
+      BlocProvider.of<UploadImageBloc>(context).close();
     final formIsValid = _formKey.currentState!.validate();
     formBloc.add(FormFieldsAreValidEvent(formIsValid));
     formBloc.add(ValidateProductFormEvent(
@@ -175,15 +177,13 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
       productsBloc.add(ProductOnSubmitedEvent(
           isFavorite: false,
           productCategory: dropdownButtonBloc.state,
-          // productImage: uploadImageBloc.state.imageUrl.toString(),
-          productImage:
-              'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
+          productImage: uploadImageBloc.state.imageUrl.toString(),
+          // productImage:'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
           productName: productName,
           productPrice: productPrice.toString(),
           context: context));
 
-      productsBloc.add(
-          ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
+      productsBloc.add(ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
       _formKey.currentState!.reset();
     } catch (error) {
       return productsBloc.add(ProductFunctionHasErrorEvent(

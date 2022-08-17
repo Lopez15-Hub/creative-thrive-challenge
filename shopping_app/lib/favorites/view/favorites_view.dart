@@ -90,10 +90,10 @@ class _FavoritesViewState extends State<FavoritesView> {
                     context: context,
                     categoryId: '',
                     productId:
-                        products[productIndex].products[productIndex].productId,
+                        products[index].products[productIndex].productId,
                     categories: _categories,
                     category:
-                        products[productIndex].products[productIndex].category,
+                        products[index].products[productIndex].category,
                   ));
 
                   // productsBloc.add(ProductWasDeletedEvent(context: context));
@@ -228,16 +228,14 @@ class _FavoritesViewState extends State<FavoritesView> {
               );
             }
             if (state is CategoriesRetrieved) {
-              _productsBloc.add(RetrieveProductsFavoritesWithCategoryEvent(
-                  category: state.retrievedCategories));
+              _productsBloc.add(RetrieveProductsFavoritesWithCategoryEvent(category: state.retrievedCategories));
               int categoriesIndex = state.retrievedCategories.length;
               return BlocBuilder<ProductsBloc, ProductsState>(
                 builder: (context, state) {
                   if (state is ProductsFavoriteRetrieved) {
                     _contents = List.generate(
                         categoriesIndex,
-                        (index) => generateDraggableItems(
-                            state.retrievedProducts, index));
+                        (index) => generateDraggableItems(state.retrievedProducts, index));
                     return configureDraggableItemList();
                   }
 

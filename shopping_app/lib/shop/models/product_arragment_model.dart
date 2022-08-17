@@ -20,10 +20,9 @@ class ProductArragmentModel {
   CategoryModel category;
   List<ProductModel> products;
 
-  static ProductArragmentModel fromSnapshot(DocumentSnapshot snapshot) {
+  static ProductArragmentModel fromSnapshot(DocumentSnapshot snapshot,CategoryModel categories) {
     return ProductArragmentModel(
-      //id
-      category: snapshot['category'],
+      category: categories,
       products: snapshot['products'],
     );
   }

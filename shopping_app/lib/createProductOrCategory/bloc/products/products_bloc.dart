@@ -88,7 +88,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           productImage: event.productImage,
           productName: event.productName,
           productPrice: event.productPrice);
-      add(CheckIfProductExistsEvent(context:event.context, product: productModel,productName: event.productName));
+      add(CheckIfProductExistsEvent(
+          context: event.context,
+          product: productModel,
+          productName: event.productName));
     });
 
     on<ProductIsOnSubmitedEvent>((event, emit) async {
@@ -149,10 +152,12 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       emit(ProductsArragmentRetrieved(retrievedProducts: event.productsList));
     });
     on<DeleteProductsWhenCategoryWasDeletedEvent>((event, emit) async {
-      await productRepository.deleteProductsWhenCategoryWasDeleted(event.category)
+      await productRepository
+          .deleteProductsWhenCategoryWasDeleted(event.category)
           .then((value) => snackbarBloc.add(SnackbarSuccessEvent(
               event.context, 'Products deleted successfully')))
-          .onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(event.context,
+          .onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(
+              event.context,
               'Delete category products fails, error: ${error.toString()}')));
     });
     on<CheckIfProductExistsEvent>((event, emit) async {
@@ -162,12 +167,17 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         return add(ProductAlreadyExistsEvent(context: event.context));
       }
       if (productsOnBd.isEmpty) {
-        return add( CreateProductEvent(product: event.product, context: event.context));
+        return add(
+            CreateProductEvent(product: event.product, context: event.context));
       }
     });
     on<ProductAlreadyExistsEvent>((event, emit) async {
       snackbarBloc
           .add(SnackbarInfoEvent(event.context, 'Product already exists'));
+    });
+    on<SearchProductEvent>((event, emit) async {
+     await emit.onEach<List<ProductModel>>(productRepository.searchProductStream(event.searchTerm),
+          onData: (data) => ProductsRetrieved(retrievedProducts: data));
     });
   }
 

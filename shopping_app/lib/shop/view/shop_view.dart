@@ -1,6 +1,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shopping_app/createProductOrCategory/models/models.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 import 'package:shopping_app/shop/models/product_arragment_model.dart';
 import '../../categories/bloc/categories_bloc.dart';
@@ -21,7 +22,8 @@ class ShopView extends StatefulWidget {
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
   late List<CategoryModel> _categories;
-  List<ProductArragmentModel> _products = [];
+  List<ProductModel> _products = [];
+  List<ProductArragmentModel> _productsArragment = [];
   late ShowPopupBloc _showPopupBloc;
   late ProductsBloc _productsBloc;
   late CategoriesBloc _categoriesBloc;
@@ -36,7 +38,6 @@ class _ShopViewState extends State<ShopView> {
   }
 
   generateDraggableItems(List<ProductArragmentModel> products, int index) {
-    _products = products;
     return DragAndDropList(
         header: Column(
           children: <Widget>[
@@ -48,6 +49,7 @@ class _ShopViewState extends State<ShopView> {
         ),
         children: List<DragAndDropItem>.generate(
             products[index].products.length, (productIndex) {
+          products.map((item) => _products.add(item.products[productIndex]));
           return DragAndDropItem(
             child: Dismissible(
               key: UniqueKey(),
@@ -203,6 +205,19 @@ class _ShopViewState extends State<ShopView> {
     setState(() {});
   }
 
+  void searchProducts(String search, index) {
+    final suggestions = _products.where((product) {
+      final productTitle = product.productName.toLowerCase();
+      final input = search.toLowerCase();
+      return productTitle.contains(input);
+    }).toList();
+    setState(() {
+      for (int i = 0; i <= _categories.length; i++) {
+        _productsArragment[i].products = suggestions;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,60 +253,66 @@ class _ShopViewState extends State<ShopView> {
               _productsBloc.add(RetrieveProductsWithCategoryEvent(
                   category: state.retrievedCategories));
               final int categoriesIndex = state.retrievedCategories.length;
+
               return Column(
                 children: [
-                  Form(child: CustomFormFieldWidget(
+                  Form(
+                      child: CustomFormFieldWidget(
                     label: 'Search ',
                     isEnabled: true,
                     keyboardType: TextInputType.text,
-                    obscureText:false,
-
-                    onChanged: (value) {
-                     
-                    }, icon: const Icon(Icons.search),
+                    obscureText: false,
+                    onChanged: (value) => _productsBloc.add(SearchProductEvent(searchTerm: value)),
+                    icon: const Icon(Icons.search),
                   )),
-                  
                   Expanded(
-                    child: BlocBuilder<ProductsBloc, ProductsState>(
+                    child: BlocConsumer<ProductsBloc, ProductsState>(
+                      listener: (context, state) {
+                        print(state);
+                      },
                       builder: (context, state) {
-                        if (state is ProductsArragmentRetrieved) {
-                          _contents = List.generate(
-                              categoriesIndex,
-                              (index) => generateDraggableItems(
-                                  state.retrievedProducts, index));
-                          return configureDraggableItemList();
-                        }
-                  
-                        if (state is ProductsRetrievedError) {
-                          return Center(
-                            child: Text(state.error.toString()),
-                          );
-                        }
-                        if (state is ProductsListIsEmpty) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const CustomTitleWidget(
-                                  title: 'You dont have products',
-                                  alignment: TextAlign.center),
-                              Center(
-                                child: CustomButtonSmallWidget(
-                                  isEnabled: true,
-                                  label: 'Add one',
-                                  iconButton: Icons.plus_one,
-                                  onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const FormCreateProductOrCategoryView())),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                  
-                        return const CustomCircularProgressIndicatorWidget(
-                          text: "Loading Products",
+                        return BlocBuilder<ProductsBloc, ProductsState>(
+                          builder: (context, state) {
+                            if (state is ProductsArragmentRetrieved) {
+                              _contents = List.generate(
+                                  categoriesIndex,
+                                  (index) => generateDraggableItems(
+                                      state.retrievedProducts, index));
+                              return configureDraggableItemList();
+                            }
+
+                            if (state is ProductsRetrievedError) {
+                              return Center(
+                                child: Text(state.error.toString()),
+                              );
+                            }
+                            if (state is ProductsListIsEmpty) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const CustomTitleWidget(
+                                      title: 'You dont have products',
+                                      alignment: TextAlign.center),
+                                  Center(
+                                    child: CustomButtonSmallWidget(
+                                      isEnabled: true,
+                                      label: 'Add one',
+                                      iconButton: Icons.plus_one,
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FormCreateProductOrCategoryView())),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return const CustomCircularProgressIndicatorWidget(
+                              text: "Loading Products",
+                            );
+                          },
                         );
                       },
                     ),
