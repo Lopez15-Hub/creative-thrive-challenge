@@ -6,10 +6,14 @@ import '../widgets/form_widgets/widgets.dart';
 import 'package:shopping_app/home/home.dart';
 
 class FormCreateProductOrCategoryView extends StatelessWidget {
-  const FormCreateProductOrCategoryView({Key? key}) : super(key: key);
-  
+  const FormCreateProductOrCategoryView({Key? key, this.addCategory = false})
+      : super(key: key);
+  final bool addCategory;
+
   @override
   Widget build(BuildContext context) {
+    final titleChangerBloc = BlocProvider.of<TitleChangerBloc>(context);
+    titleChangerBloc.add(ChangeTitle(addCategory));
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppbarFormWidget(),

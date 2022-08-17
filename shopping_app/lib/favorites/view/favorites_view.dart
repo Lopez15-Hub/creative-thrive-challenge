@@ -216,7 +216,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const FormCreateProductOrCategoryView())),
+                                  const FormCreateProductOrCategoryView(addCategory: true,))),
                     ),
                   ),
                 ],

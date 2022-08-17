@@ -79,7 +79,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const FormCreateProductOrCategoryView())),
+                              const FormCreateProductOrCategoryView(addCategory: true,))),
                 ),
               ),
             ],

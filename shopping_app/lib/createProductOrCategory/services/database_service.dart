@@ -90,16 +90,26 @@ class DatabaseService {
     return productArragmentModelList;
   }
 
+  Future<List<ProductModel>> retrieveProduct({required String productName}) {
+    return productsCollection
+        .where("productName", isEqualTo: productName)
+        .get()
+        .then((snapshot) => snapshot.docs
+            .map((product) => ProductModel.fromSnapshot(product))
+            .toList());
+  }
+
   Future<void> createProduct(ProductModel product) async =>
       await productsCollection.add(product.toJson());
   Future<void> deleteProduct(String productId) async =>
       await productsCollection.doc(productId).delete();
   Future<void> deleteProductsWhenCategoryWasDeleted(
       CategoryModel category) async {
-    await productsCollection.where("category", isEqualTo: category.toJson()).get().then((value) => 
-    value.docs.map((element) => element.reference.delete()));
-
-    
+    await productsCollection
+        .where("category", isEqualTo: category.toJson())
+        .get()
+        .then(
+            (value) => value.docs.map((element) => element.reference.delete()));
   }
 
   Future<void> updateProduct(

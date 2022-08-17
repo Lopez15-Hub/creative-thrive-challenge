@@ -12,6 +12,7 @@ class ProductsRepository {
   Stream<List<ProductArragmentModel>> getProductsWithCategoryStream(CategoryModel productCategory) =>_databaseService.retrieveProductsWithCategoryStream(productCategory);
 
   Future<List<ProductModel>>          getProducts() async =>await _databaseService.retrieveProducts();
+  Future<List<ProductModel>>          getProduct(String productName) async =>await _databaseService.retrieveProduct(productName:productName);
   Future<List<ProductModel>>          getProductsByCategory(CategoryModel productCategory)   async => await _databaseService.retrieveProductsByCategory(productCategory);
   Future<List<ProductArragmentModel>> getProductsWithCategory(CategoryModel productCategory) async => await _databaseService.retrieveProductsWithCategory(productCategory: productCategory);
   Future<List<ProductArragmentModel>> getProductsFavorites(CategoryModel productCategory)    async => await  _databaseService.retrieveProductsFavorites(productCategory:productCategory);

@@ -207,7 +207,29 @@ class UpdateProductsFavoritesPositionEvent extends ProductsEvent {
 class DeleteProductsWhenCategoryWasDeletedEvent extends ProductsEvent {
   final CategoryModel category;
   final BuildContext context;
-  const DeleteProductsWhenCategoryWasDeletedEvent({required this.category,required this.context});
+  const DeleteProductsWhenCategoryWasDeletedEvent(
+      {required this.category, required this.context});
   @override
   List<Object> get props => [category];
+}
+
+class CheckIfProductExistsEvent extends ProductsEvent {
+  final String productName;
+  final ProductModel product;
+  final BuildContext context;
+  const CheckIfProductExistsEvent(
+      {
+        required this.productName,
+        required this.context,
+        required this.product
+
+      });
+  @override
+  List<Object> get props => [productName, context, product];
+}
+class ProductAlreadyExistsEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductAlreadyExistsEvent({required this.context});
+  @override
+  List<Object> get props => [context];
 }

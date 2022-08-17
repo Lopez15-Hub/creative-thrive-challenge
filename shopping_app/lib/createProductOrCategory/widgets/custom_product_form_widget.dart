@@ -158,15 +158,12 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     );
   }
 
-  Future<void> addProduct(FilePickerState filePickerState,
-      UploadImageState uploadImageState) async {
+  Future<void> addProduct(FilePickerState filePickerState, UploadImageState uploadImageState) async {
+      final formIsValid = _formKey.currentState!.validate();
+      formBloc.add(FormFieldsAreValidEvent(formIsValid));
+      formBloc.add(ValidateProductFormEvent(context: context, dropdownCategory: dropdownButtonBloc.state));
     try {
-      productsBloc.add(
-          ProductIsOnSubmitedEvent(isOnSubmit: true, categories: categories));
-      formBloc.add(FormFieldsAreValidEvent(_formKey.currentState!.validate()));
 
-      formBloc.add(ValidateProductFormEvent(
-          context: context, dropdownCategory: dropdownButtonBloc.state));
       productsBloc.add(ProductOnSubmitedEvent(
           isFavorite: false,
           productCategory: dropdownButtonBloc.state,
@@ -176,8 +173,9 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
           productName: productName,
           productPrice: productPrice.toString(),
           context: context));
-      productsBloc.add(
-          ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
+         
+      productsBloc.add(ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
+      _formKey.currentState!.reset();
     } catch (error) {
       return productsBloc.add(ProductFunctionHasErrorEvent(
           error: error.toString(), context: context));

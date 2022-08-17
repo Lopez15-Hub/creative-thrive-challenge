@@ -223,7 +223,7 @@ class _ShopViewState extends State<ShopView> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const FormCreateProductOrCategoryView())),
+                                  const FormCreateProductOrCategoryView(addCategory: true,))),
                     ),
                   ),
                 ],

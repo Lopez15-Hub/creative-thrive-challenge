@@ -56,7 +56,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
               .add(SnackbarSuccessEvent(event.context, 'Category updated')))
           .onError((error, stackTrace) => add(ProductFunctionHasErrorEvent(
               context: event.context, error: error.toString())));
-          add(RetrieveProductsWithCategoryEvent(category: event.categories));
+      add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
     on<DeleteProductEvent>((event, emit) {
@@ -88,7 +88,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           productImage: event.productImage,
           productName: event.productName,
           productPrice: event.productPrice);
-      add(CreateProductEvent(context: event.context, product: productModel));
+      add(CheckIfProductExistsEvent(context:event.context, product: productModel,productName: event.productName));
     });
 
     on<ProductIsOnSubmitedEvent>((event, emit) async {
@@ -148,13 +148,29 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<UpdateProductsPositionEvent>((event, emit) {
       emit(ProductsArragmentRetrieved(retrievedProducts: event.productsList));
     });
-    on<DeleteProductsWhenCategoryWasDeletedEvent>  ((event, emit) async {
-      await productRepository.deleteProductsWhenCategoryWasDeleted(event.category).then((value) => 
-      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Products deleted successfully'))
-      ).onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(event.context, 'Delete category products fails, error: ${error.toString()}')));
-
-    }
-    );
+    on<DeleteProductsWhenCategoryWasDeletedEvent>((event, emit) async {
+      await productRepository
+          .deleteProductsWhenCategoryWasDeleted(event.category)
+          .then((value) => snackbarBloc.add(SnackbarSuccessEvent(
+              event.context, 'Products deleted successfully')))
+          .onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(
+              event.context,
+              'Delete category products fails, error: ${error.toString()}')));
+    });
+    on<CheckIfProductExistsEvent>((event, emit) async {
+      final productsOnBd =
+          await productRepository.getProduct(event.productName);
+      if (productsOnBd.isNotEmpty) {
+        return add(ProductAlreadyExistsEvent(context: event.context));
+      }
+      if (productsOnBd.isEmpty) {
+        return add( CreateProductEvent(product: event.product, context: event.context));
+      }
+    });
+    on<ProductAlreadyExistsEvent>((event, emit) async {
+      snackbarBloc
+          .add(SnackbarInfoEvent(event.context, 'Product already exists'));
+    });
   }
 
   final ProductsRepository productRepository;

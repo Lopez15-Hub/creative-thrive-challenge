@@ -18,8 +18,7 @@ class SwitchFormWidget extends StatelessWidget {
         activeColor: Colors.white,
         activeTrackColor: Colors.deepOrange[800],
         value: currentForm,
-        onChanged: (currentForm) =>
-            titleChangerBloc.add(ChangeTitle(currentForm)),
+        onChanged: (currentForm) =>titleChangerBloc.add(ChangeTitle(currentForm)),
       ),
     );
   }

@@ -52,3 +52,9 @@ class ProductsArragmentRetrieved extends ProductsState {
   @override
   List<Object> get props => [retrievedProducts];
 }
+class ProductExists extends ProductsState {
+  final bool productExists;
+  const ProductExists({required this.productExists });
+  @override
+  List<Object> get props => [productExists];
+}

@@ -20,7 +20,7 @@ class CustomButtonSmallWidget extends StatelessWidget {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             
-              primary: Colors.grey,
+              primary: Colors.amber[900],
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10))),
         ));
