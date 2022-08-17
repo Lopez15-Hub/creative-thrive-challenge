@@ -42,8 +42,8 @@ dependencies:
   equatable: ^2.0.3
   drag_and_drop_lists: ^0.3.3
   flutter_colorpicker: ^1.0.3
-  image_picker: ^0.8.5+3
   file_picker: ^5.0.1
+  animate_do: ^2.1.0
 
 dev_dependencies:
   flutter_test:

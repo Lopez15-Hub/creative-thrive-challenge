@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/view/categories_view.dart';
@@ -14,13 +15,13 @@ class PagesView extends StatelessWidget {
       builder: (context, currentIndex) {
         switch (currentIndex) {
           case 0:
-            return const ShopView();
+            return FadeIn(animate:true,child: const ShopView());
           case 1:
-            return const FavoritesView();
+            return FadeIn(animate:true,child: const FavoritesView());
           case 2:
-            return const CategoriesView();
+            return FadeIn(animate:true,child: const CategoriesView());
           default:
-            return const ShopView();
+            return FadeIn(animate:true,child: const ShopView());
         }
       },
     );

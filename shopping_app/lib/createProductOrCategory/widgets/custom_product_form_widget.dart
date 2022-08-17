@@ -173,7 +173,6 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
       BlocProvider.of<UploadImageBloc>(context).snackbarBloc.close();
     final formIsValid = _formKey.currentState!.validate();
     formBloc.add(FormFieldsAreValidEvent(formIsValid));
-    uploadImageBloc.add(GetImageUrl(buildContext: context, file: FileModel(file: '',path: '')));
     formBloc.add(ValidateProductFormEvent(context: context, dropdownCategory: dropdownButtonBloc.state));
     try {
       productsBloc.add(ProductOnSubmitedEvent(

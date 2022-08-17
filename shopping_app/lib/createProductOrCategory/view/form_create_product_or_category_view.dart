@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/title_changer/title_changer_bloc.dart';
@@ -18,24 +19,27 @@ class FormCreateProductOrCategoryView extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppbarFormWidget(),
       drawer: const CustomDrawerWidget(),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              Text(
-                "Add Category",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-              ),
-              SwitchFormWidget(),
-            ],
-          ),
-          BlocBuilder<TitleChangerBloc, bool>(
-            builder: (context, currentForm) => !currentForm
-                ? const ProductFormWidget()
-                : const CategoryFormWidget(),
-          )
-        ],
+      body: FadeIn(
+        animate: true,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                Text(
+                  "Add Category",
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                ),
+                SwitchFormWidget(),
+              ],
+            ),
+            BlocBuilder<TitleChangerBloc, bool>(
+              builder: (context, currentForm) => !currentForm
+                  ? const ProductFormWidget()
+                  : const CategoryFormWidget(),
+            )
+          ],
+        ),
       ),
     );
   }
