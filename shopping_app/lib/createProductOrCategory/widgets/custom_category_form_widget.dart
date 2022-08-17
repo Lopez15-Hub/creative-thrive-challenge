@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/categories.dart';
 import 'package:shopping_app/createProductOrCategory/widgets/form_widgets/custom_color_picker_widget.dart';
-
-import '../../categories/bloc/categories_bloc.dart';
 import '../bloc/blocs.dart';
 import 'form_widgets/widgets.dart';
 

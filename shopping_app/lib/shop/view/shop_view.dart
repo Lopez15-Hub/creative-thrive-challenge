@@ -88,6 +88,11 @@ class _ShopViewState extends State<ShopView> {
                 );
               }
               if (state is CategoriesListIsEmpty) return const CustomMessageIsEmptyWidget(label: 'Create my first category',message: 'You don\'t have any products and categories yet.',);
+              
+              if (state is CategoriesIsLoading) {
+                   return const CustomCircularProgressIndicatorWidget(text: 'Retrieving categories', );
+              }
+             
               return const CustomCircularProgressIndicatorWidget(
                 text: "Loading Categories",
               );
