@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/home/view/views.dart';
 import 'custom_dynamic_title_widget.dart';
 
 class AppbarFormWidget extends StatelessWidget with PreferredSizeWidget {
@@ -22,7 +23,11 @@ class AppbarFormWidget extends StatelessWidget with PreferredSizeWidget {
           color: Color.fromRGBO(216, 67, 21, 1),
           size: 30,
         ),
-        onPressed: () => Navigator.pop(context)
+        onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                         const HomeView())),
       ),
     );
   }

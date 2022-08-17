@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -56,7 +54,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const CustomTitleWidget(title: 'Product Data', alignment: TextAlign.center),
+                      const CustomTitleWidget(
+                          title: 'Product Data', alignment: TextAlign.center),
                       CustomFormFieldWidget(
                         isEnabled:
                             state is CategoriesListIsEmpty ? false : true,
@@ -142,9 +141,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                             uploadImageBloc.add(UploadImageEvent(
                                 fileModel: filePickerState.file,
                                 context: context));
-                         
                           }
-                          
+
                           return CustomFormButtonSubmitWidget(
                               isEnabled:
                                   state is CategoriesListIsEmpty ? false : true,
@@ -166,22 +164,28 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     );
   }
 
-  Future<void> addProduct(FilePickerState filePickerState,UploadImageState uploadImageState) async {
-      BlocProvider.of<UploadImageBloc>(context).snackbarBloc.close();
+  Future<void> addProduct(FilePickerState filePickerState,
+      UploadImageState uploadImageState) async {
+    BlocProvider.of<UploadImageBloc>(context).snackbarBloc.close();
     final formIsValid = _formKey.currentState!.validate();
     formBloc.add(FormFieldsAreValidEvent(formIsValid));
-    formBloc.add(ValidateProductFormEvent(context: context, dropdownCategory: dropdownButtonBloc.state));
+    formBloc.add(ValidateProductFormEvent(
+        context: context, dropdownCategory: dropdownButtonBloc.state));
     try {
-      productsBloc.add(ProductOnSubmitedEvent(
-          isFavorite: false,
-          productCategory: dropdownButtonBloc.state,
-          // productImage: uploadImageBloc.state.imageUrl.toString(),
-          productImage:'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
-          productName: productName,
-          productPrice: productPrice.toString(),
-          context: context));
+      if (formIsValid) {
+        productsBloc.add(ProductOnSubmitedEvent(
+            isFavorite: false,
+            productCategory: dropdownButtonBloc.state,
+            // productImage: uploadImageBloc.state.imageUrl.toString(),
+            productImage:
+                'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
+            productName: productName,
+            productPrice: productPrice.toString(),
+            context: context));
+        productsBloc.add(ProductIsOnSubmitedEvent(
+            isOnSubmit: false, categories: categories));
+      }
 
-      productsBloc.add(ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
       _formKey.currentState!.reset();
     } catch (error) {
       return productsBloc.add(ProductFunctionHasErrorEvent(

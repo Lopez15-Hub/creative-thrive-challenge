@@ -16,7 +16,7 @@ class CustomFabWidget extends StatelessWidget {
               : false,
           child: FloatingActionButton(
             tooltip: 'Add new product or Cateogry',
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>

@@ -28,7 +28,7 @@ class CustomDrawerWidget extends StatelessWidget {
           ListTile(
             title: const Text('Add product'),
             leading: const Icon(Icons.add),
-            onTap: () => Navigator.push(
+            onTap: () => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
@@ -37,7 +37,7 @@ class CustomDrawerWidget extends StatelessWidget {
           ListTile(
             title: const Text('Add category'),
             leading: const Icon(Icons.category),
-            onTap: () => Navigator.push(
+            onTap: () => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>

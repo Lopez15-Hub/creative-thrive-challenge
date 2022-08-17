@@ -21,7 +21,7 @@ class CustomMessageIsEmptyWidget extends StatelessWidget {
             isEnabled: true,
             label: label,
             iconButton: Icons.plus_one,
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>

@@ -9,6 +9,7 @@ import 'package:shopping_app/favorites/repository/favorites_repository.dart';
 import 'package:shopping_app/home/home.dart';
 import 'categories/bloc/categories_bloc.dart';
 import 'createProductOrCategory/create_product_or_category.dart';
+import 'home/view/views.dart';
 
 class ShoppingApp extends StatelessWidget {
   const ShoppingApp(
@@ -34,7 +35,7 @@ class ShoppingApp extends StatelessWidget {
   final StorageRepository _storageRepository;
   @override
   Widget build(BuildContext context) {
-    var scaffoldKey = GlobalKey<ScaffoldState>();
+
 
     return MultiRepositoryProvider(
       providers: [
@@ -91,20 +92,10 @@ class ShoppingApp extends StatelessWidget {
           ),
 
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            key: scaffoldKey,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            appBar: CustomAppbarWidget(scaffoldKey: scaffoldKey),
-            drawer: const CustomDrawerWidget(),
-            body: const PagesView(),
-            floatingActionButton: const CustomFabWidget(),
-            bottomNavigationBar: const CustomBottombarWidget(),
-          ),
-        ),
+        child:const HomeView(),
       ),
     );
   }
 }
+
+
