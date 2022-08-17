@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/bloc/categories_bloc.dart';
 import 'package:shopping_app/categories/models/category_model.dart';
 import 'package:shopping_app/createProductOrCategory/bloc/blocs.dart';
+import 'package:shopping_app/createProductOrCategory/models/file_model.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 import 'form_widgets/widgets.dart';
 
@@ -168,11 +169,11 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   }
 
   Future<void> addProduct(FilePickerState filePickerState,UploadImageState uploadImageState) async {
-      BlocProvider.of<UploadImageBloc>(context).close();
+      BlocProvider.of<UploadImageBloc>(context).snackbarBloc.close();
     final formIsValid = _formKey.currentState!.validate();
     formBloc.add(FormFieldsAreValidEvent(formIsValid));
-    formBloc.add(ValidateProductFormEvent(
-        context: context, dropdownCategory: dropdownButtonBloc.state));
+    uploadImageBloc.add(GetImageUrl(buildContext: context, file: FileModel(file: '',path: '')));
+    formBloc.add(ValidateProductFormEvent(context: context, dropdownCategory: dropdownButtonBloc.state));
     try {
       productsBloc.add(ProductOnSubmitedEvent(
           isFavorite: false,

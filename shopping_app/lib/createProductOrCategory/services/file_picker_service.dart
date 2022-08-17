@@ -9,8 +9,8 @@ class FilePickerService {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'png', 'jpeg'],
+        
       );
-
       if (result != null) {
          fileModel = FileModel(
             path: result.files.single.path.toString(),

@@ -16,30 +16,14 @@ class UploadImageBloc extends Bloc<UploadImageEvent, UploadImageState> {
   final snackbarBloc = SnackbarBloc();
   final FilePickerBloc filePickerBloc =
       FilePickerBloc(filePickerRepository: FilePickerRepository());
+
   UploadImageBloc({required this.storageRepository})
       : super(const UploadImageState('')) {
     on<UploadImageEvent>((event, emit) async {
-
-      final TaskSnapshot taskSnapshot = await storageRepository.uploadImage(event.fileModel.path, event.fileModel.file);
-      if (taskSnapshot.state == TaskState.success) {
-        filePickerBloc.add(CompletedEvent());
-        add(ImageWasUploadedEvent(
-            imagePath: '',
-            file: event.fileModel,
-            buildContext: event.context,
-            reference: taskSnapshot.ref));
-      }
-
-      if (taskSnapshot.state == TaskState.error) {
-        taskSnapshot.ref.delete();
-      }
+      await storageRepository.uploadImage(event.fileModel.path, event.fileModel.file);
+      add(TestEvent(context: event.context, fileModel: event.fileModel));
     });
 
-    on<ImageWasUploadedEvent>((event, emit) async {
-      final String imageUrl = await storageRepository.getImageUrl(event.reference);
-      emit(UploadImageSuccess(imagePath: imageUrl));
-      emit(ImageIsSubmit(imagePath: imageUrl, isSubmit: false));
-    });
     on<SuccessImageUpload>((event, emit) {
       snackbarBloc.add(
           SnackbarSuccessEvent(event.context, 'Image uploaded successfully'));

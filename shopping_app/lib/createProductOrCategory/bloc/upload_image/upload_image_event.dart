@@ -35,3 +35,15 @@ class SuccessImageUpload extends UploadImageEvent {
   @override
   List<Object> get props => [imagePath, buildContext, file];
 }
+
+class GetImageUrl extends UploadImageEvent {
+  final BuildContext buildContext;
+  final FileModel file;
+  const GetImageUrl({required this.buildContext,required this.file}) : super(fileModel: file, context: buildContext);
+  @override
+  List<Object> get props => [buildContext, file];
+}
+class TestEvent  extends UploadImageEvent {
+  TestEvent({required super.fileModel, required super.context});
+
+}
