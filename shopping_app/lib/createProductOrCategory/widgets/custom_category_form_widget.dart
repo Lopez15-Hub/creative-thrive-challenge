@@ -13,7 +13,8 @@ class CategoryFormWidget extends StatefulWidget {
   State<CategoryFormWidget> createState() => _CategoryFormWidgetState();
 }
 
-String extractColorProperty(color) => color.toString().replaceAll("Color(", "").replaceAll(")", "").trim();
+String extractColorProperty(color) =>
+    color.toString().replaceAll("Color(", "").replaceAll(")", "").trim();
 
 class _CategoryFormWidgetState extends State<CategoryFormWidget> {
   String categoryName = '';
@@ -57,7 +58,6 @@ class _CategoryFormWidgetState extends State<CategoryFormWidget> {
                     const CustomTitleWidget(
                         title: 'Color', alignment: TextAlign.start),
                     ColorPickerWidget(
-    
                       onChangeColorPicker: (color) => categoryColor = color,
                     ),
                   ],
@@ -73,11 +73,15 @@ class _CategoryFormWidgetState extends State<CategoryFormWidget> {
                           categoryName: categoryName.trim(),
                           categoryColor: extractColorProperty(categoryColor),
                           isOpen: true);
-    
-                      categoriesBloc.add(CheckIfCategoryExistsEvent(categoryName: categoryName, context: context,category: categoryModel));
-    
+                      if (formIsValid) {
+                        categoriesBloc.add(CheckIfCategoryExistsEvent(
+                            categoryName: categoryName,
+                            context: context,
+                            category: categoryModel));
+                      }
+
                       if (categoriesBloc.state is CategoryExists) return;
-    
+
                       _formKey.currentState!.reset();
                     },
                     buttonLabel: 'Submit Category')
