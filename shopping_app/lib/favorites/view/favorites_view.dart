@@ -86,13 +86,15 @@ class _FavoritesViewState extends State<FavoritesView> {
                 final productsBloc = BlocProvider.of<ProductsBloc>(context);
                 if (direction == DismissDirection.endToStart) {
                   _showPopupBloc.add(ShowPopupEvent(
-                      mustBeShowed: true,
-                      context: context,
-                      categoryId: '',
-                      productId: products[productIndex].products[productIndex].productId,
-                      categories: _categories,
-                      category: products[productIndex].products[productIndex].category,
-                      ));
+                    mustBeShowed: true,
+                    context: context,
+                    categoryId: '',
+                    productId:
+                        products[productIndex].products[productIndex].productId,
+                    categories: _categories,
+                    category:
+                        products[productIndex].products[productIndex].category,
+                  ));
 
                   // productsBloc.add(ProductWasDeletedEvent(context: context));
                 }
@@ -210,13 +212,16 @@ class _FavoritesViewState extends State<FavoritesView> {
                       alignment: TextAlign.center),
                   Center(
                     child: CustomButtonSmallWidget(
+                      isEnabled: true,
                       label: 'Create my first category',
                       iconButton: Icons.plus_one,
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const FormCreateProductOrCategoryView(addCategory: true,))),
+                                  const FormCreateProductOrCategoryView(
+                                    addCategory: true,
+                                  ))),
                     ),
                   ),
                 ],
@@ -250,6 +255,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                             alignment: TextAlign.center),
                         Center(
                           child: CustomButtonSmallWidget(
+                            isEnabled: true,
                             label: 'Add one',
                             iconButton: Icons.plus_one,
                             onPressed: () => Navigator.push(

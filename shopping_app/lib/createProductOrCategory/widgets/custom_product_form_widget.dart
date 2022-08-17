@@ -16,7 +16,8 @@ class ProductFormWidget extends StatefulWidget {
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
   final _formKey = GlobalKey<FormState>();
-   List<CategoryModel> categories = [];
+  final bool isEnabled = false;
+  List<CategoryModel> categories = [];
   String productName = '', productPrice = '';
   CategoryModel productCategory =
       CategoryModel(categoryColor: '', categoryName: '', isOpen: true);
@@ -44,7 +45,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     return Expanded(
       child: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (context, state) {
-          if (state is CategoriesRetrieved) categories = state.retrievedCategories;
+          if (state is CategoriesRetrieved)
+            categories = state.retrievedCategories;
           return Form(
               key: _formKey,
               child: Column(
@@ -111,9 +113,11 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: CustomButtonSmallWidget(
+                          isEnabled: isEnabled,
                           label: 'Upload File',
-                          onPressed: () =>
-                              filePickerBloc.add(LauchFilePickerEvent()),
+                          onPressed: isEnabled
+                              ? () => filePickerBloc.add(LauchFilePickerEvent())
+                              : () {},
                           iconButton: Icons.upload_file,
                         ),
                       ),
@@ -136,14 +140,18 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                     builder: (context, uploadImageState) {
                       return BlocBuilder<FilePickerBloc, FilePickerState>(
                         builder: (context, filePickerState) {
-                          if (filePickerState is SetImageFile) uploadImageBloc.add(UploadImageEvent(fileModel: filePickerState.file, context: context));
+                          if (filePickerState is SetImageFile)
+                            uploadImageBloc.add(UploadImageEvent(
+                                fileModel: filePickerState.file,
+                                context: context));
                           return CustomFormButtonSubmitWidget(
                               isEnabled:
                                   state is CategoriesListIsEmpty ? false : true,
                               onPressed: state is CategoriesListIsEmpty
                                   ? () {}
                                   : () => Future.wait([
-                                        addProduct(filePickerState, uploadImageState)
+                                        addProduct(
+                                            filePickerState, uploadImageState)
                                       ]),
                               buttonLabel: 'Submit Product');
                         },
@@ -157,12 +165,13 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     );
   }
 
-  Future<void> addProduct(FilePickerState filePickerState, UploadImageState uploadImageState) async {
-      final formIsValid = _formKey.currentState!.validate();
-      formBloc.add(FormFieldsAreValidEvent(formIsValid));
-      formBloc.add(ValidateProductFormEvent(context: context, dropdownCategory: dropdownButtonBloc.state));
+  Future<void> addProduct(FilePickerState filePickerState,
+      UploadImageState uploadImageState) async {
+    final formIsValid = _formKey.currentState!.validate();
+    formBloc.add(FormFieldsAreValidEvent(formIsValid));
+    formBloc.add(ValidateProductFormEvent(
+        context: context, dropdownCategory: dropdownButtonBloc.state));
     try {
-
       productsBloc.add(ProductOnSubmitedEvent(
           isFavorite: false,
           productCategory: dropdownButtonBloc.state,
@@ -172,8 +181,9 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
           productName: productName,
           productPrice: productPrice.toString(),
           context: context));
-         
-      productsBloc.add(ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
+
+      productsBloc.add(
+          ProductIsOnSubmitedEvent(isOnSubmit: false, categories: categories));
       _formKey.currentState!.reset();
     } catch (error) {
       return productsBloc.add(ProductFunctionHasErrorEvent(

@@ -92,7 +92,8 @@ class _ShopViewState extends State<ShopView> {
                       mustBeShowed: true,
                       context: context,
                       categoryId: '',
-                      productId:products[index].products[productIndex].productId,
+                      productId:
+                          products[index].products[productIndex].productId,
                       category: products[index].products[productIndex].category,
                       categories: _categories));
                 }
@@ -217,13 +218,16 @@ class _ShopViewState extends State<ShopView> {
                       alignment: TextAlign.center),
                   Center(
                     child: CustomButtonSmallWidget(
+                      isEnabled: true,
                       label: 'Create my first category',
                       iconButton: Icons.plus_one,
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const FormCreateProductOrCategoryView(addCategory: true,))),
+                                  const FormCreateProductOrCategoryView(
+                                    addCategory: true,
+                                  ))),
                     ),
                   ),
                 ],
@@ -234,47 +238,65 @@ class _ShopViewState extends State<ShopView> {
               _productsBloc.add(RetrieveProductsWithCategoryEvent(
                   category: state.retrievedCategories));
               final int categoriesIndex = state.retrievedCategories.length;
-              return BlocBuilder<ProductsBloc, ProductsState>(
-                builder: (context, state) {
-                  if (state is ProductsArragmentRetrieved) {
-                    _contents = List.generate(
-                        categoriesIndex,
-                        (index) => generateDraggableItems(
-                            state.retrievedProducts, index));
-                    return configureDraggableItemList();
-                  }
+              return Column(
+                children: [
+                  Form(child: CustomFormFieldWidget(
+                    label: 'Search ',
+                    isEnabled: true,
+                    keyboardType: TextInputType.text,
+                    obscureText:false,
 
-                  if (state is ProductsRetrievedError) {
-                    return Center(
-                      child: Text(state.error.toString()),
-                    );
-                  }
-                  if (state is ProductsListIsEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CustomTitleWidget(
-                            title: 'You dont have products',
-                            alignment: TextAlign.center),
-                        Center(
-                          child: CustomButtonSmallWidget(
-                            label: 'Add one',
-                            iconButton: Icons.plus_one,
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const FormCreateProductOrCategoryView())),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-
-                  return const CustomCircularProgressIndicatorWidget(
-                    text: "Loading Products",
-                  );
-                },
+                    onChanged: (value) {
+                     
+                    }, icon: const Icon(Icons.search),
+                  )),
+                  
+                  Expanded(
+                    child: BlocBuilder<ProductsBloc, ProductsState>(
+                      builder: (context, state) {
+                        if (state is ProductsArragmentRetrieved) {
+                          _contents = List.generate(
+                              categoriesIndex,
+                              (index) => generateDraggableItems(
+                                  state.retrievedProducts, index));
+                          return configureDraggableItemList();
+                        }
+                  
+                        if (state is ProductsRetrievedError) {
+                          return Center(
+                            child: Text(state.error.toString()),
+                          );
+                        }
+                        if (state is ProductsListIsEmpty) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const CustomTitleWidget(
+                                  title: 'You dont have products',
+                                  alignment: TextAlign.center),
+                              Center(
+                                child: CustomButtonSmallWidget(
+                                  isEnabled: true,
+                                  label: 'Add one',
+                                  iconButton: Icons.plus_one,
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const FormCreateProductOrCategoryView())),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                  
+                        return const CustomCircularProgressIndicatorWidget(
+                          text: "Loading Products",
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
             }
             if (state is CategoriesRetrievedError) {

@@ -73,6 +73,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                   alignment: TextAlign.center),
               Center(
                 child: CustomButtonSmallWidget(
+                  isEnabled: true,
                   label: 'Add one',
                   iconButton: Icons.plus_one,
                   onPressed: () => Navigator.push(
