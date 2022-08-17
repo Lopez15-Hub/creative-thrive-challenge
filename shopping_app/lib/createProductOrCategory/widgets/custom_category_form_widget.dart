@@ -14,12 +14,11 @@ class CategoryFormWidget extends StatefulWidget {
   State<CategoryFormWidget> createState() => _CategoryFormWidgetState();
 }
 
-extractColorProperty(color) =>
-    color.toString().replaceAll("Color(", "").replaceAll(")", "").trim();
+String extractColorProperty(color) => color.toString().replaceAll("Color(", "").replaceAll(")", "").trim();
 
 class _CategoryFormWidgetState extends State<CategoryFormWidget> {
   String categoryName = '';
-  Color categoryColor = Colors.white;
+  Color categoryColor = const Color(0xFF2196F3);
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -58,6 +57,7 @@ class _CategoryFormWidgetState extends State<CategoryFormWidget> {
                   const CustomTitleWidget(
                       title: 'Color', alignment: TextAlign.start),
                   ColorPickerWidget(
+
                     onChangeColorPicker: (color) => categoryColor = color,
                   ),
                 ],

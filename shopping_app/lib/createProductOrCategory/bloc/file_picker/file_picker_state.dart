@@ -4,7 +4,7 @@ abstract class FilePickerState extends Equatable {}
 
 class FilePickerInitial extends FilePickerState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class SetImageFile extends FilePickerState {
@@ -14,4 +14,8 @@ class SetImageFile extends FilePickerState {
 
   @override
   List<Object?> get props => [file];
+}
+class IsClosed extends FilePickerState {
+  @override
+  List<Object?> get props => [];
 }

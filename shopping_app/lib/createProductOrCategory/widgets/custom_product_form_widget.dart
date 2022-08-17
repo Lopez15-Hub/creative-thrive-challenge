@@ -136,15 +136,14 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                     builder: (context, uploadImageState) {
                       return BlocBuilder<FilePickerBloc, FilePickerState>(
                         builder: (context, filePickerState) {
-                          // if (filePickerState is SetImageFile) uploadImageBloc.add(UploadImageEvent(fileModel: filePickerState.file, context: context));
+                          if (filePickerState is SetImageFile) uploadImageBloc.add(UploadImageEvent(fileModel: filePickerState.file, context: context));
                           return CustomFormButtonSubmitWidget(
                               isEnabled:
                                   state is CategoriesListIsEmpty ? false : true,
                               onPressed: state is CategoriesListIsEmpty
                                   ? () {}
                                   : () => Future.wait([
-                                        addProduct(
-                                            filePickerState, uploadImageState)
+                                        addProduct(filePickerState, uploadImageState)
                                       ]),
                               buttonLabel: 'Submit Product');
                         },

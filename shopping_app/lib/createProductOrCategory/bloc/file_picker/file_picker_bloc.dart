@@ -14,6 +14,9 @@ class FilePickerBloc extends Bloc<FilePickerEvent, FilePickerState> {
        await filePickerRepository.openFilePicker().then((value) => emit(SetImageFile(file: value)));
 
     });
+    on<CompletedEvent>((event, emit) {
+      emit(IsClosed());
+    });
   }
   final FilePickerRepository filePickerRepository;
 }

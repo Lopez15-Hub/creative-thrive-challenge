@@ -59,7 +59,6 @@ void onDismissed(direction, context, products, index, categories) {
         context: context,
         productId: products[index].productId,
         categories: categories));
-    productsBloc.add(ProductWasDeletedEvent(context: context));
   }
   if (direction == DismissDirection.startToEnd) {
     productsBloc.add(UpdateProductsFavoriteEvent(

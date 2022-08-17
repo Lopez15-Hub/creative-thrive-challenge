@@ -105,11 +105,15 @@ class DatabaseService {
       await productsCollection.doc(productId).delete();
   Future<void> deleteProductsWhenCategoryWasDeleted(
       CategoryModel category) async {
-    await productsCollection
-        .where("category", isEqualTo: category.toJson())
+    final products = await productsCollection
+        .where("category.categoryName", isEqualTo: category.categoryName)
         .get()
-        .then(
-            (value) => value.docs.map((element) => element.reference.delete()));
+        .then((snapshot) => snapshot.docs
+            .map((product) => ProductModel.fromSnapshot(product))
+            .toList());
+      for (int i = 0; i < products.length; i++) {
+        await productsCollection.doc(products[i].productId).delete();
+      }
   }
 
   Future<void> updateProduct(
