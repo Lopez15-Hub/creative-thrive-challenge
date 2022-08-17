@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/bloc/categories_bloc.dart';
 import 'package:shopping_app/categories/models/category_model.dart';
 import 'package:shopping_app/createProductOrCategory/bloc/blocs.dart';
-import 'package:shopping_app/createProductOrCategory/models/file_model.dart';
 import 'package:shopping_app/home/widgets/custom_circular_progress_indicator_widget.dart';
 import 'form_widgets/widgets.dart';
 
