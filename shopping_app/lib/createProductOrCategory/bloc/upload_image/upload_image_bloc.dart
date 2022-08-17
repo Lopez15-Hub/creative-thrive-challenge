@@ -11,7 +11,7 @@ import 'package:shopping_app/createProductOrCategory/repository/storage_reposito
 import '../../../home/bloc/blocs.dart';
 part 'upload_image_event.dart';
 part 'upload_image_state.dart';
-
+//TODO: Fix Upload image
 class UploadImageBloc extends Bloc<UploadImageEvent, UploadImageState> {
   final snackbarBloc = SnackbarBloc();
   final FilePickerBloc filePickerBloc =
