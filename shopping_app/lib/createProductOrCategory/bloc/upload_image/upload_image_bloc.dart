@@ -21,7 +21,7 @@ class UploadImageBloc extends Bloc<UploadImageEvent, UploadImageState> {
       : super(const UploadImageState('')) {
     on<UploadImageEvent>((event, emit) async {
       await storageRepository.uploadImage(event.fileModel.path, event.fileModel.file);
-      add(TestEvent(context: event.context, fileModel: event.fileModel));
+      
     });
 
     on<SuccessImageUpload>((event, emit) {

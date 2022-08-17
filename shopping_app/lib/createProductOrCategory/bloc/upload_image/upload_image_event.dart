@@ -43,7 +43,3 @@ class GetImageUrl extends UploadImageEvent {
   @override
   List<Object> get props => [buildContext, file];
 }
-class TestEvent  extends UploadImageEvent {
-  TestEvent({required super.fileModel, required super.context});
-
-}

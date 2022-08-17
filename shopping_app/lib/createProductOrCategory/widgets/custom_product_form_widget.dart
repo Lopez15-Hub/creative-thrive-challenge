@@ -1,5 +1,7 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/categories/bloc/categories_bloc.dart';
@@ -17,7 +19,7 @@ class ProductFormWidget extends StatefulWidget {
 
 class _ProductFormWidgetState extends State<ProductFormWidget> {
   final _formKey = GlobalKey<FormState>();
-  final bool isEnabled = true;
+  final bool isEnabled = false;
   List<CategoryModel> categories = [];
   String productName = '', productPrice = '';
   CategoryModel productCategory =
@@ -55,8 +57,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const CustomTitleWidget(
-                          title: 'Product Data', alignment: TextAlign.center),
+                      const CustomTitleWidget(title: 'Product Data', alignment: TextAlign.center),
                       CustomFormFieldWidget(
                         isEnabled:
                             state is CategoriesListIsEmpty ? false : true,
@@ -178,8 +179,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
       productsBloc.add(ProductOnSubmitedEvent(
           isFavorite: false,
           productCategory: dropdownButtonBloc.state,
-          productImage: uploadImageBloc.state.imageUrl.toString(),
-          // productImage:'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
+          // productImage: uploadImageBloc.state.imageUrl.toString(),
+          productImage:'https://picsum.photos/60/60?=${Random().nextInt(1000)}',
           productName: productName,
           productPrice: productPrice.toString(),
           context: context));
