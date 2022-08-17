@@ -50,8 +50,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     });
 
     on<UpdateProductsCategoryEvent>((event, emit) {
-      productRepository.updateProductCategory(
-          event.productId, event.newCategory);
+      productRepository
+          .updateProductCategory(event.productId, event.newCategory)
+          .then((value) => snackbarBloc
+              .add(SnackbarSuccessEvent(event.context, 'Category updated')))
+          .onError((error, stackTrace) => add(ProductFunctionHasErrorEvent(
+              context: event.context, error: error.toString())));
+          add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
     on<DeleteProductEvent>((event, emit) {
@@ -101,8 +106,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     });
     on<ProductWasDeletedEvent>((event, emit) async {
       Navigator.of(event.context).pop();
-      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
-
+      snackbarBloc
+          .add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
     });
     on<ProductWasAddedToFavoritesEvent>((event, emit) async {
       snackbarBloc.add(
@@ -140,6 +145,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());
       emit(ProductsFavoriteRetrieved(retrievedProducts: productsList));
     });
+    on<UpdateProductsPositionEvent>((event, emit) {
+      emit(ProductsArragmentRetrieved(retrievedProducts: event.productsList));
+    });
+
   }
 
   final ProductsRepository productRepository;

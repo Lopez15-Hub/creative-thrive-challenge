@@ -26,7 +26,7 @@ class CustomBottombarWidget extends StatelessWidget {
         return BottomNavigationBar(
           currentIndex: currentIndex,
           selectedItemColor: Colors.deepOrange[800],
-          onTap: (int index) => navigationBloc.add(ChangePageView(index)),
+          onTap: (int index) => navigationBloc.add(ChangePageViewEvent(index)),
           elevation: 0,
           iconSize: 30,
           items: items,

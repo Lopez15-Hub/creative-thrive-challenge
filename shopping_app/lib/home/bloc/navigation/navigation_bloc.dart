@@ -4,6 +4,6 @@ part 'navigation_event.dart';
 
 class NavigationBloc extends Bloc<NavigationEvent, int> {
   NavigationBloc() : super(0) {
-    on<ChangePageView>((event, emit) => emit(event.newIndex));
+    on<ChangePageViewEvent>((event, emit) => emit(event.newIndex));
   }
 }

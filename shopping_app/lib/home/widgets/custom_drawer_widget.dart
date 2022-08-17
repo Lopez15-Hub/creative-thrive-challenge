@@ -34,12 +34,12 @@ class CustomDrawerWidget extends StatelessWidget {
                     builder: (context) =>
                         const FormCreateProductOrCategoryView())),
           ),
-            const Divider(),
+          const Divider(),
           ListTile(
             title: const Text('Shop'),
             leading: const Icon(Icons.shopping_bag),
             onTap: () {
-              navigationBloc.add(const ChangePageView(0));
+              navigationBloc.add(const ChangePageViewEvent(0));
               Navigator.pop(context);
             },
           ),
@@ -47,19 +47,16 @@ class CustomDrawerWidget extends StatelessWidget {
               title: const Text('Favorites'),
               leading: const Icon(Icons.star),
               onTap: () {
-                navigationBloc.add(const ChangePageView(1));
+                navigationBloc.add(const ChangePageViewEvent(1));
                 Navigator.pop(context);
               }),
           ListTile(
               title: const Text('Categories'),
               leading: const Icon(Icons.category),
               onTap: () {
-                navigationBloc.add(const ChangePageView(2));
+                navigationBloc.add(const ChangePageViewEvent(2));
                 Navigator.pop(context);
               }),
-        
-          
-
         ],
       ),
     );

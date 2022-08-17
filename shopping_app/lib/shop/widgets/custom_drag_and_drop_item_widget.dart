@@ -43,7 +43,7 @@ customDragAndDropItemWidget(context, products, index, categories) {
       secondaryBackground: container,
       onDismissed: (direction) =>
           onDismissed(direction, context, products, index, categories),
-      child: DragAndDropItemContentWidget(
+      child: CustomDragAndDropItemContentWidget(
         index: index,
         products: products,
         categories: categories,

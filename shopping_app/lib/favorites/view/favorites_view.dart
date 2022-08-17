@@ -112,10 +112,11 @@ class _FavoritesViewState extends State<FavoritesView> {
                   }
                 }
               },
-              child: DragAndDropItemContentWidget(
+              child: CustomDragAndDropItemContentWidget(
                 index: productIndex,
                 products: products[index].products,
                 categories: _categories,
+                isFavoriteView: true,
               ),
             ),
           );

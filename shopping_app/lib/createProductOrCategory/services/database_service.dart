@@ -99,7 +99,7 @@ class DatabaseService {
           .update({'isFavorite': isFavorite});
   Future<void> updateProductCategory(
           String productId, CategoryModel newCategory) async =>
-      await productsCollection.doc(productId).update({'category': newCategory});
+      await productsCollection.doc(productId).update({'category': newCategory.toJson()});
 
 //? Categories Database operations
   Stream<List<CategoryModel>> retrieveCategoriesStream() => categoriesCollection

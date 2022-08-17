@@ -35,10 +35,11 @@ class UpdateProductsEvent extends ProductsEvent {
 class UpdateProductsCategoryEvent extends ProductsEvent {
   final String productId;
   final CategoryModel newCategory;
-  const UpdateProductsCategoryEvent(
-      {required this.newCategory, this.productId = ""});
+  final BuildContext context;
+  final List<CategoryModel> categories;
+  const UpdateProductsCategoryEvent({required this.newCategory,required this.context, this.productId = "",required this.categories});
   @override
-  List<Object> get props => [newCategory, productId];
+  List<Object> get props => [newCategory, productId,context];
 }
 
 class UpdateProductsFavoriteEvent extends ProductsEvent {
@@ -58,9 +59,12 @@ class DeleteProductEvent extends ProductsEvent {
   final String productId;
   final BuildContext context;
   final List<CategoryModel> categories;
-  const DeleteProductEvent({required this.productId, required this.categories,required this.context});
+  const DeleteProductEvent(
+      {required this.productId,
+      required this.categories,
+      required this.context});
   @override
-  List<Object> get props => [productId, categories,context];
+  List<Object> get props => [productId, categories, context];
 }
 
 class ListeningProductsEvent extends ProductsEvent {
@@ -180,4 +184,18 @@ class RetrieveProductsFavoritesWithCategoryEvent extends ProductsEvent {
 
   @override
   List<Object> get props => [category];
+}
+
+class UpdateProductsPositionEvent extends ProductsEvent {
+  final List<ProductArragmentModel> productsList;
+  const UpdateProductsPositionEvent({required this.productsList});
+  @override
+  List<Object> get props => [productsList];
+}
+
+class UpdateProductsFavoritesPositionEvent extends ProductsEvent {
+  final List<ProductArragmentModel> productsList;
+  const UpdateProductsFavoritesPositionEvent({required this.productsList});
+  @override
+  List<Object> get props => [productsList];
 }

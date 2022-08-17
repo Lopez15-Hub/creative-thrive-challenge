@@ -21,18 +21,22 @@ class ShopView extends StatefulWidget {
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
   late List<CategoryModel> _categories;
-    late ShowPopupBloc _showPopupBloc;
+  List<ProductArragmentModel> _products = [];
+  late ShowPopupBloc _showPopupBloc;
   late ProductsBloc _productsBloc;
+  late CategoriesBloc _categoriesBloc;
   @override
   void initState() {
-    super.initState();
-    BlocProvider.of<CategoriesBloc>(context)
-        .add(const ListeningCategoriesEvent());
-    _productsBloc = BlocProvider.of<ProductsBloc>(context);
+    _categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
     _showPopupBloc = BlocProvider.of<ShowPopupBloc>(context);
+    _productsBloc = BlocProvider.of<ProductsBloc>(context);
+    _categoriesBloc.add(const CategoriesAreOnLoadingEvent(isLoading: true));
+    _categoriesBloc.add(const ListeningCategoriesEvent());
+    super.initState();
   }
 
   generateDraggableItems(List<ProductArragmentModel> products, int index) {
+    _products = products;
     return DragAndDropList(
         header: Column(
           children: <Widget>[
@@ -88,9 +92,8 @@ class _ShopViewState extends State<ShopView> {
                       mustBeShowed: true,
                       context: context,
                       categoryId: '',
-                      productId: products[productIndex]
-                          .products[productIndex]
-                          .productId,
+                      productId:
+                          products[index].products[productIndex].productId,
                       categories: _categories));
                 }
                 if (direction == DismissDirection.startToEnd) {
@@ -109,7 +112,7 @@ class _ShopViewState extends State<ShopView> {
                   }
                 }
               },
-              child: DragAndDropItemContentWidget(
+              child: CustomDragAndDropItemContentWidget(
                 index: productIndex,
                 products: products[index].products,
                 categories: _categories,
@@ -181,14 +184,25 @@ class _ShopViewState extends State<ShopView> {
     setState(() {
       var movedItem = _contents[oldListIndex].children.removeAt(oldItemIndex);
       _contents[newListIndex].children.insert(newItemIndex, movedItem);
+      var item = _products[oldListIndex].products[oldItemIndex];
+      print(item.toJson());
+      print(
+          "oldItemIndex: $oldItemIndex, oldListIndex: $oldListIndex, newItemIndex: $newItemIndex, newListIndex: $newListIndex");
+      // _products[newListIndex].products.insert(newItemIndex, movedItem);
     });
+    // var newCategory = _products[newListIndex].products[newItemIndex].category;
+    // var newProductId = _products[oldListIndex].products[oldItemIndex].productId;
+    // print(newCategory.toJson());
+    // print(newProductId.toString());
+    // _productsBloc.add(UpdateProductsCategoryEvent(
+    //     newCategory: newCategory,
+    //     context: context,
+    //     productId: newProductId,
+    //     categories: _categories));
   }
 
   _onListReorder(int oldListIndex, int newListIndex) {
-    setState(() {
-      var movedList = _contents.removeAt(oldListIndex);
-      _contents.insert(newListIndex, movedList);
-    });
+    setState(() {});
   }
 
   @override
@@ -220,16 +234,16 @@ class _ShopViewState extends State<ShopView> {
             }
             if (state is CategoriesRetrieved) {
               _categories = state.retrievedCategories;
-              _productsBloc.add(RetrieveProductsWithCategoryEvent(category: state.retrievedCategories));
-
+              _productsBloc.add(RetrieveProductsWithCategoryEvent(
+                  category: state.retrievedCategories));
               final int categoriesIndex = state.retrievedCategories.length;
               return BlocBuilder<ProductsBloc, ProductsState>(
                 builder: (context, state) {
                   if (state is ProductsArragmentRetrieved) {
-                    // print(state.retrievedProducts.map((e) => e.products[0].toJson()));
                     _contents = List.generate(
                         categoriesIndex,
-                        (index) => generateDraggableItems(state.retrievedProducts, index));
+                        (index) => generateDraggableItems(
+                            state.retrievedProducts, index));
                     return configureDraggableItemList();
                   }
 
@@ -264,6 +278,11 @@ class _ShopViewState extends State<ShopView> {
                     text: "Loading Products",
                   );
                 },
+              );
+            }
+            if (state is CategoriesRetrievedError) {
+              return Center(
+                child: Text(state.error.toString()),
               );
             }
             return const CustomCircularProgressIndicatorWidget(

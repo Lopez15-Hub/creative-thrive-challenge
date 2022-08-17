@@ -7,8 +7,8 @@ import '../../createProductOrCategory/bloc/products/products_bloc.dart';
 import '../../favorites/bloc/favorites_bloc.dart';
 import '../../home/widgets/custom_circular_progress_indicator_widget.dart';
 
-class DragAndDropItemContentWidget extends StatelessWidget {
-  const DragAndDropItemContentWidget(
+class CustomDragAndDropItemContentWidget extends StatelessWidget {
+  const CustomDragAndDropItemContentWidget(
       {Key? key,
       required this.index,
       required this.products,
@@ -22,6 +22,7 @@ class DragAndDropItemContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
+    final favoritesBloc = BlocProvider.of<FavoritesBloc>(context).add(ListeningFavoriteDateAddEvent(productId: products[index].productId));
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,7 +73,7 @@ class DragAndDropItemContentWidget extends StatelessWidget {
                       );
                     }
                     return const CustomCircularProgressIndicatorWidget(
-                      text: "Loading Products",
+                      text: "Loading date",
                     );
                   },
                 ),

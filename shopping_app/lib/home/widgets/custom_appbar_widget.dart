@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../home.dart';
+import 'custom_dynamic_text_appbar_widget.dart';
 
 class CustomAppbarWidget extends StatelessWidget with PreferredSizeWidget {
   @override
@@ -20,6 +18,7 @@ class CustomAppbarWidget extends StatelessWidget with PreferredSizeWidget {
       elevation: 0,
       title: const DynamicTextAppbarWidget(),
       toolbarHeight: 80,
+    
       leading: IconButton(
         icon: const Icon(
           Icons.menu_sharp,
@@ -28,42 +27,6 @@ class CustomAppbarWidget extends StatelessWidget with PreferredSizeWidget {
         ),
         onPressed: () => scaffoldKey.currentState!.openDrawer(),
       ),
-    );
-  }
-}
-
-class DynamicTextAppbarWidget extends StatelessWidget {
-  const DynamicTextAppbarWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<NavigationBloc, int>(
-      builder: (context, currentIndex) {
-        switch (currentIndex) {
-          case 0:
-            return const Text(
-              'Shop',
-              style: TextStyle(color: Colors.black),
-            );
-          case 1:
-            return const Text(
-              'Favorites',
-              style: TextStyle(color: Colors.black),
-            );
-          case 2:
-            return const Text(
-              'Categories',
-              style: TextStyle(color: Colors.black),
-            );
-          default:
-            return const Text(
-              'Shop',
-              style: TextStyle(color: Colors.black),
-            );
-        }
-      },
     );
   }
 }

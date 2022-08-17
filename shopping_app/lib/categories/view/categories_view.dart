@@ -48,8 +48,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                 final item = categories.removeAt(oldIndex);
                 categories.insert(newIndex, item);
                 newCategoryList.addAll(categories);
-                categoriesBloc.add(UpdateCategoriesPositionEvent(
-                    categoriesList: newCategoryList));
+                categoriesBloc.add(UpdateCategoriesPositionEvent(categoriesList: newCategoryList));
               })
             },
             children: categories
