@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../categories/models/category_model.dart';
+import '../models/category_model.dart';
 
 class CategoriesService {
   final categoriesCollection =

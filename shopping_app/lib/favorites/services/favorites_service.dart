@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../favorites/models/favorite_model.dart';
+import '../models/favorite_model.dart';
 
 class FavoritesService{
     
@@ -8,9 +8,7 @@ class FavoritesService{
   final favoritesCollection =
       FirebaseFirestore.instance.collection("favorites");
   Future<List<FavoriteModel>> retrieveFavoriteDateAdd(productId) {
-    return favoritesCollection
-        .where("productId", isEqualTo: productId)
-        .get()
+    return favoritesCollection.get()
         .then((snapshot) => snapshot.docs
             .map((favorite) => FavoriteModel.fromSnapshot(favorite))
             .toList());

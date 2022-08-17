@@ -37,7 +37,6 @@ class UploadImageBloc extends Bloc<UploadImageEvent, UploadImageState> {
 
     on<ImageWasUploadedEvent>((event, emit) async {
       final String imageUrl = await storageRepository.getImageUrl(event.reference);
-      print(imageUrl);
       emit(UploadImageSuccess(imagePath: imageUrl));
       emit(ImageIsSubmit(imagePath: imageUrl, isSubmit: false));
     });

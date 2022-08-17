@@ -1,4 +1,4 @@
-import '../../createProductOrCategory/services/categories_service.dart';
+import '../services/categories_service.dart';
 import '../models/category_model.dart';
 
 class CategoriesRepository {

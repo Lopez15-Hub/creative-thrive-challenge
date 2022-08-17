@@ -22,8 +22,8 @@ class ShopView extends StatefulWidget {
 class _ShopViewState extends State<ShopView> {
   late List<DragAndDropList> _contents;
   late List<CategoryModel> _categories;
-  List<ProductModel> _products = [];
-  List<ProductArragmentModel> _productsArragment = [];
+  List<ProductModel> productsList = [];
+  List<ProductArragmentModel> productsArragmentList = [];
   late ShowPopupBloc _showPopupBloc;
   late ProductsBloc _productsBloc;
   late CategoriesBloc _categoriesBloc;
@@ -49,7 +49,7 @@ class _ShopViewState extends State<ShopView> {
         ),
         children: List<DragAndDropItem>.generate(
             products[index].products.length, (productIndex) {
-          products.map((item) => _products.add(item.products[productIndex]));
+          products.map((item) => productsList.add(item.products[productIndex]));
           return DragAndDropItem(
             child: Dismissible(
               key: UniqueKey(),
@@ -206,14 +206,14 @@ class _ShopViewState extends State<ShopView> {
   }
 
   void searchProducts(String search, index) {
-    final suggestions = _products.where((product) {
+    final suggestions = productsList.where((product) {
       final productTitle = product.productName.toLowerCase();
       final input = search.toLowerCase();
       return productTitle.contains(input);
     }).toList();
     setState(() {
       for (int i = 0; i <= _categories.length; i++) {
-        _productsArragment[i].products = suggestions;
+        productsArragmentList[i].products = suggestions;
       }
     });
   }
@@ -262,57 +262,51 @@ class _ShopViewState extends State<ShopView> {
                     isEnabled: true,
                     keyboardType: TextInputType.text,
                     obscureText: false,
-                    onChanged: (value) => _productsBloc.add(SearchProductEvent(searchTerm: value)),
+                    onChanged: (value) => _productsBloc
+                        .add(SearchProductEvent(searchTerm: value)),
                     icon: const Icon(Icons.search),
                   )),
                   Expanded(
-                    child: BlocConsumer<ProductsBloc, ProductsState>(
-                      listener: (context, state) {
-                        print(state);
-                      },
+                    child: BlocBuilder<ProductsBloc, ProductsState>(
                       builder: (context, state) {
-                        return BlocBuilder<ProductsBloc, ProductsState>(
-                          builder: (context, state) {
-                            if (state is ProductsArragmentRetrieved) {
-                              _contents = List.generate(
-                                  categoriesIndex,
-                                  (index) => generateDraggableItems(
-                                      state.retrievedProducts, index));
-                              return configureDraggableItemList();
-                            }
+                        if (state is ProductsArragmentRetrieved) {
+                          _contents = List.generate(
+                              categoriesIndex,
+                              (index) => generateDraggableItems(
+                                  state.retrievedProducts, index));
+                          return configureDraggableItemList();
+                        }
 
-                            if (state is ProductsRetrievedError) {
-                              return Center(
-                                child: Text(state.error.toString()),
-                              );
-                            }
-                            if (state is ProductsListIsEmpty) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const CustomTitleWidget(
-                                      title: 'You dont have products',
-                                      alignment: TextAlign.center),
-                                  Center(
-                                    child: CustomButtonSmallWidget(
-                                      isEnabled: true,
-                                      label: 'Add one',
-                                      iconButton: Icons.plus_one,
-                                      onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const FormCreateProductOrCategoryView())),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
+                        if (state is ProductsRetrievedError) {
+                          return Center(
+                            child: Text(state.error.toString()),
+                          );
+                        }
+                        if (state is ProductsListIsEmpty) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const CustomTitleWidget(
+                                  title: 'You dont have products',
+                                  alignment: TextAlign.center),
+                              Center(
+                                child: CustomButtonSmallWidget(
+                                  isEnabled: true,
+                                  label: 'Add one',
+                                  iconButton: Icons.plus_one,
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const FormCreateProductOrCategoryView())),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
 
-                            return const CustomCircularProgressIndicatorWidget(
-                              text: "Loading Products",
-                            );
-                          },
+                        return const CustomCircularProgressIndicatorWidget(
+                          text: "Loading Products",
                         );
                       },
                     ),

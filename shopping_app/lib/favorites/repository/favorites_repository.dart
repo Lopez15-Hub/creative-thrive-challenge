@@ -1,5 +1,6 @@
-import '../../createProductOrCategory/services/services.dart';
+
 import '../models/favorite_model.dart';
+import '../services/favorites_service.dart';
 
 class FavoritesRepository {
   final _favoritesService = FavoritesService();
