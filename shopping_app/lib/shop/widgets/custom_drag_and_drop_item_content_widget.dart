@@ -22,7 +22,7 @@ class CustomDragAndDropItemContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
-    final favoritesBloc = BlocProvider.of<FavoritesBloc>(context).add(ListeningFavoriteDateAddEvent(productId: products[index].productId));
+    BlocProvider.of<FavoritesBloc>(context).add(ListeningFavoriteDateAddEvent(productId: products[index].productId));
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,

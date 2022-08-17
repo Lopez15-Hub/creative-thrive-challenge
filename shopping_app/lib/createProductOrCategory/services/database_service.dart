@@ -44,19 +44,21 @@ class DatabaseService {
           .map((snapshot) => snapshot.docs
               .map((product) => ProductModel.fromSnapshot(product))
               .toList());
-  Stream<List<ProductArragmentModel>> retrieveProductsWithCategoryStream(CategoryModel productCategory) =>
-      productsCollection.where("category", isEqualTo: productCategory.toJson()).snapshots()
+  Stream<List<ProductArragmentModel>> retrieveProductsWithCategoryStream(
+          CategoryModel productCategory) =>
+      productsCollection
+          .where("category", isEqualTo: productCategory.toJson())
+          .snapshots()
           .map((snapshot) => snapshot.docs
               .map((product) => ProductArragmentModel.fromSnapshot(product))
               .toList());
 
-
-  Future<List<ProductArragmentModel>> retrieveProductsWithCategory({required CategoryModel productCategory} ) async {
+  Future<List<ProductArragmentModel>> retrieveProductsWithCategory(
+      {required CategoryModel productCategory}) async {
     List<ProductArragmentModel> productArragmentModelList = [];
     List<ProductModel> productsList = [];
-    productsCollection.snapshots().map(
-        (event) => event.docs.map((product) => productsList
-            .add(ProductModel.fromJson(product.data(), product.id))));
+    productsCollection.snapshots().map((event) => event.docs.map((product) =>
+        productsList.add(ProductModel.fromJson(product.data(), product.id))));
     await productsCollection
         .where("category.categoryName", isEqualTo: productCategory.categoryName)
         .get()
@@ -70,10 +72,13 @@ class DatabaseService {
     return productArragmentModelList;
   }
 
-  Future<List<ProductArragmentModel>> retrieveProductsFavorites({required CategoryModel productCategory} ) async {
+  Future<List<ProductArragmentModel>> retrieveProductsFavorites(
+      {required CategoryModel productCategory}) async {
     List<ProductArragmentModel> productArragmentModelList = [];
     List<ProductModel> productsList = [];
-    await productsCollection.where("category.categoryName", isEqualTo: productCategory.categoryName).where("isFavorite",isEqualTo: true)
+    await productsCollection
+        .where("category.categoryName", isEqualTo: productCategory.categoryName)
+        .where("isFavorite", isEqualTo: true)
         .get()
         .then((value) {
       productsList.addAll(value.docs
@@ -89,6 +94,14 @@ class DatabaseService {
       await productsCollection.add(product.toJson());
   Future<void> deleteProduct(String productId) async =>
       await productsCollection.doc(productId).delete();
+  Future<void> deleteProductsWhenCategoryWasDeleted(
+      CategoryModel category) async {
+    await productsCollection.where("category", isEqualTo: category.toJson()).get().then((value) => 
+    value.docs.map((element) => element.reference.delete()));
+
+    
+  }
+
   Future<void> updateProduct(
           String productId, ProductModel newProductData) async =>
       await productsCollection.doc(productId).update(newProductData.toJson());
@@ -99,7 +112,9 @@ class DatabaseService {
           .update({'isFavorite': isFavorite});
   Future<void> updateProductCategory(
           String productId, CategoryModel newCategory) async =>
-      await productsCollection.doc(productId).update({'category': newCategory.toJson()});
+      await productsCollection
+          .doc(productId)
+          .update({'category': newCategory.toJson()});
 
 //? Categories Database operations
   Stream<List<CategoryModel>> retrieveCategoriesStream() => categoriesCollection

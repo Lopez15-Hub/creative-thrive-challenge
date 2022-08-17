@@ -3,12 +3,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shopping_app/categories/repository/categories_repository.dart';
 import 'package:shopping_app/categories/models/category_model.dart';
+import 'package:shopping_app/createProductOrCategory/bloc/blocs.dart';
+import 'package:shopping_app/createProductOrCategory/repository/repositories.dart';
 import 'package:shopping_app/home/bloc/blocs.dart';
 part 'categories_event.dart';
 part 'categories_state.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   final SnackbarBloc snackbarBloc = SnackbarBloc();
+  final ProductsBloc productsBloc = ProductsBloc(productRepository: ProductsRepository());
   CategoriesBloc({required this.categoriesRepository})
       : super(CategoriesInitial()) {
     on<CategoriesEvent>((event, emit) {});
@@ -37,8 +40,8 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
           SnackbarSuccessEvent(event.context, 'Category added successfully'));
     });
     on<DeleteCategoryEvent>((event, emit) {
-      categoriesRepository
-          .deleteCategory(event.categoryId)
+      productsBloc.add(DeleteProductsWhenCategoryWasDeletedEvent(context: event.context, category: event.category));
+      categoriesRepository.deleteCategory(event.categoryId)
           .then((value) => add(CategoryWasDeletedEvent(context: event.context)))
           .catchError((error) => add(CategoriesFuctionWasErrorEvent(context: event.context, error: error.toString())));
     });

@@ -148,7 +148,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<UpdateProductsPositionEvent>((event, emit) {
       emit(ProductsArragmentRetrieved(retrievedProducts: event.productsList));
     });
+    on<DeleteProductsWhenCategoryWasDeletedEvent>  ((event, emit) async {
+      await productRepository.deleteProductsWhenCategoryWasDeleted(event.category).then((value) => 
+      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Products deleted successfully'))
+      ).onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(event.context, 'Delete category products fails, error: ${error.toString()}')));
 
+    }
+    );
   }
 
   final ProductsRepository productRepository;

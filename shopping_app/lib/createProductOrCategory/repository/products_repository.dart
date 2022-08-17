@@ -1,3 +1,4 @@
+
 import 'package:shopping_app/createProductOrCategory/services/services.dart';
 import 'package:shopping_app/shop/models/product_arragment_model.dart';
 
@@ -17,18 +18,12 @@ class ProductsRepository {
 
   Future<void> createProduct(ProductModel product) async=>await _databaseService.createProduct(product);
 
-  Future<void> deleteProduct(String productId) async =>
-      await _databaseService.deleteProduct(productId);
+  Future<void> deleteProduct(String productId) async => await _databaseService.deleteProduct(productId);
+  Future<void> deleteProductsWhenCategoryWasDeleted(CategoryModel productCategory) async => await _databaseService.deleteProductsWhenCategoryWasDeleted(productCategory);
 
-  Future<void> updateProduct(
-          String productId, ProductModel newProductData) async =>
-      await _databaseService.updateProduct(productId, newProductData);
+  Future<void> updateProduct( String productId, ProductModel newProductData) async => await _databaseService.updateProduct(productId, newProductData);
 
-  Future<void> updateProductIsFavorite(
-          String productId, bool isFavorite) async =>
-      await _databaseService.updateProductIsFavorite(productId, isFavorite);
+  Future<void> updateProductIsFavorite( String productId, bool isFavorite) async =>await _databaseService.updateProductIsFavorite(productId, isFavorite);
 
-  Future<void> updateProductCategory(
-          String productId, CategoryModel newCategory) async =>
-      await _databaseService.updateProductCategory(productId, newCategory);
+  Future<void> updateProductCategory( String productId, CategoryModel newCategory) async =>await _databaseService.updateProductCategory(productId, newCategory);
 }

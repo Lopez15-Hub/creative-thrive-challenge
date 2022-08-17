@@ -46,10 +46,12 @@ class CustomCategoryItem extends StatelessWidget {
       secondaryBackground: dangerContainer,
       onDismissed: (direction) {
         popupBloc.add(ShowPopupEvent(
+            category: categories[index],
             mustBeShowed: true,
             context: context,
             categoryId: state.categoryId,
             categories: categories,
+            
             ));
       },
       child: Card(

@@ -51,10 +51,11 @@ class UpdateCategoriesStatusEvent extends CategoriesEvent {
 
 class DeleteCategoryEvent extends CategoriesEvent {
   final String categoryId;
+  final CategoryModel category;
   final BuildContext context;
-  const DeleteCategoryEvent({required this.categoryId, required this.context});
+  const DeleteCategoryEvent({required this.categoryId, required this.context,required this.category});
   @override
-  List<Object> get props => [categoryId, context];
+  List<Object> get props => [categoryId, context,category];
 }
 
 class ListeningCategoriesEvent extends CategoriesEvent {

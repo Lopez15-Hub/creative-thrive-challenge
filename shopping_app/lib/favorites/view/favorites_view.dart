@@ -89,10 +89,10 @@ class _FavoritesViewState extends State<FavoritesView> {
                       mustBeShowed: true,
                       context: context,
                       categoryId: '',
-                      productId: products[productIndex]
-                          .products[productIndex]
-                          .productId,
-                      categories: _categories));
+                      productId: products[productIndex].products[productIndex].productId,
+                      categories: _categories,
+                      category: products[productIndex].products[productIndex].category,
+                      ));
 
                   // productsBloc.add(ProductWasDeletedEvent(context: context));
                 }

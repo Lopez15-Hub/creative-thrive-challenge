@@ -5,7 +5,15 @@ import 'package:shopping_app/createProductOrCategory/bloc/blocs.dart';
 import '../../categories/bloc/categories_bloc.dart';
 import '../../categories/models/category_model.dart';
 
-Future<void> customPopupWidget(BuildContext context,String title, String content,String categoryId,{required String productId, required  List<CategoryModel>categories}) async {
+Future<void> customPopupWidget(
+  BuildContext context,
+  String title,
+  String content,
+  String categoryId,
+  CategoryModel category, {
+  required String productId,
+  required List<CategoryModel> categories,
+}) async {
   final categoriesBloc = BlocProvider.of<CategoriesBloc>(context);
   final productsBloc = BlocProvider.of<ProductsBloc>(context);
   return showDialog<void>(
@@ -26,8 +34,18 @@ Future<void> customPopupWidget(BuildContext context,String title, String content
           TextButton(
               child: const Text('Delete item'),
               onPressed: () {
-                if (categoryId.isNotEmpty)categoriesBloc.add(DeleteCategoryEvent( categoryId: categoryId, context: context));
-                if (productId.isNotEmpty)productsBloc.add(DeleteProductEvent(productId: productId, categories: categories,context: context));
+                if (categoryId.isNotEmpty) {
+                  categoriesBloc.add(DeleteCategoryEvent(
+                      categoryId: categoryId,
+                      context: context,
+                      category: category));
+                }
+                if (productId.isNotEmpty) {
+                  productsBloc.add(DeleteProductEvent(
+                      productId: productId,
+                      categories: categories,
+                      context: context));
+                }
               }),
         ],
       );

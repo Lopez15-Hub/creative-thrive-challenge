@@ -92,8 +92,8 @@ class _ShopViewState extends State<ShopView> {
                       mustBeShowed: true,
                       context: context,
                       categoryId: '',
-                      productId:
-                          products[index].products[productIndex].productId,
+                      productId:products[index].products[productIndex].productId,
+                      category: products[index].products[productIndex].category,
                       categories: _categories));
                 }
                 if (direction == DismissDirection.startToEnd) {
@@ -184,10 +184,7 @@ class _ShopViewState extends State<ShopView> {
     setState(() {
       var movedItem = _contents[oldListIndex].children.removeAt(oldItemIndex);
       _contents[newListIndex].children.insert(newItemIndex, movedItem);
-      var item = _products[oldListIndex].products[oldItemIndex];
-      print(item.toJson());
-      print(
-          "oldItemIndex: $oldItemIndex, oldListIndex: $oldListIndex, newItemIndex: $newItemIndex, newListIndex: $newListIndex");
+
       // _products[newListIndex].products.insert(newItemIndex, movedItem);
     });
     // var newCategory = _products[newListIndex].products[newItemIndex].category;
