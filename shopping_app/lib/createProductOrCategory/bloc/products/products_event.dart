@@ -7,14 +7,6 @@ abstract class ProductsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetProductsEvent extends ProductsEvent {
-  const GetProductsEvent();
-
-  @override
-  List<Object> get props => [];
-}
-
-class GetProductEvent extends ProductsEvent {}
 
 class CreateProductEvent extends ProductsEvent {
   final ProductModel product;
@@ -31,21 +23,6 @@ class UpdateProductsEvent extends ProductsEvent {
   @override
   List<Object> get props => [product, productId];
 }
-
-class UpdateProductsCategoryEvent extends ProductsEvent {
-  final String productId;
-  final CategoryModel newCategory;
-  final BuildContext context;
-  final List<CategoryModel> categories;
-  const UpdateProductsCategoryEvent(
-      {required this.newCategory,
-      required this.context,
-      this.productId = "",
-      required this.categories});
-  @override
-  List<Object> get props => [newCategory, productId, context];
-}
-
 class UpdateProductsFavoriteEvent extends ProductsEvent {
   final String productId;
   final bool isFavorite;
@@ -70,30 +47,18 @@ class DeleteProductEvent extends ProductsEvent {
   @override
   List<Object> get props => [productId, categories, context];
 }
-
-class ListeningProductsEvent extends ProductsEvent {
-  final List<CategoryModel> categories;
-  const ListeningProductsEvent({required this.categories});
-
-  @override
-  List<Object> get props => [categories];
-}
-
-class ListeningProductsByCategoryEvent extends ProductsEvent {
+class DeleteProductsWhenCategoryWasDeletedEvent extends ProductsEvent {
   final CategoryModel category;
-  const ListeningProductsByCategoryEvent({required this.category});
+  final BuildContext context;
+  const DeleteProductsWhenCategoryWasDeletedEvent(
+      {required this.category, required this.context});
   @override
   List<Object> get props => [category];
 }
 
-class ListeningProductsFavoritesEvent extends ProductsEvent {
-  final CategoryModel categories;
-  const ListeningProductsFavoritesEvent({required this.categories});
-  @override
-  List<Object> get props => [categories];
-}
 
-class NotifyProductsListIsEmptyEvent extends ProductsEvent {}
+
+
 
 class ProductSubmittedEvent extends ProductsEvent {
   final BuildContext context;
@@ -110,36 +75,6 @@ class ProductIsOnSubmitedEvent extends ProductsEvent {
       {required this.isOnSubmit, required this.categories});
   @override
   List<Object> get props => [isOnSubmit, categories];
-}
-
-class ProductWasDeletedEvent extends ProductsEvent {
-  final BuildContext context;
-  const ProductWasDeletedEvent({required this.context});
-  @override
-  List<Object> get props => [context];
-}
-
-class ProductWasAddedToFavoritesEvent extends ProductsEvent {
-  final BuildContext context;
-  const ProductWasAddedToFavoritesEvent({required this.context});
-  @override
-  List<Object> get props => [context];
-}
-
-class ProductWasDeletedFromFavoritesEvent extends ProductsEvent {
-  final BuildContext context;
-  const ProductWasDeletedFromFavoritesEvent({required this.context});
-  @override
-  List<Object> get props => [context];
-}
-
-class ProductFunctionHasErrorEvent extends ProductsEvent {
-  final String error;
-  final BuildContext context;
-  const ProductFunctionHasErrorEvent(
-      {required this.error, required this.context});
-  @override
-  List<Object> get props => [error, context];
 }
 
 class ProductOnSubmitedEvent extends ProductsEvent {
@@ -165,14 +100,45 @@ class ProductOnSubmitedEvent extends ProductsEvent {
       ];
 }
 
-class GetProductImageEvent extends ProductsEvent {
-  final String productImageUrl;
-  const GetProductImageEvent({required this.productImageUrl});
+
+class ProductWasDeletedEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductWasDeletedEvent({required this.context});
   @override
-  List<Object> get props => [productImageUrl];
+  List<Object> get props => [context];
+}
+class ProductWasAddedToFavoritesEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductWasAddedToFavoritesEvent({required this.context});
+  @override
+  List<Object> get props => [context];
 }
 
-class ProducWasSubmitEvent extends ProductsEvent {}
+class ProductWasDeletedFromFavoritesEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductWasDeletedFromFavoritesEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}
+
+class ProductFunctionHasErrorEvent extends ProductsEvent {
+  final String error;
+  final BuildContext context;
+  const ProductFunctionHasErrorEvent(
+      {required this.error, required this.context});
+  @override
+  List<Object> get props => [error, context];
+}
+
+class ProductAlreadyExistsEvent extends ProductsEvent {
+  final BuildContext context;
+  const ProductAlreadyExistsEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}
+
+
+
 
 class RetrieveProductsWithCategoryEvent extends ProductsEvent {
   final List<CategoryModel> category;
@@ -192,28 +158,6 @@ class RetrieveProductsFavoritesWithCategoryEvent extends ProductsEvent {
   List<Object> get props => [category];
 }
 
-class UpdateProductsPositionEvent extends ProductsEvent {
-  final List<ProductArragmentModel> productsList;
-  const UpdateProductsPositionEvent({required this.productsList});
-  @override
-  List<Object> get props => [productsList];
-}
-
-class UpdateProductsFavoritesPositionEvent extends ProductsEvent {
-  final List<ProductArragmentModel> productsList;
-  const UpdateProductsFavoritesPositionEvent({required this.productsList});
-  @override
-  List<Object> get props => [productsList];
-}
-
-class DeleteProductsWhenCategoryWasDeletedEvent extends ProductsEvent {
-  final CategoryModel category;
-  final BuildContext context;
-  const DeleteProductsWhenCategoryWasDeletedEvent(
-      {required this.category, required this.context});
-  @override
-  List<Object> get props => [category];
-}
 
 class CheckIfProductExistsEvent extends ProductsEvent {
   final String productName;
@@ -226,14 +170,6 @@ class CheckIfProductExistsEvent extends ProductsEvent {
   @override
   List<Object> get props => [productName, context, product];
 }
-
-class ProductAlreadyExistsEvent extends ProductsEvent {
-  final BuildContext context;
-  const ProductAlreadyExistsEvent({required this.context});
-  @override
-  List<Object> get props => [context];
-}
-
 class SearchProductEvent extends ProductsEvent {
   final String searchTerm;
   const SearchProductEvent({required this.searchTerm});

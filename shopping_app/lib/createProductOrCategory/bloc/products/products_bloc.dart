@@ -20,10 +20,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   UploadImageBloc uploadImageBloc =
       UploadImageBloc(storageRepository: StorageRepository());
   ProductsBloc({required this.productRepository}) : super(ProductsInitial()) {
-    on<GetProductsEvent>((event, emit) {
-      productRepository.getProducts();
-    });
-
     on<CreateProductEvent>((event, emit) {
       productRepository
           .createProduct(event.product)
@@ -49,16 +45,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
 
-    on<UpdateProductsCategoryEvent>((event, emit) {
-      productRepository
-          .updateProductCategory(event.productId, event.newCategory)
-          .then((value) => snackbarBloc
-              .add(SnackbarSuccessEvent(event.context, 'Category updated')))
-          .onError((error, stackTrace) => add(ProductFunctionHasErrorEvent(
-              context: event.context, error: error.toString())));
-      add(RetrieveProductsWithCategoryEvent(category: event.categories));
-    });
-
     on<DeleteProductEvent>((event, emit) {
       productRepository
           .deleteProduct(event.productId)
@@ -67,20 +53,23 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
               error: error.toString(), context: event.context));
       add(RetrieveProductsWithCategoryEvent(category: event.categories));
     });
-
-    on<ListeningProductsFavoritesEvent>((event, emit) async {
-      List<ProductArragmentModel> favoritesProducts =
-          await productRepository.getProductsFavorites(event.categories);
-
-      if (favoritesProducts.isEmpty) return emit(ProductsListIsEmpty());
-
-      emit(ProductsFavoriteRetrieved(retrievedProducts: favoritesProducts));
+    on<DeleteProductsWhenCategoryWasDeletedEvent>((event, emit) async {
+      await productRepository
+          .deleteProductsWhenCategoryWasDeleted(event.category)
+          .then((value) => snackbarBloc.add(SnackbarSuccessEvent(
+              event.context, 'Products deleted successfully')))
+          .onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(
+              event.context,
+              'Delete category products fails, error: ${error.toString()}')));
     });
 
-    on<NotifyProductsListIsEmptyEvent>((event, emit) async {
-      emit(ProductsListIsEmpty());
+    on<ProductSubmittedEvent>((event, emit) async {
+      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
     });
-
+    on<ProductIsOnSubmitedEvent>((event, emit) async {
+      emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
+      add(RetrieveProductsWithCategoryEvent(category: event.categories));
+    });
     on<ProductOnSubmitedEvent>((event, emit) async {
       final productModel = ProductModel(
           category: event.productCategory,
@@ -94,23 +83,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           productName: event.productName));
     });
 
-    on<ProductIsOnSubmitedEvent>((event, emit) async {
-      emit(ProductsIsOnSubmit(isOnSubmit: event.isOnSubmit));
-      add(RetrieveProductsWithCategoryEvent(category: event.categories));
-    });
 
-    on<ProductFunctionHasErrorEvent>((event, emit) async {
-      snackbarBloc.add(SnackbarErrorEvent(
-          event.context, 'An ocurred error: ${event.error}'));
-    });
-
-    on<ProductSubmittedEvent>((event, emit) async {
-      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product created'));
-    });
     on<ProductWasDeletedEvent>((event, emit) async {
       Navigator.of(event.context).pop();
-      snackbarBloc
-          .add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
+      snackbarBloc.add(SnackbarSuccessEvent(event.context, 'Product was deleted'));
     });
     on<ProductWasAddedToFavoritesEvent>((event, emit) async {
       snackbarBloc.add(
@@ -121,6 +97,15 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           event.context, 'Product removed from favorites'));
     });
 
+    on<ProductFunctionHasErrorEvent>((event, emit) async {
+      snackbarBloc.add(SnackbarErrorEvent(
+          event.context, 'An ocurred error: ${event.error}'));
+    });
+    on<ProductAlreadyExistsEvent>((event, emit) async {
+      snackbarBloc.add(SnackbarInfoEvent(event.context, 'Product already exists'));
+    });
+    
+    
     on<RetrieveProductsWithCategoryEvent>((event, emit) async {
       List<ProductArragmentModel> productsList = [];
       List<CategoryModel> categories = event.category;
@@ -134,7 +119,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());
       emit(ProductsArragmentRetrieved(retrievedProducts: productsList));
     });
-
     on<RetrieveProductsFavoritesWithCategoryEvent>((event, emit) async {
       List<ProductArragmentModel> productsList = [];
       List<CategoryModel> categories = event.category;
@@ -148,18 +132,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       if (productsList.isEmpty) return emit(ProductsListIsEmpty());
       emit(ProductsFavoriteRetrieved(retrievedProducts: productsList));
     });
-    on<UpdateProductsPositionEvent>((event, emit) {
-      emit(ProductsArragmentRetrieved(retrievedProducts: event.productsList));
-    });
-    on<DeleteProductsWhenCategoryWasDeletedEvent>((event, emit) async {
-      await productRepository
-          .deleteProductsWhenCategoryWasDeleted(event.category)
-          .then((value) => snackbarBloc.add(SnackbarSuccessEvent(
-              event.context, 'Products deleted successfully')))
-          .onError((error, stackTrace) => snackbarBloc.add(SnackbarErrorEvent(
-              event.context,
-              'Delete category products fails, error: ${error.toString()}')));
-    });
+
     on<CheckIfProductExistsEvent>((event, emit) async {
       final productsOnBd =
           await productRepository.getProduct(event.productName);
@@ -171,12 +144,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
             CreateProductEvent(product: event.product, context: event.context));
       }
     });
-    on<ProductAlreadyExistsEvent>((event, emit) async {
-      snackbarBloc
-          .add(SnackbarInfoEvent(event.context, 'Product already exists'));
-    });
+
     on<SearchProductEvent>((event, emit) async {
-     await emit.onEach<List<ProductModel>>(productRepository.searchProductStream(event.searchTerm),
+      await emit.onEach<List<ProductModel>>(
+          productRepository.searchProductStream(event.searchTerm),
           onData: (data) => ProductsRetrieved(retrievedProducts: data));
     });
   }

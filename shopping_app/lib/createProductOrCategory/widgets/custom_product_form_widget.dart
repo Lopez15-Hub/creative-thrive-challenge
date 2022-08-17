@@ -130,9 +130,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                           text: 'Saving product',
                         );
                       }
-                      if (state is ProducWasSubmitEvent) {
-                        return Container();
-                      }
+
                       return Container();
                     },
                   ),
